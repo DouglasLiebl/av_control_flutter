@@ -1,5 +1,6 @@
 import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/second.dart';
+import 'package:demo_project/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,11 +42,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Consumer<Counter>(
+        builder: (context, counter, child) {
+          return FutureBuilder<int>(
+            future: counter._dbHelper.getCount(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              
+              if (snapshot.hasData && snapshot.data! > 2) {
+                return HomePage();
+              } else {
+                return LoginPage();
+              }
+            },
+          );
+        }
+      ),
     );
   }
 }
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
