@@ -1,29 +1,59 @@
 import 'package:demo_project/data/database_helper.dart';
-import 'package:demo_project/second.dart';
+import 'package:demo_project/data/server_service.dart';
+import 'package:demo_project/models/account.dart';
+import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/views/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Counter with ChangeNotifier {
   final DatabaseHelper _dbHelper = DatabaseHelper();
-  int _count = 0;
+  final ServerService _serverService = ServerService();
+  Account _account = Account(
+        id: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        aviaries: [],
+        authData: Auth(
+          accountId: '',
+          accessToken: '',
+          tokenType: '',
+          refreshToken: '',
+          accessTokenExpiration: '',
+        ),
+      );
   
   Counter() {
-    _loadCounter();
+    _loadContext();
   }
 
-  Future<void> _loadCounter() async {
-    _count = await _dbHelper.getCount();
+  Account get getAccount => _account;  
+
+  Future<void> _loadContext() async {
+    _account = _dbHelper.getContext() as Account;
     notifyListeners();
   }
 
-  int get count => _count;
+  Future<void> login(String email, String password) async {
+    try {
+      // Get account from server
+      Account response = await _serverService.login(email, password);
+      
+      // Save to SQLite
+      await _dbHelper.registerAccountData(response);
+      
+      // Update local state
+      _account = response;
+      
+      // Notify listeners
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Login failed: $e');
+    }
+      notifyListeners();
+    }
 
-  Future<void> increment() async {
-    _count++;
-    await _dbHelper.updateCount(_count);
-    notifyListeners();
-  }
 }
 
 void main() {
@@ -44,16 +74,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Consumer<Counter>(
         builder: (context, counter, child) {
-          return FutureBuilder<int>(
-            future: counter._dbHelper.getCount(),
+          return FutureBuilder<Account>(
+            future: counter._dbHelper.getContext(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               }
               
-              if (snapshot.hasData && snapshot.data! > 2) {
+              if (snapshot.hasData && snapshot.data?.id != '') {
                 return HomePage();
               } else {
+                print("Here ${snapshot.data}");
                 return LoginPage();
               }
             },
@@ -76,18 +107,13 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Consumer<Counter>(
           builder: (context, counter, child) {
-            return Text('Contador: ${counter.count}');
+            return Text('Contador: ${counter.getAccount}');
           }
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.navigate_next),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SecondPage()),
-          );
-        },
+        onPressed: () {},
       ),
     );
   }
