@@ -22,7 +22,7 @@ class ServerService {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         return Account.fromJson(jsonResponse);
       } else {
-        throw Exception('Failed to login: ${response.statusCode}');
+        throw Exception('Failed to login: ${response.body}');
       }
     } catch (e) {
       throw Exception('Network error: $e');

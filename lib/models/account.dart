@@ -28,7 +28,7 @@ class Account {
       aviaries: (json['aviaries'] as List)
           .map((aviary) => Aviary.fromJson(aviary))
           .toList(),
-      authData: Auth.fromJson(json['authData']),
+      authData: Auth.fromJson(json['auth']),
     );
   }
 }

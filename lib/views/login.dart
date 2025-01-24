@@ -1,4 +1,5 @@
-import 'package:demo_project/main.dart';
+import 'package:demo_project/context/data_provider.dart';
+import 'package:demo_project/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +19,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Counter>(
-      builder: (context, counter, child) {
+    return Consumer<DataProvider>(
+      builder: (context, provider, child) {
         return Scaffold(
           body: Container(
             decoration: BoxDecoration(
@@ -157,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 onPressed: () async {
                                   try {
-                                    await counter.login(
+                                    await provider.login(
                                       _emailController.text, 
                                       _passwordController.text
                                     );

@@ -33,9 +33,12 @@ class DatabaseHelper {
         id VARCHAR(300) PRIMARY KEY,
         first_name VARCHAR(300),
         last_name VARCHAR(300),
-        email VARCHAR(300),
+        email VARCHAR(300)
       );
+    ''');
 
+    // Create auth data table
+    await db.execute('''
       CREATE TABLE tb_auth_data(
         account_id VARCHAR(300) PRIMARY KEY,
         access_token TEXT,
@@ -44,26 +47,30 @@ class DatabaseHelper {
         expires_at VARCHAR(255),
         FOREIGN KEY (account_id) REFERENCES tb_account(id) ON DELETE CASCADE
       );
+    ''');
 
+    // Create aviaries table
+    await db.execute('''
       CREATE TABLE tb_aviaries(
         id VARCHAR(300) PRIMARY KEY,
         name VARCHAR(300),
         alias VARCHAR(255),
         account_id VARCHAR(300),
-        activeAllotmentId VARCHAR(300),
+        active_allotment_id VARCHAR(300),
         FOREIGN KEY (account_id) REFERENCES tb_account(id) ON DELETE CASCADE
       );
-
-      CREATE INDEX idx_account_email ON tb_account(email);
-      CREATE INDEX idx_auth_token ON tb_auth_data(access_token);
-      CREATE INDEX idx_account_id ON tb_aviaries(account_id);
     ''');
+
+    // Create indexes
+    await db.execute('CREATE INDEX idx_account_email ON tb_account(email);');
+    await db.execute('CREATE INDEX idx_auth_token ON tb_auth_data(access_token);');
+    await db.execute('CREATE INDEX idx_account_id ON tb_aviaries(account_id);');
   }
 
   Future<void> registerAccountData(Account request) async { 
     final db = await database;
     await db.insert(
-      "tb_accounts", 
+      "tb_account", 
       {
         'id': request.id,
         'first_name': request.firstName,
@@ -78,7 +85,8 @@ class DatabaseHelper {
         'account_id': request.id,
         'access_token': request.authData.accessToken,
         'token_type': request.authData.tokenType,
-        'refresh_token': request.authData.accessTokenExpiration,
+        'refresh_token': request.authData.refreshToken,
+        'expires_at': request.authData.accessTokenExpiration
       }
     );
 
@@ -98,74 +106,53 @@ class DatabaseHelper {
 
   Future<Account> getContext() async {
     final db = await database;
-    final List<Map<String, dynamic>> results = await db.rawQuery('''
-    SELECT 
-      a.*,
-      auth.access_token,
-      auth.token_type,
-      auth.refresh_token,
-      auth.expires_at,
-      av.id as aviary_id,
-      av.name as aviary_name,
-      av.alias as aviary_alias,
-      av.active_allotment_id
-    FROM tb_account a
-    LEFT JOIN tb_auth_data auth ON auth.account_id = a.id
-    LEFT JOIN tb_aviaries av ON av.account_id = a.id
-  ''');
+    final List<Map<String, dynamic>> results = await db.rawQuery(
+    '''
+      SELECT 
+        a.*,
+        auth.access_token,
+        auth.token_type,
+        auth.refresh_token,
+        auth.expires_at,
+        av.id as aviary_id,
+        av.name as aviary_name,
+        av.alias as aviary_alias,
+        av.active_allotment_id
+      FROM tb_account a
+      LEFT JOIN tb_auth_data auth ON auth.account_id = a.id
+      LEFT JOIN tb_aviaries av ON av.account_id = a.id
+    ''');
 
-    if (results.isEmpty) {
-      return Account(
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        aviaries: [],
-        authData: Auth(
-          accountId: '',
-          accessToken: '',
-          tokenType: '',
-          refreshToken: '',
-          accessTokenExpiration: '',
-        ),
-      ); // Return empty Account object
-    }
-
-    // Map first row to Account
     final accountData = results.first;
+
     final account = Account(
-      id: accountData['id'],
-      firstName: accountData['first_name'],
-      lastName: accountData['last_name'],
-      email: accountData['email'],
+      id: accountData['id'] ?? '',
+      firstName: accountData['first_name'] ?? '', 
+      lastName: accountData['last_name'] ?? '',
+      email: accountData['email'] ?? '',
       authData: Auth(
-        accountId: accountData['account_id'],
-        accessToken: accountData['access_token'],
-        tokenType: accountData['token_type'],
-        refreshToken: accountData['refresh_token'],
-        accessTokenExpiration: accountData['expires_at'],
+        accountId: accountData['id'] ?? '',
+        accessToken: accountData['access_token'] ?? '',
+        tokenType: accountData['token_type'] ?? '',
+        refreshToken: accountData['refresh_token'] ?? '',
+        accessTokenExpiration: accountData['expires_at'] ?? '',
       ),
-      aviaries: results.map((row) => 
-        Aviary(
-          id: row['aviary_id'],
-          name: row['aviary_name'],
-          alias: row['aviary_alias'],
-          accountId: row['id'],
-          activeAllotmentId: row['active_allotment_id'],
-        )
-      ).toList(),
+      aviaries: results
+        .where((row) => row['aviary_id'] != null)
+        .map((row) => Aviary.fromJson(row))
+        .toList(),
     );
 
     return account;
   }
 
-  Future<void> updateCount(int value) async {
+  Future<bool> hasLocalData() async {
     final db = await database;
-    await db.update(
-      'counter',
-      {'value': value},
-      where: 'id = ?',
-      whereArgs: [1],
-    );
+    final List<Map<String, dynamic>> results = await db.rawQuery(
+      '''
+        SELECT id FROM tb_account;
+      ''');
+
+    return results.first.isEmpty ? false : true;
   }
 }
