@@ -1,4 +1,5 @@
 import 'package:demo_project/context/data_provider.dart';
+import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final Color bgGray = Color(0xFFF3F4F6);
-  final Color subTitleGray = Color.fromARGB(255, 107, 104, 104);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
         return Scaffold(
           body: Container(
             decoration: BoxDecoration(
-              color: bgGray
+              color: DefaultColors.bgGray()
             ),
             child: SafeArea(
               child: Center(
@@ -54,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                               Text(
                                 "Insira seu email abaixo para acessar sua conta",
                                 style: TextStyle(
-                                  color: subTitleGray,
+                                  color: DefaultColors.subTitleGray(),
                                   fontSize: 15
                                 ),
                                 textAlign: TextAlign.center,
@@ -94,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: const Color.fromARGB(255, 194, 189, 189)
                                     )
                                   ),
-                                  prefixIcon: Icon(Icons.email_outlined, color: subTitleGray)
+                                  prefixIcon: Icon(Icons.email_outlined, color: DefaultColors.subTitleGray())
                                 ),
                               ),
                               SizedBox(height: 6),
@@ -133,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: const Color.fromARGB(255, 194, 189, 189)
                                     )
                                   ),
-                                  prefixIcon: Icon(Icons.key_outlined, color: subTitleGray)
+                                  prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray())
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -188,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                                   overlayColor: MaterialStateProperty.resolveWith<Color?>(
                                     (Set<MaterialState> states) {
                                       if (states.contains(MaterialState.pressed)) {
-                                        return Colors.grey.withOpacity(0.2);
+                                        return const Color.fromARGB(255, 201, 177, 177).withOpacity(0.2);
                                       }
                                       return null;
                                     },
@@ -207,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                                 children: [
                                   Expanded(
                                     child: Divider(
-                                      color: subTitleGray,
+                                      color: DefaultColors.subTitleGray(),
                                       thickness: 1,
                                     ),
                                   ),
@@ -216,14 +215,14 @@ class _LoginPageState extends State<LoginPage> {
                                     child: Text(
                                       "OU ENTÃO",
                                       style: TextStyle(
-                                        color: subTitleGray,
+                                        color: DefaultColors.subTitleGray(),
                                         fontSize: 15
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     child: Divider(
-                                      color: subTitleGray,
+                                      color: DefaultColors.subTitleGray(),
                                       thickness: 1,
                                     ),
                                   ),

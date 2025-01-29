@@ -4,7 +4,7 @@ class Aviary {
   String name;
   String alias;
   String accountId;
-  String activeAllotmentId;
+  String? activeAllotmentId;
 
   Aviary({
     required this.id,

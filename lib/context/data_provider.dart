@@ -8,19 +8,19 @@ class DataProvider with ChangeNotifier {
   final DatabaseHelper dbHelper = DatabaseHelper();
   final ServerService _serverService = ServerService();
   Account _account = Account(
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        aviaries: [],
-        authData: Auth(
-          accountId: '',
-          accessToken: '',
-          tokenType: '',
-          refreshToken: '',
-          accessTokenExpiration: '',
-        ),
-      );
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    aviaries: [],
+    authData: Auth(
+      accountId: '',
+      accessToken: '',
+      tokenType: '',
+      refreshToken: '',
+      accessTokenExpiration: '',
+    ),
+  );
   
   DataProvider() {
     _loadContext();
@@ -43,7 +43,25 @@ class DataProvider with ChangeNotifier {
     } catch (e) {
       throw Exception('Login failed: $e');
     }
-      notifyListeners();
-    }
+    notifyListeners();
+  }
 
+  Future<void> logout() async {
+    await dbHelper.cleanDatabase(_account.id);
+    _account = Account(
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      aviaries: [],
+      authData: Auth(
+        accountId: '',
+        accessToken: '',
+        tokenType: '',
+        refreshToken: '',
+        accessTokenExpiration: '',
+      ),
+    );
+    notifyListeners();
+  }
 }

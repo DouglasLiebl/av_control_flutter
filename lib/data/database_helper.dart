@@ -97,7 +97,7 @@ class DatabaseHelper {
           'id': a.id,
           'name': a.name,
           'alias': a.alias,
-          'account_id': a.accountId,
+          'account_id': request.id,
           'active_allotment_id': a.activeAllotmentId
         }
       ); 
@@ -107,23 +107,29 @@ class DatabaseHelper {
   Future<Account> getContext() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db.rawQuery(
-    '''
+      '''
       SELECT 
         a.*,
         auth.access_token,
         auth.token_type,
         auth.refresh_token,
-        auth.expires_at,
-        av.id as aviary_id,
-        av.name as aviary_name,
-        av.alias as aviary_alias,
-        av.active_allotment_id
+        auth.expires_at
       FROM tb_account a
       LEFT JOIN tb_auth_data auth ON auth.account_id = a.id
-      LEFT JOIN tb_aviaries av ON av.account_id = a.id
-    ''');
+      ''');
 
+    if (results.isEmpty) {
+      throw Exception("No account found");
+    }
     final accountData = results.first;
+
+    final List<Map<String, dynamic>> registeredAviaries = await db.rawQuery(
+      '''
+      SELECT * FROM tb_aviaries
+      WHERE account_id = ?
+      ''',
+      [accountData['id']]
+    );
 
     final account = Account(
       id: accountData['id'] ?? '',
@@ -137,9 +143,14 @@ class DatabaseHelper {
         refreshToken: accountData['refresh_token'] ?? '',
         accessTokenExpiration: accountData['expires_at'] ?? '',
       ),
-      aviaries: results
-        .where((row) => row['aviary_id'] != null)
-        .map((row) => Aviary.fromJson(row))
+      aviaries: registeredAviaries
+        .map((a) => Aviary(
+          id: a['id'],
+          name: a['name'],
+          alias: a['alias'],
+          accountId: a['account_id'],
+          activeAllotmentId: a['active_allotment_id']
+        ))
         .toList(),
     );
 
@@ -154,5 +165,14 @@ class DatabaseHelper {
       ''');
 
     return results.first.isEmpty ? false : true;
+  }
+
+  Future<void> cleanDatabase(String id) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn.rawDelete('DELETE FROM tb_aviaries');
+      await txn.rawDelete('DELETE FROM tb_auth_data');
+      await txn.rawDelete('DELETE FROM tb_account');
+    });
   }
 }

@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:demo_project/models/account.dart';
 import 'package:http/http.dart' as http;
 
 class ServerService {
-  final String baseUrl = 'http://10.0.2.2:8080';
+  final String baseUrl = Platform.isAndroid 
+    ? 'http://10.0.2.2:8080'
+    : 'http://localhost:8080';
 
   Future<Account> login(String email, String password) async {
     try {
@@ -25,6 +28,7 @@ class ServerService {
         throw Exception('Failed to login: ${response.body}');
       }
     } catch (e) {
+      print(e);
       throw Exception('Network error: $e');
     }
   }
