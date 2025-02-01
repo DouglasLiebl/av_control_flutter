@@ -1,5 +1,6 @@
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
+import 'package:demo_project/views/details.dart';
 import 'package:demo_project/views/options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -156,7 +157,10 @@ class HomePage extends StatelessWidget {
                             subtitle: Text(aviary.name),
                             trailing: Icon(Icons.arrow_forward_ios, size: 15,),
                             onTap: () {
-
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => DetailsPage(aviary: aviary))
+                              );
                             }
                           )
                         ); 
