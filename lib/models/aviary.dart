@@ -19,7 +19,7 @@ class Aviary {
       id: json['id'],
       name: json['name'],
       alias: json['alias'],
-      accountId: json['alias'],
+      accountId: json['accountId'],
       activeAllotmentId: json['activeAllotmentId']
     );
   }

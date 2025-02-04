@@ -106,16 +106,19 @@ class DatabaseHelper {
 
   Future<void> registerAviaryData(Aviary request) async {
     final db = await database;
-    await db.insert(
-      "tb_aviaries",
-      {
-        'id': request.id,
-        'name': request.name,
-        'alias': request.alias,
-        'account_id': request.accountId,
-        'active_allotment_id': null
-      }
-    );
+    await db.transaction((txn) async {
+       await txn.insert(
+        "tb_aviaries",
+        {
+          'id': request.id,
+          'name': request.name,
+          'alias': request.alias,
+          'account_id': request.accountId,
+          'active_allotment_id': null
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace
+      );
+    });
 
   }
 
@@ -145,8 +148,6 @@ class DatabaseHelper {
       ''',
       [accountData['id']]
     );
-
-    print(registeredAviaries);
     
     final account = Account(
       id: accountData['id'] ?? '',
