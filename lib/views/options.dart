@@ -1,6 +1,7 @@
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/login.dart';
+import 'package:demo_project/views/register_aviary.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,22 @@ class OptionsPage extends StatelessWidget {
           body: Column(
             children: [
               Card(
+                color: DefaultColors.bgGray(),
+                elevation: 0,
+                child: ListTile(
+                  leading: Icon(Icons.add_outlined),
+                  title: Text("Adicionar aviário"),
+                  subtitle: Text("Registrar um novo aviário à conta"),
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => RegisterAviary()),
+                    );
+                  }
+                )
+              ),
+              Card(
+                color: DefaultColors.bgGray(),
                 elevation: 0,
                 child: ListTile(
                   leading: Icon(Icons.logout_outlined),

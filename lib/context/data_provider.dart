@@ -2,6 +2,7 @@ import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/auth.dart';
+import 'package:demo_project/models/aviary.dart';
 import 'package:flutter/material.dart';
 
 class DataProvider with ChangeNotifier {
@@ -62,6 +63,13 @@ class DataProvider with ChangeNotifier {
         accessTokenExpiration: '',
       ),
     );
+    notifyListeners();
+  }
+
+  Future<void> registerAviary(String name, String alias) async {
+    Aviary r = await _serverService.registerAviary(_account.authData, name, alias);
+    await dbHelper.registerAviaryData(r);
+    _account.aviaries.add(r);
     notifyListeners();
   }
 }

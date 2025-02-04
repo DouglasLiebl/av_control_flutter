@@ -104,6 +104,21 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> registerAviaryData(Aviary request) async {
+    final db = await database;
+    await db.insert(
+      "tb_aviaries",
+      {
+        'id': request.id,
+        'name': request.name,
+        'alias': request.alias,
+        'account_id': request.accountId,
+        'active_allotment_id': null
+      }
+    );
+
+  }
+
   Future<Account> getContext() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db.rawQuery(
@@ -131,6 +146,8 @@ class DatabaseHelper {
       [accountData['id']]
     );
 
+    print(registeredAviaries);
+    
     final account = Account(
       id: accountData['id'] ?? '',
       firstName: accountData['first_name'] ?? '', 
