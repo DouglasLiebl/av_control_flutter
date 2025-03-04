@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:demo_project/models/account.dart';
+import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:http/http.dart' as http;
@@ -49,6 +50,27 @@ class ServerService {
       return Aviary.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to register Aviary: ${response.body}");
+    }
+  }
+
+  Future<Allotment> startAllotment(Auth auth, int totalAmount, String aviaryId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/account/allotment'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${auth.tokenType} ${auth.accessToken}'
+      },
+      body: jsonEncode({
+        'totalAmount': totalAmount,
+        'aviaryId': aviaryId
+      })
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> jsonReponse = jsonDecode(response.body);
+      return Allotment.toJson(jsonReponse);
+    } else {
+      throw Exception("Failed to register Allotment");
     }
   }
 }

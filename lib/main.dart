@@ -1,3 +1,4 @@
+import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/views/home.dart';
 import 'package:demo_project/views/login.dart';
@@ -6,9 +7,12 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => DataProvider(),
-      child: MyApp(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => AllotmentProvider()),
+      ],
+      child: const MyApp(),
     ),
   );
 }

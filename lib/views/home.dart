@@ -80,10 +80,10 @@ class HomePage extends StatelessWidget {
                                       )
                                     ),
                                     Text(
-                                      "${provider.getAccount.aviaries
-                                        .map((a) => a.activeAllotmentId != null)
-                                        .toList().length
-                                      }",
+                                        "${provider.getAccount.aviaries
+                                          .where((a) => a.activeAllotmentId != null)
+                                          .length
+                                        }",
                                       style: TextStyle(
                                         color: Color(0xFF38a169),
                                         fontWeight: FontWeight.bold,

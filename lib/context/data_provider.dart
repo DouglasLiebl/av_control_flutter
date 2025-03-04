@@ -72,4 +72,14 @@ class DataProvider with ChangeNotifier {
     _account.aviaries.add(r);
     notifyListeners();
   }
+
+  Future<void> updateActiveAllotmentId(String aviaryId, String allotmentId) async {
+    for (var a in _account.aviaries) {
+      if (a.id == aviaryId) {
+        a.activeAllotmentId = allotmentId;
+      }
+    }
+
+    notifyListeners(); 
+  }
 }
