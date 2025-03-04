@@ -45,4 +45,25 @@ class AllotmentProvider with ChangeNotifier {
       throw Exception("Failed to register a new allotment $e");
     }
   }
+
+  Future<void> cleanContext() async {
+    _allotment = Allotment(
+      id: '', 
+      aviaryId: '', 
+      isActive: false, 
+      number: 0, 
+      totalAmount: 0, 
+      currentAge: 0, 
+      startedAt: '', 
+      endedAt: '', 
+      currentDeathPercentage: 0, 
+      currentWeight: 0, 
+      currentTotalWaterConsume: 0, 
+      waterHistory: [], 
+      mortalityHistory: [], 
+      weightHistory: []
+    );
+
+    notifyListeners();
+  }
 }

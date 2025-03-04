@@ -166,9 +166,10 @@ class _RegisterAviary extends State<RegisterAviary> {
                                       _aliasController.text
                                     );
 
-                                    Navigator.pushReplacement(
+                                    Navigator.pushAndRemoveUntil(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const HomePage())  
+                                      MaterialPageRoute(builder: (context) => const HomePage()),
+                                      (route) => false  // This removes all previous routes
                                     );
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(

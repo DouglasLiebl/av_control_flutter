@@ -284,7 +284,7 @@ class DatabaseHelper {
       SELECT 
         *
       FROM tb_allotments 
-      WHERE a.id = ?
+      WHERE id = ?
     ''', [allotmentId]);
 
     if (results.isEmpty) {
@@ -341,7 +341,7 @@ class DatabaseHelper {
     final allotment = Allotment(
       id: allotmentData['id'] ?? '',
       aviaryId: allotmentData['aviary_id'] ?? '',
-      isActive: allotmentData['is_active'] ?? false,
+      isActive: (allotmentData['is_active'] as int) == 1,
       number: allotmentData['number'] ?? 0,
       totalAmount: allotmentData['total_amount'] ?? 0,
       currentAge: allotmentData['current_age'] ?? 0,
@@ -378,6 +378,7 @@ class DatabaseHelper {
       await txn.rawDelete('DELETE FROM tb_aviaries');
       await txn.rawDelete('DELETE FROM tb_auth_data');
       await txn.rawDelete('DELETE FROM tb_account');
+      await txn.rawDelete('DELETE FROM tb_allotments');
     });
   }
 }

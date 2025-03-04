@@ -9,4 +9,12 @@ class DefaultColors {
   static Color subTitleGray() {
     return Color.fromARGB(255, 107, 104, 104);
   }
+
+  static Color activeGreen() {
+    return Color(0xFF276749);
+  }
+
+  static Color activeBgGreen() {
+    return Color(0xFFf0fff4);
+  }
 }

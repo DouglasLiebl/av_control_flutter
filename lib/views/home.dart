@@ -1,3 +1,4 @@
+import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/details.dart';
@@ -160,6 +161,13 @@ class HomePage extends StatelessWidget {
                             subtitle: Text(aviary.name),
                             trailing: Icon(Icons.arrow_forward_ios, size: 15,),
                             onTap: () {
+                              final allotmentProvider = context.read<AllotmentProvider>();
+                              if (aviary.activeAllotmentId != null) {
+                                allotmentProvider.loadContext(aviary.activeAllotmentId!);
+                              } else {
+                                allotmentProvider.cleanContext();
+                              }
+                            
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => DetailsPage(aviary: aviary))
