@@ -2,6 +2,7 @@ import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
+import 'package:demo_project/models/mortality.dart';
 import 'package:flutter/material.dart';
 
 class AllotmentProvider with ChangeNotifier {
@@ -65,5 +66,13 @@ class AllotmentProvider with ChangeNotifier {
     );
 
     notifyListeners();
+  }
+
+  String getId() {
+    return _allotment.id;
+  }
+
+  List<Mortality> getMortalityHistory() {
+    return _allotment.mortalityHistory;
   }
 }

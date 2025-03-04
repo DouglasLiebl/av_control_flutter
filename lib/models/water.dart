@@ -5,6 +5,7 @@ class Water {
   int previousMeasure;
   int currentMeasure;
   int consumedLiters;
+  String createdAt;
 
   Water({
     required this.id,
@@ -12,7 +13,8 @@ class Water {
     required this.age,
     required this.previousMeasure,
     required this.currentMeasure,
-    required this.consumedLiters
+    required this.consumedLiters,
+    required this.createdAt
   });
 
   factory Water.fromJson(Map<String, dynamic> json) {
@@ -22,7 +24,8 @@ class Water {
       age: json["age"],
       previousMeasure: json["previousMeasure"],
       currentMeasure: json["currentMeasure"],
-      consumedLiters: json["consumedLiters"]
+      consumedLiters: json["consumedLiters"],
+      createdAt: json["createdAt"]
     );
   }
   

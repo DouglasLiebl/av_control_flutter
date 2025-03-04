@@ -92,6 +92,7 @@ class DatabaseHelper {
         previous_measure INTEGER,
         current_measure INTEGER,
         consumed_liters INTEGER,
+        created_at VARCHAR(100),
         FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
@@ -104,6 +105,7 @@ class DatabaseHelper {
         age INTEGER,
         deaths INTEGER,
         eliminations INTEGER,
+        created_at VARCHAR(100),
         FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
@@ -117,6 +119,7 @@ class DatabaseHelper {
         weight DECIMAL(10, 3),
         tare DECIMAL(10, 3),
         total_units INTEGER,
+        created_at VARCHAR(100),
         FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
@@ -333,6 +336,7 @@ class DatabaseHelper {
         weight: weight['weight'],
         tare: weight['tare'],
         totalUnits: weight['total_units'],
+        createdAt: weight['created_at'],
         boxesWeights: boxes.map((b) => WeightBox.fromJson(b)).toList()
       );
     }).toList());

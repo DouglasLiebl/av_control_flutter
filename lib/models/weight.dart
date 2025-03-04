@@ -7,6 +7,7 @@ class Weight {
   double weight;
   double tare;
   int totalUnits;
+  String createdAt;
   List<WeightBox> boxesWeights;
 
   Weight({
@@ -16,6 +17,7 @@ class Weight {
     required this.weight,
     required this.tare,
     required this.totalUnits,
+    required this.createdAt,
     required this.boxesWeights
   });
 
@@ -27,6 +29,7 @@ class Weight {
       weight: json["weight"],
       tare: json["tare"],
       totalUnits: json["totalUnits"],
+      createdAt: json["createdA"],
       boxesWeights: (json["boxesWeights"] as List)
         .map((box) => WeightBox.fromJson(box))
         .toList()

@@ -4,13 +4,15 @@ class Mortality {
   int age;
   int deaths;
   int eliminations;
+  String createdAt;
 
   Mortality({
     required this.id,
     required this.allotmentId,
     required this.age,
     required this.deaths,
-    required this.eliminations
+    required this.eliminations,
+    required this.createdAt
   });
 
   factory Mortality.fromJson(Map<String, dynamic> json) {
@@ -19,7 +21,8 @@ class Mortality {
       allotmentId: json["allotmentId"],
       age: json["age"],
       deaths: json["deaths"],
-      eliminations: json["eliminations"]
+      eliminations: json["eliminations"],
+      createdAt: json["createdAt"]
     );
   }
 

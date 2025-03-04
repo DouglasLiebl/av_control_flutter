@@ -1,6 +1,7 @@
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
+import 'package:demo_project/utils/status_tags.dart';
 import 'package:demo_project/views/details.dart';
 import 'package:demo_project/views/options.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allotmentProvider = context.read<AllotmentProvider>();
+
     return Consumer<DataProvider>(
       builder:(context, provider, child) {
         return Scaffold(
@@ -62,7 +65,7 @@ class HomePage extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: const Color.fromARGB(255, 173, 171, 171),
+                                color: DefaultColors.borderGray(),
                                 width: 1
                               )
                             ),
@@ -105,7 +108,7 @@ class HomePage extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: const Color.fromARGB(255, 173, 171, 171),
+                                color: DefaultColors.borderGray(),
                                 width: 1
                               )
                             ),
@@ -150,23 +153,64 @@ class HomePage extends StatelessWidget {
                           margin: EdgeInsets.symmetric(vertical: 8),
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
-                              color: const Color.fromARGB(255, 173, 171, 171),
+                              color: DefaultColors.borderGray(),
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(8)
                           ),
                           child: ListTile(
                             leading: Icon(Icons.home_work),
-                            title: Text(aviary.alias),
-                            subtitle: Text(aviary.name),
+                            title: aviary.activeAllotmentId != null 
+                              ? StatusTags.getActiveTag(aviary.alias) 
+                              : StatusTags.getInactiveTag(aviary.alias),
+                            subtitle: Text(
+                              aviary.name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: DefaultColors.textGray(),
+                              ),
+                            ),
                             trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-                            onTap: () {
-                              final allotmentProvider = context.read<AllotmentProvider>();
+                            onTap: () async {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Center(
+                                    child: Container(
+                                      padding: EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CircularProgressIndicator(
+                                            color: Colors.black,
+                                          ),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            "Carregando detalhes...",
+                                            style: TextStyle(
+                                              color: DefaultColors.textGray(),
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
                               if (aviary.activeAllotmentId != null) {
-                                allotmentProvider.loadContext(aviary.activeAllotmentId!);
+                                await allotmentProvider.loadContext(aviary.activeAllotmentId!);
                               } else {
-                                allotmentProvider.cleanContext();
+                                await allotmentProvider.cleanContext();
                               }
+
+                              Navigator.pop(context);
                             
                               Navigator.push(
                                 context,
