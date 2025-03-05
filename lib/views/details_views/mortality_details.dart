@@ -1,95 +1,38 @@
+import 'package:demo_project/components/table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/models/aviary.dart';
-import 'package:demo_project/models/mortality.dart';
-import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MortalityDetails extends StatelessWidget {
+class MortalityDetails extends StatefulWidget {
   final Aviary aviary;
   final VoidCallback onRefresh;
 
-  MortalityDetails({
+  const MortalityDetails({
     super.key, 
     required this.aviary,
     required this.onRefresh,
   });
 
+  @override
+  State<MortalityDetails> createState() => _MortalityDetailsState();
+}
+
+class _MortalityDetailsState extends State<MortalityDetails> {
   final _deathsController = TextEditingController();
   final _eliminationsController = TextEditingController();
+
+  void _refreshData() {
+    setState(() {});
+    widget.onRefresh();
+  }
 
   @override
   Widget build(BuildContext context) {
     final allotmentProvider = context.read<AllotmentProvider>();
     final provider = context.read<DataProvider>();
-
-    final mock = [
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 222, 
-        eliminations: 33, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),
-      Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      ),Mortality(
-        id: "flskadfjsl", 
-        allotmentId: "lfjkladjflks", 
-        age: 1, 
-        deaths: 2, 
-        eliminations: 13, 
-        createdAt: "23/02/2025"
-      )
-    ];
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -116,352 +59,185 @@ class MortalityDetails extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Novo Registro",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Mortes",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          controller: _deathsController,  // Create a new controller for deaths
-                                          cursorColor: Colors.black,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                          ),
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: const Color.fromARGB(255, 128, 126, 126),
-                                                width: 3.0,
-                                              )
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: const Color.fromARGB(255, 194, 189, 189)
-                                              )
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Eliminações",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          controller: _eliminationsController,  // Create a new controller for eliminations
-                                          cursorColor: Colors.black,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                          ),
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(5),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: const Color.fromARGB(255, 128, 126, 126),
-                                                width: 3.0,
-                                              )
-                                            ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: const Color.fromARGB(255, 194, 189, 189)
-                                              )
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 16),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Colors.black),
-                                  minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5)
-                                    ),
-                                  ),
-                                  elevation: MaterialStateProperty.all(5),
-                                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
-                                      if (states.contains(MaterialState.pressed)) {
-                                        return Colors.grey.withOpacity(0.2);
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  onRefresh();
-                                }, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.add, color: Colors.white,),
-                                    SizedBox(width: 16),
-                                    Text(
-                                      "Adicionar Registro",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ),
-                            ],
-                          ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white
                         ),
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Novo Registro",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Mortes",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _deathsController,  // Create a new controller for deaths
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(255, 128, 126, 126),
+                                              width: 3.0,
+                                            )
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(255, 194, 189, 189)
+                                            )
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Eliminações",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _eliminationsController,  // Create a new controller for eliminations
+                                        cursorColor: Colors.black,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(255, 128, 126, 126),
+                                              width: 3.0,
+                                            )
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: const Color.fromARGB(255, 194, 189, 189)
+                                            )
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(Colors.black),
+                                minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)
+                                  ),
+                                ),
+                                elevation: MaterialStateProperty.all(5),
+                                overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                                  (Set<MaterialState> states) {
+                                    if (states.contains(MaterialState.pressed)) {
+                                      return Colors.grey.withOpacity(0.2);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              onPressed: () async {
+                                final deaths = _deathsController.text.isEmpty ? 
+                                  0 : int.parse(_deathsController.text);
+                                final eliminations = _eliminationsController.text.isEmpty ? 
+                                  0 : int.parse(_eliminationsController.text);
+
+                                await allotmentProvider.updateMortality(
+                                  provider.getAuth(),
+                                  deaths,
+                                  eliminations
+                                );
+                                _deathsController.clear();
+                                _eliminationsController.clear();
+                                _refreshData();
+                              }, 
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add, color: Colors.white,),
+                                  SizedBox(width: 16),
+                                  Text(
+                                    "Adicionar Registro",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ) 
               ),
               SizedBox(height: 16),
               // Registers
-              Card(
-                color: Colors.white,
-                elevation: 0,
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: DefaultColors.borderGray(),
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    topRight: Radius.circular(8)
-                  )
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Registros de Mortalidade",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16
-                        ),
-                      ),
-                    ],
-                  ),
-                ) 
-              ),
+              TableRows.getMortalityTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: mock.length,
+                itemCount: allotmentProvider.getMortalityHistory().length,
                 itemBuilder: (context, index) {
                   
-                  final history = mock[index];
+                  final history = allotmentProvider.getMortalityHistory()[index];
 
-                  if (!((mock.length - 1) == index)) {
-                    return Card(
-                      color: Colors.white,
-                      elevation: 0,
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide.none, // No border for the whole shape
-                        borderRadius: BorderRadius.zero,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: DefaultColors.borderGray(),
-                              width: 1,
-                            ),
-                            left: BorderSide(
-                              color: DefaultColors.borderGray(),
-                              width: 1,
-                            ),
-                            right: BorderSide(
-                              color: DefaultColors.borderGray(),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Data: ${history.createdAt}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Idade: ${history.age}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Mortes: ${history.deaths}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Eliminações: ${history.eliminations}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Icon(Icons.edit_note_outlined)
-                                  ],
-                                ),
-
-                              )
-                            ],
-                          )
-                        ),
-                      ),
-                    );
+                  if (!((allotmentProvider.getMortalityHistory().length - 1) == index)) {
+                    return TableRows.getMortalityMiddleRow(history);
                   } else {
-                    return Card(
-                      color: Colors.white,
-                      elevation: 0,
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: DefaultColors.borderGray(),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8)
-                        )
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Data: ${history.createdAt}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Idade: ${history.age}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Mortes: ${history.deaths}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Text(
-                                          "Eliminações: ${history.eliminations}",
-                                          style: TextStyle(
-                                            color: DefaultColors.textGray(),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Icon(Icons.edit_note_outlined)
-                                  ],
-                                ),
-                            ),
-                          ],
-                        )
-                      ) 
-                    );
+                    return TableRows.getMortalityBottomRow(history);
                   }
-                  
                 }
-    
-              
               )
-
             ],
           ),
         ),

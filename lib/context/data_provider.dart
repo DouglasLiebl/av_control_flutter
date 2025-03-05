@@ -82,4 +82,8 @@ class DataProvider with ChangeNotifier {
 
     notifyListeners(); 
   }
+
+  Auth getAuth() {
+    return _account.authData;
+  }
 }

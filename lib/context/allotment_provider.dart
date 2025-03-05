@@ -4,6 +4,7 @@ import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class AllotmentProvider with ChangeNotifier {
   final DatabaseHelper dbHelper = DatabaseHelper();
@@ -30,10 +31,22 @@ class AllotmentProvider with ChangeNotifier {
 
   Allotment get getAllotment => _allotment;
 
-  Future<void> loadContext(String allotmentId) async {
-    final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
-    _allotment = allotmentData; 
-    notifyListeners();
+  Future<void> loadContext(Auth auth, String allotmentId) async {
+    bool status = await InternetConnection().hasInternetAccess;
+    print("INTERNET STATUS $status");
+    if (status) {
+      print("STARTING SERVER REQUEST");
+      final allotmentData = await _serverService.getAllotmentDetails(auth, allotmentId);
+      _allotment = allotmentData; 
+      notifyListeners();
+    } else {
+      print("TRYING TO GET LOCAL DATA");
+       final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
+      _allotment = allotmentData; 
+      notifyListeners();
+    }
+
+   
   }
 
   Future<void> registerAllotment(Auth auth, aviaryId, int totalAmount) async {
@@ -74,5 +87,13 @@ class AllotmentProvider with ChangeNotifier {
 
   List<Mortality> getMortalityHistory() {
     return _allotment.mortalityHistory;
+  }
+
+  Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {
+    Mortality response = await _serverService
+      .registerMortality(auth, _allotment.id, deaths, eliminations);
+    await dbHelper.registerMortality(response);
+    _allotment.mortalityHistory.add(response);
+    notifyListeners();
   }
 }

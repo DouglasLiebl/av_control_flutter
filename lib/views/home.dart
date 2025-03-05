@@ -205,7 +205,7 @@ class HomePage extends StatelessWidget {
                               );
 
                               if (aviary.activeAllotmentId != null) {
-                                await allotmentProvider.loadContext(aviary.activeAllotmentId!);
+                                await allotmentProvider.loadContext(provider.getAuth(), aviary.activeAllotmentId!);
                               } else {
                                 await allotmentProvider.cleanContext();
                               }

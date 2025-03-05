@@ -213,7 +213,10 @@ class DatabaseHelper {
           'current_age': request.currentAge,
           'started_at': request.startedAt,
           'ended_at': request.endedAt,
-        }
+          'current_death_percentage': request.currentDeathPercentage,
+          'current_weight': request.currentWeight,
+          'current_total_water_consume': request.currentTotalWaterConsume
+        },
       );
 
       await txn.update(
@@ -225,6 +228,94 @@ class DatabaseHelper {
         whereArgs: [request.aviaryId]
       );
     });
+  }
+
+  Future<void> updateAllotmentData(Allotment request) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.insert(
+        "tb_allotments", 
+        {
+          'id': request.id,
+          'aviary_id': request.aviaryId,
+          'is_active': request.isActive ? 1 : 0,
+          'number': request.number,
+          'total_amount': request.totalAmount,
+          'current_age': request.currentAge,
+          'started_at': request.startedAt,
+          'ended_at': request.endedAt,
+          'current_death_percentage': request.currentDeathPercentage,
+          'current_weight': request.currentWeight,
+          'current_total_water_consume': request.currentTotalWaterConsume
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace
+      );
+
+      for (Water h in request.waterHistory) {
+        await txn.insert(
+          "tb_water_history",
+          {
+            'id': h.id,
+            'allotment_id': h.allotmentId,
+            'age': h.age,
+            'previous_measure': h.previousMeasure,
+            'current_measure': h.currentMeasure,
+            'consumed_liters': h.consumedLiters,
+            'created_at': h.createdAt
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace
+        );
+      }
+
+      for (Mortality h in request.mortalityHistory) {
+        await txn.insert(
+          "tb_mortality_history",
+          {
+            'id': h.id,
+            'allotment_id': h.allotmentId,
+            'age': h.age,
+            'deaths': h.deaths,
+            'eliminations': h.eliminations,
+            'created_at': h.createdAt
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace
+        );
+      }
+
+      for (Weight h in request.weightHistory) {
+        await txn.insert(
+          "tb_weight_history",
+          {
+            'id': h.id,
+            'allotment_id': h.allotmentId,
+            'age': h.age,
+            'weight': h.weight,
+            'tare': h.tare,
+            'total_units': h.totalUnits,
+            'created_at': h.createdAt
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace
+        );
+
+        for (WeightBox hb in h.boxesWeights) {
+          await txn.insert(
+            "tb_box_weight_history",
+            {
+              'id': hb.id,
+              'weight_id': hb.weightId,
+              'number': hb.number,
+              'weight': hb.weight,
+              'units': hb.units
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace
+          );
+        }
+
+      }
+
+    });
+
   }
 
   Future<Account> getContext() async {
@@ -311,6 +402,15 @@ class DatabaseHelper {
       ''',
       [allotmentData['id']]
     );
+
+    final List<Mortality> mortalities = mortalityHistory.map((m) => Mortality(
+      id: m['id'],
+      allotmentId: m['allotment_id'],
+      age: m['age'],
+      deaths: m['deaths'],
+      eliminations: m['eliminations'],
+      createdAt: m['created_at']
+    )).toList();
     
     final List<Map<String, dynamic>> weightHistory = await db.rawQuery(
       '''
@@ -357,13 +457,29 @@ class DatabaseHelper {
       waterHistory: waterHistory
         .map((w) => Water.fromJson(w))
         .toList(),
-      mortalityHistory: mortalityHistory
-        .map((m) => Mortality.fromJson(m))
-        .toList(),
+      mortalityHistory: mortalities,
       weightHistory: weights
     );
 
     return allotment;
+  }
+
+  Future<void> registerMortality(Mortality request) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.insert(
+        "tb_mortality_history",
+        {
+          'id': request.id,
+          'allotment_id': request.allotmentId,
+          'age': request.age,
+          'deaths': request.deaths,
+          'eliminations': request.eliminations,
+          'created_at': request.createdAt
+        }
+      );
+    });
   }
 
   Future<bool> hasLocalData() async {

@@ -4,6 +4,7 @@ import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
+import 'package:demo_project/models/mortality.dart';
 import 'package:http/http.dart' as http;
 
 class ServerService {
@@ -68,9 +69,49 @@ class ServerService {
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> jsonReponse = jsonDecode(response.body);
-      return Allotment.toJson(jsonReponse);
+      return Allotment.fromJson(jsonReponse);
     } else {
       throw Exception("Failed to register Allotment");
+    }
+  }
+
+  Future<Mortality> registerMortality(Auth auth, String allotmentId, int deaths, int eliminations) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/account/allotment/deaths'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${auth.tokenType} ${auth.accessToken}'
+      },
+      body: jsonEncode({
+        'allotmentId': allotmentId,
+        'deaths': deaths,
+        'eliminations': eliminations
+      })
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return Mortality.fromJson(jsonResponse);
+    } else {
+      throw Exception("Failed to register a new mortality");
+    }
+  }
+
+  Future<Allotment> getAllotmentDetails(Auth auth, String allotmentId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/account/allotment/$allotmentId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${auth.tokenType} ${auth.accessToken}'
+      }
+    );
+
+    print("REQUEST RECEIVED");
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = await jsonDecode(response.body);
+      return Allotment.fromJson(jsonResponse);
+    } else {
+      throw Exception("Failed to fetch allotment details");
     }
   }
 }
