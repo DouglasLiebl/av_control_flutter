@@ -37,19 +37,19 @@ class Allotment {
     required this.weightHistory,
   });
 
-  factory Allotment.toJson(Map<String, dynamic> json) {
+  factory Allotment.fromJson(Map<String, dynamic> json) {
     return Allotment(
       id: json["id"],
       aviaryId: json["aviaryId"],
       isActive: json["isActive"],
-      number: json["number"],
-      totalAmount: json["totalAmount"],
-      currentAge: json["currentAge"],
+      number: json["number"].toInt(),
+      totalAmount: json["totalAmount"].toInt(),
+      currentAge: json["currentAge"].toInt(),
       startedAt: json["startedAt"],
       endedAt: json["endedAt"] ?? '',
       currentDeathPercentage: (json["currentDeathPercentage"] as num).toDouble(),
       currentWeight: (json["currentWeight"] as num).toDouble(),
-      currentTotalWaterConsume: json["currentTotalWaterConsume"] as int,
+      currentTotalWaterConsume: json["currentTotalWaterConsume"].toInt(),
       waterHistory: (json["waterHistory"] as List)
         .map((history) => Water.fromJson(history))
         .toList(),

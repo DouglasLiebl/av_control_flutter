@@ -407,8 +407,8 @@ class DatabaseHelper {
       id: m['id'],
       allotmentId: m['allotment_id'],
       age: m['age'],
-      deaths: m['deaths'],
-      eliminations: m['eliminations'],
+      deaths: m['deaths'].toInt(),
+      eliminations: m['eliminations'].toInt(),
       createdAt: m['created_at']
     )).toList();
     
@@ -451,9 +451,9 @@ class DatabaseHelper {
       currentAge: allotmentData['current_age'] ?? 0,
       startedAt: allotmentData['started_at'] ?? '',
       endedAt: allotmentData['ended_at'] ?? '',
-      currentDeathPercentage: allotmentData['current_death_percentage'] ?? 0,
-      currentWeight: allotmentData['current_weight'] ?? 0,
-      currentTotalWaterConsume: allotmentData['current_total_water_consume'] ?? 0,
+      currentDeathPercentage: allotmentData['current_death_percentage'] ?? 0.0,
+      currentWeight: (allotmentData['current_weight'] ?? 0.0).toDouble(),
+      currentTotalWaterConsume: (allotmentData['current_total_water_consume'] ?? 0).toInt(),
       waterHistory: waterHistory
         .map((w) => Water.fromJson(w))
         .toList(),

@@ -482,7 +482,7 @@ class GeneralDetails extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
-                                  "${allotment.getAllotment.currentDeathPercentage.toString()} Kg",
+                                  "${allotment.getAllotment.currentWeight.toString()} Kg",
                                   style: TextStyle(
                                     color: DefaultColors.valueGray(),
                                     fontSize: 18,
@@ -530,7 +530,7 @@ class GeneralDetails extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              "${allotment.getAllotment.currentDeathPercentage.toString()} L",
+                              "${allotment.getAllotment.currentTotalWaterConsume.toString()} L",
                               style: TextStyle(
                                 color: DefaultColors.valueGray(),
                                 fontSize: 18,

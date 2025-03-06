@@ -33,15 +33,14 @@ class AllotmentProvider with ChangeNotifier {
 
   Future<void> loadContext(Auth auth, String allotmentId) async {
     bool status = await InternetConnection().hasInternetAccess;
-    print("INTERNET STATUS $status");
+    
     if (status) {
-      print("STARTING SERVER REQUEST");
       final allotmentData = await _serverService.getAllotmentDetails(auth, allotmentId);
-      _allotment = allotmentData; 
+      _allotment = allotmentData;
+      await dbHelper.updateAllotmentData(allotmentData);
       notifyListeners();
     } else {
-      print("TRYING TO GET LOCAL DATA");
-       final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
+      final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
       _allotment = allotmentData; 
       notifyListeners();
     }
