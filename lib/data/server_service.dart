@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
-import 'package:demo_project/models/mortality.dart';
 import 'package:http/http.dart' as http;
 
 class ServerService {
@@ -75,7 +75,7 @@ class ServerService {
     }
   }
 
-  Future<Mortality> registerMortality(Auth auth, String allotmentId, int deaths, int eliminations) async {
+  Future<MortalityDto> registerMortality(Auth auth, String allotmentId, int deaths, int eliminations) async {
     final response = await http.post(
       Uri.parse('$baseUrl/account/allotment/deaths'),
       headers: {
@@ -91,7 +91,7 @@ class ServerService {
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      return Mortality.fromJson(jsonResponse);
+      return MortalityDto.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to register a new mortality");
     }
@@ -106,10 +106,8 @@ class ServerService {
       }
     );
 
-    print("REQUEST RECEIVED");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = await jsonDecode(response.body);
-      print(jsonResponse);
       return Allotment.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to fetch allotment details");

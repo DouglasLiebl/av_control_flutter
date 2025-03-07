@@ -1,11 +1,11 @@
-import 'package:demo_project/models/mortality.dart';
+import 'package:demo_project/models/water.dart';
 import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
 
-class TableRows {
+class WaterTableRows {
 
-  static Card getMortalityTopRow() {
+  static Card getWaterTopRow() {
     return Card(
     color: Colors.white,
     elevation: 0,
@@ -26,7 +26,7 @@ class TableRows {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Registros de Mortalidade",
+            "Registros de Cosumo de Água",
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w500,
@@ -39,7 +39,7 @@ class TableRows {
   );
   }
 
-  static Card getMortalityMiddleRow(Mortality history) {
+  static Card getWaterMiddleRow(Water history) {
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -93,7 +93,7 @@ class TableRows {
                           ),
                         ),
                         Text(
-                          "Mortes: ${history.deaths}",
+                          "Mortes: ${history.age}",
                           style: TextStyle(
                             color: DefaultColors.textGray(),
                             fontSize: 14,
@@ -101,7 +101,7 @@ class TableRows {
                           ),
                         ),
                         Text(
-                          "Eliminações: ${history.eliminations}",
+                          "Eliminações: ${history.age}",
                           style: TextStyle(
                             color: DefaultColors.textGray(),
                             fontSize: 14,
@@ -122,7 +122,7 @@ class TableRows {
     );
   }
 
-  static Card getMortalityBottomRow(Mortality history) {
+  static Card getWaterBottomRow(Water history) {
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -180,7 +180,7 @@ class TableRows {
                             ),
                           ),
                           Text(
-                            "Mortes: ${history.deaths}",
+                            "Mortes: ${history.age}",
                             style: TextStyle(
                               color: DefaultColors.textGray(),
                               fontSize: 14,
@@ -188,7 +188,7 @@ class TableRows {
                             ),
                           ),
                           Text(
-                            "Eliminações: ${history.eliminations}",
+                            "Eliminações: ${history.age}",
                             style: TextStyle(
                               color: DefaultColors.textGray(),
                               fontSize: 14,
@@ -201,6 +201,151 @@ class TableRows {
                     ],
                   ),
               ),
+            ],
+          )
+        ) 
+      )
+    );
+  }
+
+  static Card getWaterStartPointRow(Water history) {
+    return Card(
+      color: Colors.white,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: BorderSide.none, // No border for the whole shape
+        borderRadius: BorderRadius.zero,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1,
+            ),
+            right: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Data: ${DateFormater.formatDateString(history.createdAt)}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "Idade: ${history.age}",
+                          style: TextStyle(
+                            color: DefaultColors.textGray(),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "Mortes: ${history.age}",
+                          style: TextStyle(
+                            color: DefaultColors.textGray(),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          "Eliminações: ${history.age}",
+                          style: TextStyle(
+                            color: DefaultColors.textGray(),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.edit_note_outlined, size: 28.0, color: DefaultColors.borderGray(),)
+                  ],
+                ),
+
+              )
+            ],
+          )
+        ),
+      ),
+    );
+  }
+
+  static Card getWaterBottomStartPointRow() {
+    return Card(
+      color: Colors.white,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: BorderSide.none, // No border for the whole shape
+        borderRadius: BorderRadius.zero,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+          border: Border(
+            left: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1,
+            ),
+            right: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1,
+            ),
+            bottom: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Icon(Icons.start_outlined, color: DefaultColors.textGray(), size: 18,),
+              SizedBox(width: 12),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Ponto de Partida",
+                      style: TextStyle(
+                        color: DefaultColors.textGray(),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14
+                      ),      
+                    ),
+                    Text(
+                      "7233",
+                      style: TextStyle(
+                        color: DefaultColors.valueGray(),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           )
         ) 

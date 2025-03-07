@@ -4,6 +4,7 @@ import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/details_views/empty_allotment.dart';
 import 'package:demo_project/views/details_views/general_details.dart';
 import 'package:demo_project/views/details_views/mortality_details.dart';
+import 'package:demo_project/views/details_views/water_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,7 @@ class _DetailsPage extends State<DetailsPage> {
     _pages = <Widget>[
       GeneralDetails(aviary: widget.aviary),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
-      MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
+      WaterDetails(aviary: widget.aviary, onRefresh: refreshPage),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage)
     ];
   }

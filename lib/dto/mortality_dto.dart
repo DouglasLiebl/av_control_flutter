@@ -1,41 +1,31 @@
-import 'package:demo_project/dto/mortality_dto.dart';
-
-class Mortality {
+class MortalityDto {
   String id;
   String allotmentId;
   int age;
   int deaths;
   int eliminations;
+  double newDeathPercentage;
   String createdAt;
 
-  Mortality({
+  MortalityDto({
     required this.id,
     required this.allotmentId,
     required this.age,
     required this.deaths,
     required this.eliminations,
+    required this.newDeathPercentage,
     required this.createdAt
   });
 
-  factory Mortality.fromJson(Map<String, dynamic> json) {
-    return Mortality(
+  factory MortalityDto.fromJson(Map<String, dynamic> json) {
+    return MortalityDto(
       id: json["id"],
       allotmentId: json["allotmentId"],
       age: json["age"],
       deaths: json["deaths"],
       eliminations: json["eliminations"],
+      newDeathPercentage: json["newDeathPercentage"],
       createdAt: json["createdAt"]
-    );
-  }
-
-  factory Mortality.fromDTO(MortalityDto source) {
-    return Mortality(
-      id: source.id,
-      allotmentId: source.allotmentId,
-      age: source.age,
-      deaths: source.deaths,
-      eliminations: source.eliminations,
-      createdAt: source.createdAt
     );
   }
 

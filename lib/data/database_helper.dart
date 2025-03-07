@@ -1,3 +1,4 @@
+import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
@@ -62,6 +63,7 @@ class DatabaseHelper {
         alias VARCHAR(255),
         account_id VARCHAR(300),
         active_allotment_id VARCHAR(300),
+        current_water_multiplier INTEGER,
         FOREIGN KEY (account_id) REFERENCES tb_account(id) ON DELETE CASCADE
       );
     ''');
@@ -175,7 +177,8 @@ class DatabaseHelper {
           'name': a.name,
           'alias': a.alias,
           'account_id': request.id,
-          'active_allotment_id': a.activeAllotmentId
+          'active_allotment_id': a.activeAllotmentId,
+          'current_water_multiplier': a.currentWaterMultiplier
         }
       ); 
     }
@@ -191,7 +194,8 @@ class DatabaseHelper {
           'name': request.name,
           'alias': request.alias,
           'account_id': request.accountId,
-          'active_allotment_id': null
+          'active_allotment_id': null,
+          'current_water_multiplier': null
         },
         conflictAlgorithm: ConflictAlgorithm.replace
       );
@@ -464,7 +468,7 @@ class DatabaseHelper {
     return allotment;
   }
 
-  Future<void> registerMortality(Mortality request) async {
+  Future<void> registerMortality(MortalityDto request) async {
     final db = await database;
 
     await db.transaction((txn) async {
@@ -479,6 +483,16 @@ class DatabaseHelper {
           'created_at': request.createdAt
         }
       );
+
+      await txn.update(
+        "tb_allotments",
+        {
+          "current_death_percentage": request.newDeathPercentage
+        },
+        where: "id = ?",
+        whereArgs: [request.allotmentId]
+      );
+      
     });
   }
 

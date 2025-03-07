@@ -68,7 +68,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Novo Registro",
+                                "Novo Registro de Mortalidade",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -77,7 +77,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                 textAlign: TextAlign.left,
                               ),
                             ),
-                            SizedBox(height: 6),
+                            SizedBox(height: 12),
                             Row(
                               children: [
                                 Expanded(
@@ -115,6 +115,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                               color: const Color.fromARGB(255, 194, 189, 189)
                                             )
                                           ),
+                                          prefixIcon: Icon(Icons.monitor_heart_outlined, size: 28, color: DefaultColors.subTitleGray())
                                         ),
                                       ),
                                     ],
@@ -156,6 +157,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                               color: const Color.fromARGB(255, 194, 189, 189)
                                             )
                                           ),
+                                          prefixIcon: Icon(Icons.sentiment_very_dissatisfied_outlined, size: 28, color: DefaultColors.subTitleGray())
                                         ),
                                       ),
                                     ],

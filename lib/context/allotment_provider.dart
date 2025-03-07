@@ -1,8 +1,10 @@
 import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
+import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
+import 'package:demo_project/models/water.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -88,11 +90,19 @@ class AllotmentProvider with ChangeNotifier {
     return _allotment.mortalityHistory;
   }
 
+  List<Water> getWaterHistory() {
+    return _allotment.waterHistory;
+  }
+
   Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {
-    Mortality response = await _serverService
+    MortalityDto response = await _serverService
       .registerMortality(auth, _allotment.id, deaths, eliminations);
+
+    Mortality data = Mortality.fromDTO(response);
+
     await dbHelper.registerMortality(response);
-    _allotment.mortalityHistory.add(response);
+    _allotment.mortalityHistory.add(data);
+    _allotment.currentDeathPercentage = response.newDeathPercentage;
     notifyListeners();
   }
 }
