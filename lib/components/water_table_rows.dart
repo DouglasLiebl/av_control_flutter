@@ -208,7 +208,7 @@ class WaterTableRows {
     );
   }
 
-  static Card getWaterStartPointRow(Water history) {
+  static Card getWaterStartPointRow() {
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -220,6 +220,10 @@ class WaterTableRows {
       child: Container(
         decoration: BoxDecoration(
           border: Border(
+            bottom: BorderSide(
+              color: DefaultColors.borderGray(),
+              width: 1
+            ),
             left: BorderSide(
               color: DefaultColors.borderGray(),
               width: 1,
@@ -234,51 +238,30 @@ class WaterTableRows {
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
+              Icon(Icons.start_outlined, color: DefaultColors.textGray(), size: 18,),
+              SizedBox(width: 12),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Data: ${DateFormater.formatDateString(history.createdAt)}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          "Idade: ${history.age}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          "Mortes: ${history.age}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          "Eliminações: ${history.age}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "Ponto de Partida",
+                      style: TextStyle(
+                        color: DefaultColors.textGray(),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14
+                      ),      
                     ),
-                    Icon(Icons.edit_note_outlined, size: 28.0, color: DefaultColors.borderGray(),)
+                    Text(
+                      "7233",
+                      style: TextStyle(
+                        color: DefaultColors.valueGray(),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
-
               )
             ],
           )

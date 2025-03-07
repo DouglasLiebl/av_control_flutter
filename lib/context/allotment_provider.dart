@@ -1,6 +1,7 @@
 import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
+import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
@@ -104,5 +105,17 @@ class AllotmentProvider with ChangeNotifier {
     _allotment.mortalityHistory.add(data);
     _allotment.currentDeathPercentage = response.newDeathPercentage;
     notifyListeners();
+  }
+
+  Future<void> updateWaterHistory(Auth auth, String aviaryId, int multiplier, int measure) async {
+    WaterDto response = await _serverService
+      .registerWaterHistory(auth, multiplier, _allotment.id, measure);
+
+    Water data = Water.fromDTO(response);
+
+    await dbHelper.registerWaterHistory(response, aviaryId);
+    _allotment.waterHistory.add(data);
+    _allotment.currentTotalWaterConsume = response.newTotalConsumed;
+    notifyListeners(); 
   }
 }

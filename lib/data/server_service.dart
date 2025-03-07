@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:demo_project/dto/mortality_dto.dart';
+import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
@@ -111,6 +112,28 @@ class ServerService {
       return Allotment.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to fetch allotment details");
+    }
+  }
+
+  Future<WaterDto> registerWaterHistory(Auth auth, int? multiplier, String allotmentId, int measure) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/account/allotment/water'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '${auth.tokenType} ${auth.accessToken}'
+      },
+      body: jsonEncode({
+        multiplier != null ? 'multiplier': multiplier : '', 
+        'allotmentId': allotmentId,
+        'currentMeasure': measure
+      })
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return WaterDto.fromJson(jsonResponse);
+    } else {
+      throw Exception("Failed to register water History");
     }
   }
 }

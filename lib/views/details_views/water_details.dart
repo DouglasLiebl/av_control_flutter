@@ -60,10 +60,15 @@ class _MortalityDetailsState extends State<WaterDetails> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:1 ,
+                itemCount: 2 ,
                 itemBuilder: (context, index) {
 
-                  return WaterTableRows.getWaterBottomStartPointRow();
+                  if (index == 0) {
+                    return WaterTableRows.getWaterStartPointRow();
+                  } else if (index == 1) {
+                    return WaterTableRows.getWaterBottomStartPointRow();
+                  }
+                  return null;
                 }
               )
             ],

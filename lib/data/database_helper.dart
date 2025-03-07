@@ -1,4 +1,5 @@
 import 'package:demo_project/dto/mortality_dto.dart';
+import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
@@ -493,6 +494,44 @@ class DatabaseHelper {
         whereArgs: [request.allotmentId]
       );
       
+    });
+  }
+
+  Future<void> registerWaterHistory(WaterDto request, String aviaryId) async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.insert(
+        "tb_water_history",
+        {
+          "id": request.id,
+          "allotment_id": request.allotmentId,
+          "age": request.age,
+          "previous_measure": request.previousMeasure,
+          "current_measure": request.currentMeasure,
+          "consumed_liters": request.consumedLiters,
+          "created_at": request.createdAt
+        }
+      );
+
+      await txn.update(
+        "tb_aviaries", 
+        {
+          "current_water_multiplier": request.multiplier
+        },
+        where: "id = ?",
+        whereArgs: [aviaryId]
+      );
+
+      await txn.update(
+        "tb_allotments",
+        {
+          "current_total_water_consume": request.newTotalConsumed
+        },
+        where: "id = ?",
+        whereArgs: [request.allotmentId]
+      );
+
     });
   }
 
