@@ -93,7 +93,7 @@ class WaterTableRows {
                           ),
                         ),
                         Text(
-                          "Mortes: ${history.age}",
+                          "Medida: ${history.currentMeasure}",
                           style: TextStyle(
                             color: DefaultColors.textGray(),
                             fontSize: 14,
@@ -101,7 +101,7 @@ class WaterTableRows {
                           ),
                         ),
                         Text(
-                          "Eliminações: ${history.age}",
+                          "Litros Consumidos: ${history.consumedLiters} L",
                           style: TextStyle(
                             color: DefaultColors.textGray(),
                             fontSize: 14,
@@ -180,7 +180,7 @@ class WaterTableRows {
                             ),
                           ),
                           Text(
-                            "Mortes: ${history.age}",
+                            "Medida: ${history.currentMeasure}",
                             style: TextStyle(
                               color: DefaultColors.textGray(),
                               fontSize: 14,
@@ -188,7 +188,7 @@ class WaterTableRows {
                             ),
                           ),
                           Text(
-                            "Eliminações: ${history.age}",
+                            "Litros Consumidos: ${history.consumedLiters} L",
                             style: TextStyle(
                               color: DefaultColors.textGray(),
                               fontSize: 14,
@@ -208,7 +208,7 @@ class WaterTableRows {
     );
   }
 
-  static Card getWaterStartPointRow() {
+  static Card getWaterStartPointRow(Water history) {
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -253,7 +253,7 @@ class WaterTableRows {
                       ),      
                     ),
                     Text(
-                      "7233",
+                      "${history.currentMeasure}",
                       style: TextStyle(
                         color: DefaultColors.valueGray(),
                         fontSize: 14,
@@ -270,7 +270,7 @@ class WaterTableRows {
     );
   }
 
-  static Card getWaterBottomStartPointRow() {
+  static Card getWaterBottomStartPointRow(Water history) {
     return Card(
       color: Colors.white,
       elevation: 0,
@@ -319,7 +319,7 @@ class WaterTableRows {
                       ),      
                     ),
                     Text(
-                      "7233",
+                      "${history.currentMeasure}",
                       style: TextStyle(
                         color: DefaultColors.valueGray(),
                         fontSize: 14,

@@ -368,7 +368,8 @@ class DatabaseHelper {
           name: a['name'],
           alias: a['alias'],
           accountId: a['account_id'],
-          activeAllotmentId: a['active_allotment_id']
+          activeAllotmentId: a['active_allotment_id'],
+          currentWaterMultiplier: a['current_water_multiplier']
         ))
         .toList(),
     );

@@ -1,10 +1,8 @@
-import 'package:demo_project/components/table_rows.dart';
 import 'package:demo_project/components/water_register_cards.dart';
 import 'package:demo_project/components/water_table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/models/aviary.dart';
-import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +34,29 @@ class _MortalityDetailsState extends State<WaterDetails> {
     final allotmentProvider = context.read<AllotmentProvider>();
     final provider = context.read<DataProvider>();
 
+    void registerWaterMeasure() async {
+
+      final measure = _measureController.text.isEmpty ? 
+        0 : int.parse(_measureController.text);
+
+      final multiplier = _multiplierController.text.isEmpty ?
+        0 : int.parse(_multiplierController.text);
+
+      await allotmentProvider.updateWaterHistory(
+        provider.getAuth(), 
+        widget.aviary.id, 
+        multiplier, 
+        measure
+      );
+
+      provider.reloadContext();
+
+      _measureController.clear();
+      _multiplierController.clear();
+
+      _refreshData();
+    }
+
     return SafeArea(
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
@@ -45,14 +66,16 @@ class _MortalityDetailsState extends State<WaterDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              widget.aviary.currentWaterMultiplier == null
+              widget.aviary.currentWaterMultiplier != null
               ? WaterRegisterCards.registerCard(
                 _measureController,
-                true
+                allotmentProvider.getWaterHistory().isEmpty,
+                registerWaterMeasure
               )
               : WaterRegisterCards.firstRegisterCard(
                 _multiplierController,
-                _measureController
+                _measureController,
+                registerWaterMeasure
               ),
               SizedBox(height: 16),
               // Registers
@@ -60,15 +83,24 @@ class _MortalityDetailsState extends State<WaterDetails> {
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 2 ,
+                itemCount: allotmentProvider.getWaterHistory().length,
                 itemBuilder: (context, index) {
 
-                  if (index == 0) {
-                    return WaterTableRows.getWaterStartPointRow();
-                  } else if (index == 1) {
-                    return WaterTableRows.getWaterBottomStartPointRow();
+                  final history = allotmentProvider.getWaterHistory()[index];
+
+
+                  if (index == 0 && allotmentProvider.getWaterHistory().length == 1) {
+                    return WaterTableRows.getWaterBottomStartPointRow(history);
+                  } else if (index == 0) {
+                    return WaterTableRows.getWaterStartPointRow(history);
                   }
-                  return null;
+                  
+                  if (!((allotmentProvider.getWaterHistory().length - 1) == index)) {
+                    return WaterTableRows.getWaterMiddleRow(history);
+                  } else {
+                    return WaterTableRows.getWaterBottomRow(history);
+                  }
+
                 }
               )
             ],

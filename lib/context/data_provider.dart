@@ -86,4 +86,8 @@ class DataProvider with ChangeNotifier {
   Auth getAuth() {
     return _account.authData;
   }
+
+  Future<void> reloadContext() async {
+    _loadContext();
+  }
 }

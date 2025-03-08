@@ -35,7 +35,7 @@ class ServerService {
 
   Future<Aviary> registerAviary(Auth auth, String name, String alias) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/account/aviary'),
+      Uri.parse('$baseUrl/aviary/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${auth.tokenType} ${auth.accessToken}'
@@ -57,7 +57,7 @@ class ServerService {
 
   Future<Allotment> startAllotment(Auth auth, int totalAmount, String aviaryId) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/account/allotment'),
+      Uri.parse('$baseUrl/allotment/'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${auth.tokenType} ${auth.accessToken}'
@@ -78,7 +78,7 @@ class ServerService {
 
   Future<MortalityDto> registerMortality(Auth auth, String allotmentId, int deaths, int eliminations) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/account/allotment/deaths'),
+      Uri.parse('$baseUrl/allotment/deaths'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${auth.tokenType} ${auth.accessToken}'
@@ -100,7 +100,7 @@ class ServerService {
 
   Future<Allotment> getAllotmentDetails(Auth auth, String allotmentId) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/account/allotment/$allotmentId'),
+      Uri.parse('$baseUrl/allotment/$allotmentId'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${auth.tokenType} ${auth.accessToken}'
@@ -117,19 +117,19 @@ class ServerService {
 
   Future<WaterDto> registerWaterHistory(Auth auth, int? multiplier, String allotmentId, int measure) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/account/allotment/water'),
+      Uri.parse('$baseUrl/allotment/water'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': '${auth.tokenType} ${auth.accessToken}'
       },
       body: jsonEncode({
-        multiplier != null ? 'multiplier': multiplier : '', 
+        'multiplier': multiplier,
         'allotmentId': allotmentId,
         'currentMeasure': measure
       })
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       return WaterDto.fromJson(jsonResponse);
     } else {

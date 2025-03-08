@@ -5,7 +5,8 @@ class WaterRegisterCards {
 
   static Card firstRegisterCard(
     TextEditingController multiplierController, 
-    TextEditingController measureController
+    TextEditingController measureController,
+    Function onPress
   ) {
     return Card(
       color: Colors.white,
@@ -162,7 +163,7 @@ class WaterRegisterCards {
                       ),
                     ),
                     onPressed: () async {
-                      
+                      await onPress();
                     }, 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +191,8 @@ class WaterRegisterCards {
 
   static Card registerCard(
     TextEditingController measureController,
-    bool isFistAllotmentRegister
+    bool isFistAllotmentRegister,
+    Function onPress
   ) {
     return Card(
       color: Colors.white,
@@ -305,7 +307,7 @@ class WaterRegisterCards {
                       ),
                     ),
                     onPressed: () async {
-                      
+                      await onPress();
                     }, 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
