@@ -5,21 +5,21 @@ import 'package:demo_project/context/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WaterDetails extends StatefulWidget {
+class WeightsDetails extends StatefulWidget {
   final String id;
   final VoidCallback onRefresh;
 
-  const WaterDetails({
+  const WeightsDetails({
     super.key, 
     required this.id,
     required this.onRefresh,
   });
 
   @override
-  State<WaterDetails> createState() => _WaterDetailsState();
+  State<WeightsDetails> createState() => _WeightDetailsState();
 }
 
-class _WaterDetailsState extends State<WaterDetails> {
+class _WeightDetailsState extends State<WeightsDetails> {
   final _multiplierController = TextEditingController();
   final _measureController = TextEditingController();
 

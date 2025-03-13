@@ -48,102 +48,102 @@ class HomePage extends StatelessWidget {
             ]
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: DefaultColors.borderGray(),
-                                width: 1
-                              )
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      "Ativos",
-                                      style: TextStyle(
-                                        color: DefaultColors.subTitleGray(),
-                                        fontSize: 12
-                                      )
-                                    ),
-                                    Text(
-                                        "${provider.getAccount.aviaries
-                                          .where((a) => a.activeAllotmentId != null)
-                                          .length
-                                        }",
-                                      style: TextStyle(
-                                        color: Color(0xFF38a169),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20
-                                      ),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: DefaultColors.borderGray(),
+                              width: 1
+                            )
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    "Ativos",
+                                    style: TextStyle(
+                                      color: DefaultColors.subTitleGray(),
+                                      fontSize: 12
                                     )
-                                  ],
-                                ),
-                              )
-                            ),
+                                  ),
+                                  Text(
+                                      "${provider.getAccount.aviaries
+                                        .where((a) => a.activeAllotmentId != null)
+                                        .length
+                                      }",
+                                    style: TextStyle(
+                                      color: Color(0xFF38a169),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
                           ),
                         ),
-                        SizedBox(width: 10), // Spacing between containers
-                        Expanded(
-                          child: Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: DefaultColors.borderGray(),
-                                width: 1
-                              )
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    Text(
-                                      "Total",
-                                      style: TextStyle(
-                                        color: DefaultColors.subTitleGray(),
-                                        fontSize: 12
-                                      )
-                                    ),
-                                    Text(
-                                      "${provider.getAccount.aviaries.length}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20
-                                      ),
+                      ),
+                      SizedBox(width: 10), // Spacing between containers
+                      Expanded(
+                        child: Container(
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: DefaultColors.borderGray(),
+                              width: 1
+                            )
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    "Total",
+                                    style: TextStyle(
+                                      color: DefaultColors.subTitleGray(),
+                                      fontSize: 12
                                     )
-                                  ],
-                                ),
-                              )
-                            ),
+                                  ),
+                                  Text(
+                                    "${provider.getAccount.aviaries.length}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
                           ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    ListView.builder(
-                      shrinkWrap: true,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      physics: AlwaysScrollableScrollPhysics(),
                       itemCount: provider.getAccount.aviaries.length,
                       itemBuilder: (context, index) {
                         final aviary = provider.getAccount.aviaries[index];
@@ -220,11 +220,12 @@ class HomePage extends StatelessWidget {
                           )
                         ); 
                       },
-                    )
-                  ],
-                )
-              ),
-            )
+                    ) 
+                  )
+                ],
+              )
+            ),
+    
           )
         );
       },

@@ -88,6 +88,10 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<void> reloadContext() async {
-    _loadContext();
+    await _loadContext();
+  }
+
+  Aviary getAviaryById(String id) {
+    return _account.aviaries.firstWhere((aviary) => aviary.id == id);
   }
 }

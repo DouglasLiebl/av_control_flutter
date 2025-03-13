@@ -35,7 +35,7 @@ class _DetailsPage extends State<DetailsPage> {
     _pages = <Widget>[
       GeneralDetails(aviary: widget.aviary),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
-      WaterDetails(aviary: widget.aviary, onRefresh: refreshPage),
+      WaterDetails(id: widget.aviary.id, onRefresh: refreshPage),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage)
     ];
   }
