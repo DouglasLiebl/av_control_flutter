@@ -5,6 +5,7 @@ import 'package:demo_project/views/details_views/empty_allotment.dart';
 import 'package:demo_project/views/details_views/general_details.dart';
 import 'package:demo_project/views/details_views/mortality_details.dart';
 import 'package:demo_project/views/details_views/water_details.dart';
+import 'package:demo_project/views/details_views/weight_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,7 @@ class _DetailsPage extends State<DetailsPage> {
       GeneralDetails(aviary: widget.aviary),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
       WaterDetails(id: widget.aviary.id, onRefresh: refreshPage),
+      WeightDetails(id: widget.aviary.id, onRefresh: refreshPage),
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage)
     ];
   }
@@ -58,7 +60,7 @@ class _DetailsPage extends State<DetailsPage> {
       body: allotmentProvider.getAllotment.id == "" 
       ? EmptyAllotment(
           aviary: widget.aviary,
-          onRefresh: refreshPage,  // Pass the refresh callback
+          onRefresh: refreshPage,
         ) 
       : _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -74,6 +76,10 @@ class _DetailsPage extends State<DetailsPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.water_outlined),
             label: "Água"
+          ),
+           BottomNavigationBarItem(
+            icon: Icon(Icons.balance_outlined),
+            label: "Pesos"
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.food_bank_outlined),

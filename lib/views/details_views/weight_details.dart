@@ -1,28 +1,26 @@
-import 'package:demo_project/components/water_register_cards.dart';
 import 'package:demo_project/components/water_table_rows.dart';
+import 'package:demo_project/components/weight_register_cards.dart';
 import 'package:demo_project/context/allotment_provider.dart';
-import 'package:demo_project/context/data_provider.dart';
+import 'package:demo_project/views/details_views/weight_register.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WeightsDetails extends StatefulWidget {
+class WeightDetails extends StatefulWidget {
   final String id;
   final VoidCallback onRefresh;
 
-  const WeightsDetails({
+  const WeightDetails({
     super.key, 
     required this.id,
     required this.onRefresh,
   });
 
   @override
-  State<WeightsDetails> createState() => _WeightDetailsState();
+  State<WeightDetails> createState() => _WeightDetailsState();
 }
 
-class _WeightDetailsState extends State<WeightsDetails> {
-  final _multiplierController = TextEditingController();
-  final _measureController = TextEditingController();
-
+class _WeightDetailsState extends State<WeightDetails> {
+  
   void _refreshData() {
     setState(() {});
     widget.onRefresh();
@@ -31,32 +29,6 @@ class _WeightDetailsState extends State<WeightsDetails> {
   @override
   Widget build(BuildContext context) {
     final allotmentProvider = context.read<AllotmentProvider>();
-    final provider = context.read<DataProvider>();
-
-    final aviary = provider.getAviaryById(widget.id);
-
-    void registerWaterMeasure() async {
-
-      final measure = _measureController.text.isEmpty ? 
-        0 : int.parse(_measureController.text);
-
-      final multiplier = _multiplierController.text.isEmpty ?
-        0 : int.parse(_multiplierController.text);
-
-      await allotmentProvider.updateWaterHistory(
-        provider.getAuth(), 
-        widget.id,
-        multiplier, 
-        measure
-      );
-
-      await provider.reloadContext();
-
-      _measureController.clear();
-      _multiplierController.clear();
-
-      _refreshData();
-    }
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -67,24 +39,19 @@ class _WeightDetailsState extends State<WeightsDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              aviary.currentWaterMultiplier != null
-              ? WaterRegisterCards.registerCard(
-                _measureController,
-                allotmentProvider.getWaterHistory().isEmpty,
-                registerWaterMeasure
-              )
-              : WaterRegisterCards.firstRegisterCard(
-                _multiplierController,
-                _measureController,
-                registerWaterMeasure
-              ),
+              WeightRegisterCards.startRegister(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => WeightRegister(id: widget.id, onRefresh: _refreshData))
+                );
+              }),
               SizedBox(height: 16),
               // Registers
               WaterTableRows.getWaterTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: allotmentProvider.getWaterHistory().length,
+                itemCount: allotmentProvider.getWeightHistory().length,
                 itemBuilder: (context, index) {
 
                   final history = allotmentProvider.getWaterHistory()[index];

@@ -1,6 +1,6 @@
 class WeightBox {
-  String id;
-  String weightId;
+  String? id;
+  String? weightId;
   int number;
   double weight;
   int units;

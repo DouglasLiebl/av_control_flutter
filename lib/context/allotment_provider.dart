@@ -6,6 +6,7 @@ import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
+import 'package:demo_project/models/weight.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -93,6 +94,10 @@ class AllotmentProvider with ChangeNotifier {
 
   List<Water> getWaterHistory() {
     return _allotment.waterHistory;
+  }
+
+  List<Weight> getWeightHistory() {
+    return _allotment.weightHistory;
   }
 
   Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {

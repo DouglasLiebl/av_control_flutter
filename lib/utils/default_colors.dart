@@ -53,4 +53,8 @@ class DefaultColors {
   static Color valueGray() {
     return Color(0xFF1a202c);
   }
+
+  static Color iconAmber() {
+    return Color(0xFFfbbf24);
+  }
 }

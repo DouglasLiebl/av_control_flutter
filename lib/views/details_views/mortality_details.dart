@@ -224,7 +224,8 @@ class _MortalityDetailsState extends State<MortalityDetails> {
               ),
               SizedBox(height: 16),
               // Registers
-              TableRows.getMortalityTopRow(),
+              if (allotmentProvider.getMortalityHistory().isNotEmpty) 
+                TableRows.getMortalityTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
