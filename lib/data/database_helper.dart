@@ -446,7 +446,7 @@ class DatabaseHelper {
         boxesWeights: boxes.map((b) => WeightBox.fromJson(b)).toList()
       );
     }).toList());
-    
+
 
     final allotment = Allotment(
       id: allotmentData['id'] ?? '',
@@ -528,6 +528,48 @@ class DatabaseHelper {
         "tb_allotments",
         {
           "current_total_water_consume": request.newTotalConsumed
+        },
+        where: "id = ?",
+        whereArgs: [request.allotmentId]
+      );
+
+    });
+  }
+
+  Future<void> registerWeight(Weight request) async {
+    final db = await database;
+
+    await db.transaction((tx) async {
+      tx.insert(
+        "tb_weight_history", 
+        {
+          "id": request.id,
+          "allotment_id": request.allotmentId,
+          "age": request.age,
+          "weight": request.weight,
+          "tare": request.tare,
+          "total_units": request.totalUnits,
+          "created_at": request.createdAt
+        }
+      );
+
+      for (WeightBox w in request.boxesWeights) {
+        tx.insert(
+          "tb_box_weight_history",
+          {
+            "id": w.id,
+            "weight_id": w.weightId,
+            "number": w.number,
+            "weight": w.weight,
+            "units": w.units
+          }
+        );
+      }
+
+      await tx.update(
+        "tb_allotments",
+        {
+          "current_weight": request.weight
         },
         where: "id = ?",
         whereArgs: [request.allotmentId]

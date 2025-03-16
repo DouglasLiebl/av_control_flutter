@@ -6,6 +6,8 @@ import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
+import 'package:demo_project/models/weight.dart';
+import 'package:demo_project/models/weight_box.dart';
 import 'package:http/http.dart' as http;
 
 class ServerService {
@@ -134,6 +136,35 @@ class ServerService {
       return WaterDto.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to register water History");
+    }
+  }
+
+  Future<Weight> registerWeight(
+    Auth auth, 
+    String allotmentId,
+    int totalUnits,
+    double tare,
+    List<WeightBox> weights
+  ) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/allotment/weight"),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "${auth.tokenType} ${auth.accessToken}"
+      },
+      body: jsonEncode({
+        "allotmentId": allotmentId,
+        "totalUnits": totalUnits,
+        "tare": tare,
+        "weights": weights.map((w) => WeightBox.toJson(w)).toList()
+      })
+    );
+
+    if (response.statusCode == 201) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return Weight.fromJson(jsonResponse);
+    } else {
+      throw Exception("Failed to register Weight");
     }
   }
 }

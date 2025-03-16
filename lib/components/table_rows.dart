@@ -7,36 +7,36 @@ class TableRows {
 
   static Card getMortalityTopRow() {
     return Card(
-    color: Colors.white,
-    elevation: 0,
-    margin: EdgeInsets.zero,
-    shape: RoundedRectangleBorder(
-      side: BorderSide(
-        color: DefaultColors.borderGray(),
-        width: 1,
+      color: Colors.white,
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: DefaultColors.borderGray(),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8)
+        )
       ),
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(8),
-        topRight: Radius.circular(8)
-      )
-    ),
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Registros de Mortalidade",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-              fontSize: 16
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Registros de Mortalidade",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 16
+              ),
             ),
-          ),
-        ],
-      ),
-    ) 
-  );
+          ],
+        ),
+      ) 
+    );
   }
 
   static Card getMortalityMiddleRow(Mortality history) {
@@ -76,38 +76,80 @@ class TableRows {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Data: ${DateFormater.formatDateString(history.createdAt)}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.heart_broken_outlined, size: 14, color: DefaultColors.iconRed()),
+                            SizedBox(width: 5),
+                            Text(
+                              DateFormater.formatDateString(history.createdAt),
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ]
                         ),
-                        Text(
-                          "Idade: ${history.age}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Idade: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.age}",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Mortes: ${history.deaths}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Mortes: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.deaths}",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Eliminações: ${history.eliminations}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Eliminações: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.eliminations}",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     ),
                     Icon(Icons.edit_note_outlined, size: 28.0, color: DefaultColors.borderGray(),)
@@ -163,38 +205,80 @@ class TableRows {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Data: ${DateFormater.formatDateString(history.createdAt)}",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Icon(Icons.heart_broken_outlined, size: 14, color: DefaultColors.iconRed()),
+                              SizedBox(width: 5),
+                              Text(
+                                DateFormater.formatDateString(history.createdAt),
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ]
                           ),
-                          Text(
-                            "Idade: ${history.age}",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Idade: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.age}",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Mortes: ${history.deaths}",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Mortes: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.deaths}",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Eliminações: ${history.eliminations}",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Row(
+                            children: [
+                              Text(
+                                "Eliminações: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.eliminations}",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                       Icon(Icons.edit_note_outlined, size: 28.0, color: DefaultColors.borderGray())

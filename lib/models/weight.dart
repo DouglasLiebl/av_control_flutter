@@ -29,8 +29,8 @@ class Weight {
       weight: json["weight"],
       tare: json["tare"],
       totalUnits: json["totalUnits"],
-      createdAt: json["createdA"],
-      boxesWeights: (json["boxesWeights"] as List)
+      createdAt: json["createdAt"],
+      boxesWeights: (json["weights"] as List)
         .map((box) => WeightBox.fromJson(box))
         .toList()
     );

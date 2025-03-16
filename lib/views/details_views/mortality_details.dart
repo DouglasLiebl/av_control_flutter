@@ -93,11 +93,11 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                       SizedBox(height: 8),
                                       TextFormField(
                                         keyboardType: TextInputType.number,
-                                        controller: _deathsController,  // Create a new controller for deaths
-                                        cursorColor: Colors.black,
+                                        controller: _deathsController,
+                                        cursorColor: DefaultColors.valueGray(),
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.black,
+                                          color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -135,11 +135,11 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                       SizedBox(height: 8),
                                       TextFormField(
                                         keyboardType: TextInputType.number,
-                                        controller: _eliminationsController,  // Create a new controller for eliminations
-                                        cursorColor: Colors.black,
+                                        controller: _eliminationsController,
+                                        cursorColor: DefaultColors.valueGray(),
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.black,
+                                          color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -168,7 +168,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                             SizedBox(height: 16),
                             ElevatedButton(
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(Colors.black),
+                                backgroundColor: MaterialStateProperty.all(DefaultColors.valueGray()),
                                 minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
                                 shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(

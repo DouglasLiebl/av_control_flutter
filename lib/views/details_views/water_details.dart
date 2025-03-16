@@ -80,7 +80,8 @@ class _WaterDetailsState extends State<WaterDetails> {
               ),
               SizedBox(height: 16),
               // Registers
-              WaterTableRows.getWaterTopRow(),
+              if (allotmentProvider.getWaterHistory().isNotEmpty)
+                  WaterTableRows.getWaterTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

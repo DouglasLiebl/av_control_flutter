@@ -57,4 +57,12 @@ class DefaultColors {
   static Color iconAmber() {
     return Color(0xFFfbbf24);
   }
+
+  static Color subBox() {
+    return Color(0xFFf9fafb);
+  }
+
+  static Color iconGreen() {
+    return Color(0xFF38b000);
+  }
 }

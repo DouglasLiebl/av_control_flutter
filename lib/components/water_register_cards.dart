@@ -70,11 +70,11 @@ class WaterRegisterCards {
                             SizedBox(height: 8),
                             TextFormField(
                               keyboardType: TextInputType.number,
-                              controller: multiplierController,  // Create a new controller for deaths
-                              cursorColor: Colors.black,
+                              controller: multiplierController, 
+                              cursorColor: DefaultColors.valueGray(),
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: DefaultColors.valueGray(),
                               ),
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -112,11 +112,11 @@ class WaterRegisterCards {
                             SizedBox(height: 8),
                             TextFormField(
                               keyboardType: TextInputType.number,
-                              controller: measureController,  // Create a new controller for eliminations
-                              cursorColor: Colors.black,
+                              controller: measureController,
+                              cursorColor: DefaultColors.valueGray(),
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: DefaultColors.valueGray(),
                               ),
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -145,7 +145,7 @@ class WaterRegisterCards {
                   SizedBox(height: 16),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.black),
+                      backgroundColor: MaterialStateProperty.all(DefaultColors.valueGray()),
                       minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
@@ -259,11 +259,11 @@ class WaterRegisterCards {
                       SizedBox(height: 8),
                       TextFormField(
                         keyboardType: TextInputType.number,
-                        controller: measureController,  // Create a new controller for eliminations
-                        cursorColor: Colors.black,
+                        controller: measureController,
+                        cursorColor: DefaultColors.valueGray(),
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: DefaultColors.valueGray(),
                         ),
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -289,7 +289,7 @@ class WaterRegisterCards {
                   SizedBox(height: 16),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.black),
+                      backgroundColor: MaterialStateProperty.all(DefaultColors.valueGray()),
                       minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(

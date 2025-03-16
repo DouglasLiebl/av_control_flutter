@@ -471,7 +471,7 @@ class GeneralDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Column(
                               children: [
-                                Icon(Icons.balance_outlined, color: DefaultColors.iconBlue(), size: 20),
+                                Icon(Icons.balance_outlined, color: DefaultColors.iconGreen(), size: 20),
                                 Text(
                                   "Peso Médio atual",
                                   style: TextStyle(

@@ -7,6 +7,7 @@ import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
+import 'package:demo_project/models/weight_box.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -122,5 +123,16 @@ class AllotmentProvider with ChangeNotifier {
     _allotment.waterHistory.add(data);
     _allotment.currentTotalWaterConsume = response.newTotalConsumed;
     notifyListeners(); 
+  }
+
+  Future<void> updateWeight(Auth auth, int totalUnits, double tare, List<WeightBox> weights) async {
+    Weight response = await _serverService
+      .registerWeight(auth, _allotment.id, totalUnits, tare, weights);
+
+      await dbHelper.registerWeight(response);
+      _allotment.weightHistory.add(response);
+      _allotment.currentWeight = response.weight;
+
+      notifyListeners();
   }
 }

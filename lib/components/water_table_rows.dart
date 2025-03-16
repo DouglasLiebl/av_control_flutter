@@ -76,37 +76,79 @@ class WaterTableRows {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Data: ${DateFormater.formatDateString(history.createdAt)}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Icon(Icons.water_drop_outlined, size: 14, color: DefaultColors.iconLightBlue(),),
+                            SizedBox(width: 5),
+                            Text(
+                              DateFormater.formatDateString(history.createdAt),
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Idade: ${history.age}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Idade: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.age}",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Medida: ${history.currentMeasure}",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Medida: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.currentMeasure}",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Litros Consumidos: ${history.consumedLiters} L",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Litros Consumidos: ",
+                              style: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "${history.consumedLiters} L",
+                              style: TextStyle(
+                                color: DefaultColors.valueGray(),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -163,37 +205,79 @@ class WaterTableRows {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Data: ${DateFormater.formatDateString(history.createdAt)}",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Icon(Icons.water_drop_outlined, size: 14, color: DefaultColors.iconLightBlue(),),
+                              SizedBox(width: 5),
+                              Text(
+                                DateFormater.formatDateString(history.createdAt),
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Idade: ${history.age}",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Idade: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.age}",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Medida: ${history.currentMeasure}",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Medida: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.currentMeasure}",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Litros Consumidos: ${history.consumedLiters} L",
-                            style: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Litros Consumidos: ",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                "${history.consumedLiters} L",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -1,5 +1,5 @@
-import 'package:demo_project/components/water_table_rows.dart';
 import 'package:demo_project/components/weight_register_cards.dart';
+import 'package:demo_project/components/weight_table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/views/details_views/weight_register.dart';
 import 'package:flutter/material.dart';
@@ -47,28 +47,21 @@ class _WeightDetailsState extends State<WeightDetails> {
               }),
               SizedBox(height: 16),
               // Registers
-              WaterTableRows.getWaterTopRow(),
+              if (allotmentProvider.getWeightHistory().isNotEmpty)
+                WeightTableRows.getWeightTopRow("Registros de Pesos"),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: allotmentProvider.getWeightHistory().length,
                 itemBuilder: (context, index) {
-
-                  final history = allotmentProvider.getWaterHistory()[index];
-
-
-                  if (index == 0 && allotmentProvider.getWaterHistory().length == 1) {
-                    return WaterTableRows.getWaterBottomStartPointRow(history);
-                  } else if (index == 0) {
-                    return WaterTableRows.getWaterStartPointRow(history);
-                  }
                   
-                  if (!((allotmentProvider.getWaterHistory().length - 1) == index)) {
-                    return WaterTableRows.getWaterMiddleRow(history);
-                  } else {
-                    return WaterTableRows.getWaterBottomRow(history);
-                  }
+                  final history = allotmentProvider.getWeightHistory()[index];
 
+                  if (!((allotmentProvider.getWeightHistory().length - 1) == index)) {
+                    return WeightTableRows.getWeightMiddleRow(history);
+                  } else {
+                    return WeightTableRows.getWeightBottomRow(history);
+                  }
                 }
               )
             ],

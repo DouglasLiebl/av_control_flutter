@@ -2,9 +2,11 @@ import 'package:demo_project/components/weight_register_cards.dart';
 import 'package:demo_project/components/weight_table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
+import 'package:demo_project/data/secure_storage_service.dart';
 import 'package:demo_project/models/weight_box.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class WeightRegister extends StatefulWidget {
@@ -25,6 +27,7 @@ class _WaterDetailsState extends State<WeightRegister> {
   final _unitsController = TextEditingController();
   final _weightController = TextEditingController();
   final _boxController = TextEditingController();
+  final _tareController = TextEditingController();
 
   void _refreshData() {
     setState(() {});
@@ -38,11 +41,9 @@ class _WaterDetailsState extends State<WeightRegister> {
   Widget build(BuildContext context) {
     final allotmentProvider = context.read<AllotmentProvider>();
     final provider = context.read<DataProvider>();
-
-    final aviary = provider.getAviaryById(widget.id);
+    final storage = SecureStorageService(storage: FlutterSecureStorage());
 
     void registerWeight() async {
-
       final weight = _weightController.text.isEmpty ? 
         0.0 : double.parse(_weightController.text);
 
@@ -73,6 +74,15 @@ class _WaterDetailsState extends State<WeightRegister> {
         weights.removeAt(index);
       });
       _refreshData();
+    }
+
+    void finishRegister() async {
+      final tareString = await storage.getItem("Tare");
+      final tare = tareString != null ? double.parse(tareString) : 0.0;
+      
+      int totalUnits = weights.fold(0, (total, element) => total + element.units);
+
+      await allotmentProvider.updateWeight(provider.getAuth(), totalUnits, tare, weights);
     }
 
     Future<bool> closePopUp() async {
@@ -164,8 +174,9 @@ class _WaterDetailsState extends State<WeightRegister> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () {
-
+                    onTap: () async {
+                      finishRegister();  
+                      Navigator.of(context).pop();                      
                     },
                     overlayColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {
@@ -214,7 +225,13 @@ class _WaterDetailsState extends State<WeightRegister> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  WeightRegisterCards.registerCard(_weightController, _unitsController, _boxController, registerWeight),
+                  WeightRegisterCards.registerCard(
+                    _weightController, 
+                    _unitsController, 
+                    _boxController, 
+                    _tareController, 
+                    registerWeight
+                  ),
                   SizedBox(height: 16),
                   if (weights.isNotEmpty)
                     WeightTableRows.getWeightTopRow("Pesos Adicionados"),
