@@ -578,15 +578,16 @@ class DatabaseHelper {
     });
   }
 
-  Future<bool> hasLocalData() async {
+Future<bool> hasLocalData() async {
+  try {
     final db = await database;
-    final List<Map<String, dynamic>> results = await db.rawQuery(
-      '''
-        SELECT id FROM tb_account;
-      ''');
-
-    return results.first.isEmpty ? false : true;
+    final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM tb_account'));
+    return count != null && count > 0;
+  } catch (e) {
+    print('Error checking local data: $e');
+    return false;
   }
+}
 
   Future<void> cleanDatabase(String id) async {
     final db = await database;

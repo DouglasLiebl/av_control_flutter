@@ -30,8 +30,11 @@ class DataProvider with ChangeNotifier {
   Account get getAccount => _account;  
 
   Future<void> _loadContext() async {
-    final accountData = await dbHelper.getContext();
-    _account = accountData;
+    if (await dbHelper.hasLocalData()) {
+      final accountData = await dbHelper.getContext();
+      _account = accountData;
+    }
+    
     notifyListeners();
   }
 
@@ -93,5 +96,9 @@ class DataProvider with ChangeNotifier {
 
   Aviary getAviaryById(String id) {
     return _account.aviaries.firstWhere((aviary) => aviary.id == id);
+  }
+
+  List<Aviary> getAviaries() {
+    return _account.aviaries;
   }
 }

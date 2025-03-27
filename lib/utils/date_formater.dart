@@ -16,6 +16,15 @@ class DateFormater {
     }
   }
 
+    static String formatISODate(String isoDateStr) {
+    try {
+      final date = DateTime.parse(isoDateStr);
+      return DateFormat('dd/MM/yyyy HH:mm').format(date);
+    } catch (e) {
+      return 'Data inválida';
+    }
+  }
+
   static String addDaysToDate(String dateStr, int days) {
     try {
       DateTime date;

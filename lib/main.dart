@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/views/home.dart';
 import 'package:demo_project/views/login.dart';
+import 'package:demo_project/views/xml_receiver.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 void main() {
   runApp(
@@ -17,8 +21,46 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String? fileContent;
+
+   @override
+  void initState() {
+    super.initState();
+
+    ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) {
+      _handleSharedFile(value);
+    }, onError: (err) {
+      print("Error: $err");
+    });
+
+    // Handle shared files when the app is launched
+    ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) {
+      _handleSharedFile(value);
+    });
+  }
+
+    void _handleSharedFile(List<SharedMediaFile> files) async {
+    if (files.isNotEmpty) {
+      String path = files.first.path;
+      print("Received file path: $path");
+
+      // Read the file content
+      File file = File(path);
+      String content = await file.readAsString();
+
+      setState(() {
+        fileContent = content;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +85,14 @@ class MyApp extends StatelessWidget {
                   )
                 );
               }
-              
-              if (snapshot.hasData && snapshot.data == true) {
+
+             if (fileContent != null) {
+                return XmlReceiver(
+                  xmlContent: fileContent!, 
+                  changeState: () => setState(() {
+                    fileContent = null;
+                  }));
+              } else if (snapshot.hasData && snapshot.data == true) {
                 return HomePage();
               } else {
                 return LoginPage();
