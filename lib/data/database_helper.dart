@@ -4,6 +4,7 @@ import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
+import 'package:demo_project/models/feed.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
@@ -82,7 +83,8 @@ class DatabaseHelper {
         ended_at VARCHAR(100),
         current_death_percentage DECIMAL(10, 3),
         current_weight DECIMAL(10, 3),
-        current_total_water_consume INTEGER
+        current_total_water_consume INTEGER,
+        current_total_feed_received DECIMAL(12, 4);
       );
     ''');
 
@@ -137,6 +139,19 @@ class DatabaseHelper {
         weight DECIMAL(10, 3),
         units INTEGER,
         FOREIGN KEY (weight_id) REFERENCES tb_weight_history(id) ON DELETE CASCADE
+      );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE tb_feed_history (
+        id VARCHAR(300) PRIMARY KEY,
+        allotment_id VARCHAR(300),
+        access_key TEXT,
+        nfe_number VARCHAR(300),
+        emmited_at VARCHAR(100),
+        weight DECIMAL(12, 4),
+        created_at VARCHAR(100),
+        FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
 
@@ -447,6 +462,23 @@ class DatabaseHelper {
       );
     }).toList());
 
+    final List<Map<String, dynamic>> feedHistory = await db.rawQuery(
+      '''
+      SELECT * FROM tb_feed_history
+      WHERE allotment_id = ?
+      ''',
+      [allotmentData['id']]
+    );
+
+    List<Feed> feeds = feedHistory.map((f) => Feed(
+      id: f['id'],
+      allotmentId: f['allotment_id'],
+      accessKey: f['access_key'],
+      nfeNumber: f['nfe_number'],
+      emmitedAt: f['emmited_at'],
+      weight: f['weight'],
+      createdAt: f['created_at']
+    )).toList();
 
     final allotment = Allotment(
       id: allotmentData['id'] ?? '',
@@ -458,13 +490,15 @@ class DatabaseHelper {
       startedAt: allotmentData['started_at'] ?? '',
       endedAt: allotmentData['ended_at'] ?? '',
       currentDeathPercentage: allotmentData['current_death_percentage'] ?? 0.0,
-      currentWeight: (allotmentData['current_weight'] ?? 0.0).toDouble(),
+      currentWeight: allotmentData['current_weight'] ?? 0.0,
       currentTotalWaterConsume: (allotmentData['current_total_water_consume'] ?? 0).toInt(),
+      currentTotalFeedReceived: allotmentData['current_total_feed_received'] ?? 0.0,
       waterHistory: waterHistory
         .map((w) => Water.fromJson(w))
         .toList(),
       mortalityHistory: mortalities,
-      weightHistory: weights
+      weightHistory: weights,
+      feedHistory: feeds
     );
 
     return allotment;
@@ -578,16 +612,35 @@ class DatabaseHelper {
     });
   }
 
-Future<bool> hasLocalData() async {
-  try {
+  Future<void> registerFeed(Feed request) async {
     final db = await database;
-    final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM tb_account'));
-    return count != null && count > 0;
-  } catch (e) {
-    print('Error checking local data: $e');
-    return false;
+
+    await db.transaction((tx) async {
+      tx.insert(
+        "tb_feed_history", 
+        {
+          "id": request.id,
+          "allotment_id": request.allotmentId,
+          "access_key": request.accessKey,
+          "nfe_number": request.nfeNumber,
+          "emmited_at": request.emmitedAt,
+          "weight": request.weight,
+          "created_at": request.createdAt
+        }
+      );
+    });
   }
-}
+
+  Future<bool> hasLocalData() async {
+    try {
+      final db = await database;
+      final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM tb_account'));
+      return count != null && count > 0;
+    } catch (e) {
+      print('Error checking local data: $e');
+      return false;
+    }
+  }
 
   Future<void> cleanDatabase(String id) async {
     final db = await database;

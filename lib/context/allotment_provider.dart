@@ -27,9 +27,11 @@ class AllotmentProvider with ChangeNotifier {
     currentDeathPercentage: 0, 
     currentWeight: 0, 
     currentTotalWaterConsume: 0, 
+    currentTotalFeedReceived: 0,
     waterHistory: [], 
     mortalityHistory: [], 
-    weightHistory: []
+    weightHistory: [],
+    feedHistory: []
   );
 
   AllotmentProvider();
@@ -76,10 +78,12 @@ class AllotmentProvider with ChangeNotifier {
       endedAt: '', 
       currentDeathPercentage: 0, 
       currentWeight: 0, 
-      currentTotalWaterConsume: 0, 
+      currentTotalWaterConsume: 0,
+      currentTotalFeedReceived: 0, 
       waterHistory: [], 
       mortalityHistory: [], 
-      weightHistory: []
+      weightHistory: [],
+      feedHistory: []
     );
 
     notifyListeners();

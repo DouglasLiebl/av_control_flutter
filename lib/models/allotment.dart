@@ -1,3 +1,4 @@
+import 'package:demo_project/models/feed.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
@@ -15,9 +16,11 @@ class Allotment {
   double currentDeathPercentage;
   double currentWeight;
   int currentTotalWaterConsume;
+  double currentTotalFeedReceived;
   List<Water> waterHistory;
   List<Mortality> mortalityHistory;
   List<Weight> weightHistory;
+  List<Feed> feedHistory;
 
 
   Allotment({
@@ -32,9 +35,11 @@ class Allotment {
     required this.currentDeathPercentage,
     required this.currentWeight,
     required this.currentTotalWaterConsume,
+    required this.currentTotalFeedReceived,
     required this.waterHistory,
     required this.mortalityHistory,
     required this.weightHistory,
+    required this.feedHistory
   });
 
   factory Allotment.fromJson(Map<String, dynamic> json) {
@@ -50,6 +55,7 @@ class Allotment {
       currentDeathPercentage: (json["currentDeathPercentage"] as num).toDouble(),
       currentWeight: (json["currentWeight"] as num).toDouble(),
       currentTotalWaterConsume: json["currentTotalWaterConsume"].toInt(),
+      currentTotalFeedReceived: (json["currentTotalFeedReceived"] as num).toDouble(),
       waterHistory: (json["waterHistory"] as List)
         .map((history) => Water.fromJson(history))
         .toList(),
@@ -58,6 +64,9 @@ class Allotment {
         .toList(),
       weightHistory: (json["weightHistory"] as List)
         .map((history) => Weight.fromJson(history))
+        .toList(),
+      feedHistory: (json["feedHistory"] as List)
+        .map((history) => Feed.fromJson(history))
         .toList()
     );
   }
