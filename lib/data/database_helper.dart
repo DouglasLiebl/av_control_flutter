@@ -1,3 +1,4 @@
+import 'package:demo_project/dto/feed_dto.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/account.dart';
@@ -150,8 +151,17 @@ class DatabaseHelper {
         nfe_number VARCHAR(300),
         emmited_at VARCHAR(100),
         weight DECIMAL(12, 4),
+        type VARCHAR(10),
         created_at VARCHAR(100),
         FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
+      );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE tb_offline_sync (
+        id INTEGER PRIMARY KEY,
+        operation_type VARCHAR(40),
+        data TEXT
       );
     ''');
 
@@ -334,6 +344,23 @@ class DatabaseHelper {
 
       }
 
+      for (Feed f in request.feedHistory) {
+        await txn.insert(
+          "tb_feed_history",
+          {
+            "id": f.id,
+            "allotment_id": f.allotmentId,
+            "access_key": f.accessKey,
+            "nfe_number": f.nfeNumber,
+            "emmited_at": f.emmitedAt,
+            "weight": f.weight,
+            "type": f.type,
+            "created_at": f.createdAt
+          },
+          conflictAlgorithm: ConflictAlgorithm.replace
+        );
+      }
+
     });
 
   }
@@ -477,6 +504,7 @@ class DatabaseHelper {
       nfeNumber: f['nfe_number'],
       emmitedAt: f['emmited_at'],
       weight: f['weight'],
+      type: f["type"],
       createdAt: f['created_at']
     )).toList();
 
@@ -612,7 +640,7 @@ class DatabaseHelper {
     });
   }
 
-  Future<void> registerFeed(Feed request) async {
+  Future<void> registerFeed(FeedDto request) async {
     final db = await database;
 
     await db.transaction((tx) async {
@@ -625,9 +653,20 @@ class DatabaseHelper {
           "nfe_number": request.nfeNumber,
           "emmited_at": request.emmitedAt,
           "weight": request.weight,
+          "type": request.type,
           "created_at": request.createdAt
         }
       );
+
+      tx.update(
+        "tb_allotments", 
+        {
+          "current_total_feed_received": request.currentTotalFeedReceived
+        },
+        where: "id = ?",
+        whereArgs: [request.allotmentId]
+      );
+
     });
   }
 
@@ -640,6 +679,10 @@ class DatabaseHelper {
       print('Error checking local data: $e');
       return false;
     }
+  }
+
+  Future<void> registerOfflineData(int id, String type, String data) async {
+    
   }
 
   Future<void> cleanDatabase(String id) async {

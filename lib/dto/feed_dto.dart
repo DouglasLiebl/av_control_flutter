@@ -1,6 +1,4 @@
-import 'package:demo_project/dto/feed_dto.dart';
-
-class Feed {
+class FeedDto {
   String id;
   String allotmentId;
   String accessKey;
@@ -9,8 +7,9 @@ class Feed {
   double weight;
   String type;
   String createdAt;
+  double currentTotalFeedReceived;
 
-  Feed({
+  FeedDto({
     required this.id,
     required this.allotmentId,
     required this.accessKey,
@@ -18,11 +17,12 @@ class Feed {
     required this.emmitedAt,
     required this.weight,
     required this.type,
-    required this.createdAt
+    required this.createdAt,
+    required this.currentTotalFeedReceived
   });
 
-  factory Feed.fromJson(Map<String, dynamic> json) {
-    return Feed(
+  factory FeedDto.fromJson(Map<String, dynamic> json) {
+    return FeedDto(
       id: json['id'],
       allotmentId: json['allotmentId'],
       accessKey: json['accessKey'],
@@ -30,20 +30,8 @@ class Feed {
       emmitedAt: json['emmitedAt'],
       weight: (json['weight'] as num).toDouble(),
       type: json["type"],
-      createdAt: json['createdAt']
-    );
-  }
-
-  factory Feed.fromDTO(FeedDto source) {
-    return Feed(
-      id: source.id,
-      allotmentId: source.allotmentId,
-      accessKey: source.accessKey,
-      nfeNumber: source.nfeNumber,
-      emmitedAt: source.emmitedAt,
-      weight: source.weight,
-      type: source.type,
-      createdAt: source.createdAt
+      createdAt: json['createdAt'],
+      currentTotalFeedReceived: (json["currentTotalFeedReceived"] as num).toDouble()
     );
   }
 }

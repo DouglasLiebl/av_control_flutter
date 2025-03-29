@@ -1,9 +1,11 @@
 import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
+import 'package:demo_project/dto/feed_dto.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/allotment.dart';
 import 'package:demo_project/models/auth.dart';
+import 'package:demo_project/models/feed.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
@@ -138,5 +140,24 @@ class AllotmentProvider with ChangeNotifier {
       _allotment.currentWeight = response.weight;
 
       notifyListeners();
+  }
+
+  Future<void> updateFeed(
+    Auth auth, 
+    String accessKey,
+    String nfeNumber,
+    String emmitedAt,
+    double weight,    
+  ) async {
+    FeedDto response = await _serverService
+      .registerFeed(auth, _allotment.id, accessKey, nfeNumber, emmitedAt, weight);
+
+    Feed data = Feed.fromDTO(response);
+
+    await dbHelper.registerFeed(response);
+    _allotment.feedHistory.add(data);
+    _allotment.currentTotalFeedReceived = response.currentTotalFeedReceived;
+
+    notifyListeners();
   }
 }

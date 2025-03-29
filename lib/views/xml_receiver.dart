@@ -6,11 +6,34 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xml/xml.dart';
 
-class XmlReceiver extends StatelessWidget {
+
+class XmlReceiver extends StatefulWidget {
   final String xmlContent;
   final Function changeState;
 
   const XmlReceiver({super.key, required this.xmlContent, required this.changeState});
+
+  @override
+  State<StatefulWidget> createState() => _XmlReceiverState();
+  
+}
+
+class _XmlReceiverState extends State<XmlReceiver> {
+  
+  final _aviaryController = TextEditingController();
+  final _accessKeyController = TextEditingController();
+  final _nfeNumberController = TextEditingController();
+  final _emmitedAtController = TextEditingController();
+  final _typeController = TextEditingController();
+  final _weightController = TextEditingController();
+
+  late XmlDocument data;
+
+  @override
+  void initState() {
+    super.initState();
+    data = XmlDocument.parse(widget.xmlContent);
+  }
 
   String? findMatchingAviaryId(String xmlAviaryName, List<Aviary> aviaries) {
     final receivedName = xmlAviaryName.toLowerCase().trim();
@@ -21,9 +44,17 @@ class XmlReceiver extends StatelessWidget {
     return matching.id.isNotEmpty ? matching.id : null;
   }
 
+  void initalizeData() {
+    _accessKeyController.text = data.findAllElements("chNFe").first.text;
+    _nfeNumberController.text = data.findAllElements("nNF").first.text;
+    _typeController.text = data.findAllElements("xProd").first.text;
+    _weightController.text = data.findAllElements("qTrib").first.text;
+    _emmitedAtController.text = DateFormater.formatISODate(data.findAllElements("dhEmi").first.text).toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final data = XmlDocument.parse(xmlContent);
+    initalizeData();
     final provider = context.read<DataProvider>();
 
     final xmlAviaryName = data.findAllElements("dest").first.findElements("xNome").first.text;
@@ -31,7 +62,7 @@ class XmlReceiver extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        changeState();
+        widget.changeState();
         return true;
       },
       child:Scaffold(
@@ -133,51 +164,51 @@ class XmlReceiver extends StatelessWidget {
                   ) 
                 ),
                 Card(
-                color: Colors.white,
-                elevation: 0,
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide.none, // No border for the whole shape
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: DefaultColors.borderGray(),
-                        width: 1,
-                      ),
-                      right: BorderSide(
-                        color: DefaultColors.borderGray(),
-                        width: 1,
+                  color: Colors.white,
+                  elevation: 0,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide.none, // No border for the whole shape
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                        right: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Tipo de Ração",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14
-                          ),      
-                        ),
-                        Text(
-                          data.findAllElements("xProd").first.text,
-                          style: TextStyle(
-                            color: DefaultColors.valueGray(),
-                            fontSize: 14
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Tipo de Ração",
+                            style: TextStyle(
+                              color: DefaultColors.textGray(),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14
+                            ),      
                           ),
-                        ),
-                      ],
+                          Text(
+                            _typeController.text,
+                            style: TextStyle(
+                              color: DefaultColors.valueGray(),
+                              fontSize: 14
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
                 Card(
                   color: Colors.white,
                   elevation: 0,
@@ -217,7 +248,7 @@ class XmlReceiver extends StatelessWidget {
                             ),      
                           ),
                           Text(
-                           data.findAllElements("qTrib").first.text,
+                            _weightController.text,
                             style: TextStyle(
                               color: DefaultColors.valueGray(),
                               fontSize: 14
@@ -340,7 +371,7 @@ class XmlReceiver extends StatelessWidget {
                                   ),      
                                 ),
                                 Text(
-                                DateFormater.formatISODate(data.findAllElements("dhEmi").first.text),
+                                  _emmitedAtController.text,
                                   style: TextStyle(
                                     color: DefaultColors.valueGray(),
                                     fontSize: 14,
@@ -445,7 +476,7 @@ class XmlReceiver extends StatelessWidget {
                           ),
                           onChanged: (String? value) {
                             if (value != null) {
-                              
+                              _aviaryController.text = value;
                             }
                           },
                           style: TextStyle(

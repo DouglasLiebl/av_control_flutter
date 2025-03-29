@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:demo_project/dto/feed_dto.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/account.dart';
@@ -166,5 +167,38 @@ class ServerService {
     } else {
       throw Exception("Failed to register Weight");
     }
+  }
+
+  Future<FeedDto> registerFeed(
+    Auth auth, 
+    String allotmentId,
+    String accessKey,
+    String nfeNumber,
+    String emmitedAt,
+    double weight
+  ) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/allotment/weight"),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "${auth.tokenType} ${auth.accessToken}"
+      },
+      body: jsonEncode({
+        "allotmentId": allotmentId,
+        "accessKey": accessKey,
+        "nfeNumber": nfeNumber,
+        "emmitedAt": emmitedAt,
+        "weight": weight
+      })
+    );
+
+    
+    if (response.statusCode == 201) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return FeedDto.fromJson(jsonResponse);
+    } else {
+      throw Exception("Failed to register new Feed");
+    }
+  
   }
 }
