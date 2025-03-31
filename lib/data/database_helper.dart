@@ -85,7 +85,7 @@ class DatabaseHelper {
         current_death_percentage DECIMAL(10, 3),
         current_weight DECIMAL(10, 3),
         current_total_water_consume INTEGER,
-        current_total_feed_received DECIMAL(12, 4);
+        current_total_feed_received DECIMAL(12, 4)
       );
     ''');
 
@@ -149,7 +149,7 @@ class DatabaseHelper {
         allotment_id VARCHAR(300),
         access_key TEXT,
         nfe_number VARCHAR(300),
-        emmited_at VARCHAR(100),
+        emitted_at VARCHAR(100),
         weight DECIMAL(12, 4),
         type VARCHAR(10),
         created_at VARCHAR(100),
@@ -352,7 +352,7 @@ class DatabaseHelper {
             "allotment_id": f.allotmentId,
             "access_key": f.accessKey,
             "nfe_number": f.nfeNumber,
-            "emmited_at": f.emmitedAt,
+            "emitted_at": f.emittedAt,
             "weight": f.weight,
             "type": f.type,
             "created_at": f.createdAt
@@ -502,7 +502,7 @@ class DatabaseHelper {
       allotmentId: f['allotment_id'],
       accessKey: f['access_key'],
       nfeNumber: f['nfe_number'],
-      emmitedAt: f['emmited_at'],
+      emittedAt: f['emmited_at'],
       weight: f['weight'],
       type: f["type"],
       createdAt: f['created_at']
@@ -651,7 +651,7 @@ class DatabaseHelper {
           "allotment_id": request.allotmentId,
           "access_key": request.accessKey,
           "nfe_number": request.nfeNumber,
-          "emmited_at": request.emmitedAt,
+          "emitted_at": request.emittedAt,
           "weight": request.weight,
           "type": request.type,
           "created_at": request.createdAt

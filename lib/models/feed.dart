@@ -5,7 +5,7 @@ class Feed {
   String allotmentId;
   String accessKey;
   String nfeNumber;
-  String emmitedAt;
+  String emittedAt;
   double weight;
   String type;
   String createdAt;
@@ -15,7 +15,7 @@ class Feed {
     required this.allotmentId,
     required this.accessKey,
     required this.nfeNumber,
-    required this.emmitedAt,
+    required this.emittedAt,
     required this.weight,
     required this.type,
     required this.createdAt
@@ -27,7 +27,7 @@ class Feed {
       allotmentId: json['allotmentId'],
       accessKey: json['accessKey'],
       nfeNumber: json['nfeNumber'],
-      emmitedAt: json['emmitedAt'],
+      emittedAt: json['emittedAt'],
       weight: (json['weight'] as num).toDouble(),
       type: json["type"],
       createdAt: json['createdAt']
@@ -40,7 +40,7 @@ class Feed {
       allotmentId: source.allotmentId,
       accessKey: source.accessKey,
       nfeNumber: source.nfeNumber,
-      emmitedAt: source.emmitedAt,
+      emittedAt: source.emittedAt,
       weight: source.weight,
       type: source.type,
       createdAt: source.createdAt

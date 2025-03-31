@@ -429,6 +429,64 @@ class GeneralDetails extends StatelessWidget {
                         color: DefaultColors.borderGray(),
                         width: 1,
                       ),
+                      bottom: BorderSide(
+                        color: DefaultColors.borderGray(),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Icon(Icons.breakfast_dining_outlined, color: DefaultColors.iconAmber(), size: 22,),
+                              Text(
+                                "Ração Total Recebida",
+                                style: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "${allotment.getAllotment.currentTotalFeedReceived.toString()} Kg",
+                                style: TextStyle(
+                                  color: DefaultColors.valueGray(),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ) 
+                )
+              ),
+              Card(
+                color: Colors.white,
+                elevation: 0,
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.zero,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(
+                        color: DefaultColors.borderGray(),
+                        width: 1,
+                      ),
+                      right: BorderSide(
+                        color: DefaultColors.borderGray(),
+                        width: 1,
+                      ),
                     ),
                   ),
                   child: IntrinsicHeight(
@@ -439,7 +497,7 @@ class GeneralDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Column(
                               children: [
-                                Icon(Icons.percent_outlined, color: DefaultColors.iconRed(), size: 20),
+                                Icon(Icons.percent_outlined, color: DefaultColors.iconRed(), size: 22),
                                 Text(
                                   "Mortalidade",
                                   style: TextStyle(
@@ -471,7 +529,7 @@ class GeneralDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Column(
                               children: [
-                                Icon(Icons.balance_outlined, color: DefaultColors.iconGreen(), size: 20),
+                                Icon(Icons.balance_outlined, color: DefaultColors.iconGreen(), size: 22),
                                 Text(
                                   "Peso Médio atual",
                                   style: TextStyle(
@@ -519,7 +577,7 @@ class GeneralDetails extends StatelessWidget {
                       Expanded(
                         child: Column(
                           children: [
-                            Icon(Icons.water_drop_outlined, color: DefaultColors.iconLightBlue(), size: 20,),
+                            Icon(Icons.water_drop_outlined, color: DefaultColors.iconLightBlue(), size: 22,),
                             Text(
                               "Consumo Total de Água",
                               style: TextStyle(

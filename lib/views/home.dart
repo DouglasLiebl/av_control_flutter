@@ -12,8 +12,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allotmentProvider = context.read<AllotmentProvider>();
-    final provider = context.read<DataProvider>();
+    final allotmentProvider = context.watch<AllotmentProvider>();
+    final provider = context.watch<DataProvider>();
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10), // Spacing between containers
+                  SizedBox(width: 10),
                   Expanded(
                     child: Container(
                       height: 60,
@@ -210,6 +210,7 @@ class HomePage extends StatelessWidget {
                             await allotmentProvider.cleanContext();
                           }
 
+                          if (!context.mounted) return;
                           Navigator.pop(context);
                         
                           Navigator.push(

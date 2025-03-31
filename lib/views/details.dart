@@ -2,6 +2,7 @@ import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/details_views/empty_allotment.dart';
+import 'package:demo_project/views/details_views/feed_details.dart';
 import 'package:demo_project/views/details_views/general_details.dart';
 import 'package:demo_project/views/details_views/mortality_details.dart';
 import 'package:demo_project/views/details_views/water_details.dart';
@@ -38,7 +39,7 @@ class _DetailsPage extends State<DetailsPage> {
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
       WaterDetails(id: widget.aviary.id, onRefresh: refreshPage),
       WeightDetails(id: widget.aviary.id, onRefresh: refreshPage),
-      MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage)
+      FeedDetails(id: widget.aviary.activeAllotmentId!, onRefresh: refreshPage)
     ];
   }
 

@@ -144,13 +144,15 @@ class AllotmentProvider with ChangeNotifier {
 
   Future<void> updateFeed(
     Auth auth, 
+    String allotmentId,
     String accessKey,
     String nfeNumber,
     String emmitedAt,
-    double weight,    
+    double weight, 
+    String type
   ) async {
     FeedDto response = await _serverService
-      .registerFeed(auth, _allotment.id, accessKey, nfeNumber, emmitedAt, weight);
+      .registerFeed(auth, allotmentId, accessKey, nfeNumber, emmitedAt, weight, type);
 
     Feed data = Feed.fromDTO(response);
 

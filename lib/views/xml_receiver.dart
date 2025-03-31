@@ -1,7 +1,9 @@
+import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/utils/default_colors.dart';
+import 'package:demo_project/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xml/xml.dart';
@@ -10,8 +12,9 @@ import 'package:xml/xml.dart';
 class XmlReceiver extends StatefulWidget {
   final String xmlContent;
   final Function changeState;
+  final String? allotmentId; 
 
-  const XmlReceiver({super.key, required this.xmlContent, required this.changeState});
+  const XmlReceiver({super.key, required this.xmlContent, required this.changeState, this.allotmentId});
 
   @override
   State<StatefulWidget> createState() => _XmlReceiverState();
@@ -20,7 +23,7 @@ class XmlReceiver extends StatefulWidget {
 
 class _XmlReceiverState extends State<XmlReceiver> {
   
-  final _aviaryController = TextEditingController();
+  final _allotmentController = TextEditingController();
   final _accessKeyController = TextEditingController();
   final _nfeNumberController = TextEditingController();
   final _emmitedAtController = TextEditingController();
@@ -41,7 +44,8 @@ class _XmlReceiverState extends State<XmlReceiver> {
       (aviary) => aviary.name.toLowerCase().trim() == receivedName,
       orElse: () => Aviary(id: '', name: '', alias: '', accountId: '', activeAllotmentId: ''),
     );
-    return matching.id.isNotEmpty ? matching.id : null;
+
+    return matching.activeAllotmentId!.isNotEmpty ? matching.activeAllotmentId : null;
   }
 
   void initalizeData() {
@@ -56,9 +60,23 @@ class _XmlReceiverState extends State<XmlReceiver> {
   Widget build(BuildContext context) {
     initalizeData();
     final provider = context.read<DataProvider>();
+    final allotmentProvider = context.read<AllotmentProvider>();
 
     final xmlAviaryName = data.findAllElements("dest").first.findElements("xNome").first.text;
     final matchingAviaryId = findMatchingAviaryId(xmlAviaryName, provider.getAviaries());
+    _allotmentController.text = matchingAviaryId ?? "";
+
+    void registerFeed() async {
+      await allotmentProvider.updateFeed(
+        provider.getAuth(), 
+        _allotmentController.text,
+        _accessKeyController.text, 
+        _nfeNumberController.text, 
+        _emmitedAtController.text, 
+        double.parse(_weightController.text), 
+        _typeController.text
+      );
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -83,7 +101,12 @@ class _XmlReceiverState extends State<XmlReceiver> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () async {
-                    Navigator.of(context).pop();                      
+                    registerFeed();
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage())
+                    );                      
                   },
                   overlayColor: MaterialStateProperty.resolveWith<Color?>(
                     (Set<MaterialState> states) {
@@ -135,6 +158,61 @@ class _XmlReceiverState extends State<XmlReceiver> {
                 Card(
                   color: Colors.white,
                   elevation: 0,
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: DefaultColors.borderGray(),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: DefaultColors.iconBgGray(),
+                            borderRadius: BorderRadius.circular(9999),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Center(
+                            child: Icon(Icons.lock_open_outlined),
+                            ),  
+                          )
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Chave de Acesso",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                _accessKeyController.text,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: DefaultColors.textGray(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ) 
+                ),
+                SizedBox(height: 10.0),
+                Card(
+                  color: Colors.white,
+                  elevation: 0,
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
@@ -168,7 +246,57 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   elevation: 0,
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide.none, // No border for the whole shape
+                    side: BorderSide.none,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                        right: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                        bottom: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Número da Nota",
+                            style: TextStyle(
+                              color: DefaultColors.textGray(),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14
+                            ),      
+                          ),
+                          Text(
+                            _nfeNumberController.text,
+                            style: TextStyle(
+                              color: DefaultColors.valueGray(),
+                              fontSize: 14
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  elevation: 0,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide.none,
                     borderRadius: BorderRadius.zero,
                   ),
                   child: Container(
@@ -214,7 +342,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   elevation: 0,
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide.none, // No border for the whole shape
+                    side: BorderSide.none,
                     borderRadius: BorderRadius.zero,
                   ),
                   child: Container(
@@ -336,7 +464,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   elevation: 0,
                   margin: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide.none, // No border for the whole shape
+                    side: BorderSide.none,
                     borderRadius: BorderRadius.zero,
                   ),
                   child: Container(
@@ -435,7 +563,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   ) 
                 ),
                 SizedBox(height: 16),
-                provider.getAccount.id != ""
+                provider.getAccount.id.isNotEmpty && widget.allotmentId == null
                 ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -467,7 +595,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                               )
                             ),
                             prefixIcon: Icon(
-                              Icons.house_siding_outlined,
+                              Icons.home_work_rounded,
                               size: 28,
                               color: DefaultColors.subTitleGray()
                             ),
@@ -476,7 +604,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                           ),
                           onChanged: (String? value) {
                             if (value != null) {
-                              _aviaryController.text = value;
+                              _allotmentController.text = value;
                             }
                           },
                           style: TextStyle(
@@ -494,7 +622,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                           value: matchingAviaryId,
                           items:  provider.getAviaries().map((aviary) {
                             return DropdownMenuItem(
-                              value: aviary.id,
+                              value: aviary.activeAllotmentId,
                               child: Text(
                                 aviary.name, 
                                 style: TextStyle(fontSize: 16)

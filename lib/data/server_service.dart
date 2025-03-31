@@ -174,11 +174,13 @@ class ServerService {
     String allotmentId,
     String accessKey,
     String nfeNumber,
-    String emmitedAt,
-    double weight
+    String emittedAt,
+    double weight,
+    String type
   ) async {
+    print("RECEIVED ID $allotmentId");
     final response = await http.post(
-      Uri.parse("$baseUrl/allotment/weight"),
+      Uri.parse("$baseUrl/allotment/feed"),
       headers: {
         "Content-Type": "application/json",
         "Authorization": "${auth.tokenType} ${auth.accessToken}"
@@ -187,8 +189,9 @@ class ServerService {
         "allotmentId": allotmentId,
         "accessKey": accessKey,
         "nfeNumber": nfeNumber,
-        "emmitedAt": emmitedAt,
-        "weight": weight
+        "emittedAt": emittedAt,
+        "weight": weight,
+        "type": type.replaceAll(" ", "_")
       })
     );
 

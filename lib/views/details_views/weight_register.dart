@@ -39,8 +39,8 @@ class _WaterDetailsState extends State<WeightRegister> {
 
   @override
   Widget build(BuildContext context) {
-    final allotmentProvider = context.read<AllotmentProvider>();
-    final provider = context.read<DataProvider>();
+    final allotmentProvider = context.watch<AllotmentProvider>();
+    final provider = context.watch<DataProvider>();
     final storage = SecureStorageService(storage: FlutterSecureStorage());
 
     void registerWeight() async {
@@ -158,6 +158,7 @@ class _WaterDetailsState extends State<WeightRegister> {
               onPressed: () async {
                 final shouldPop = await closePopUp();
                 if (shouldPop) {
+                  if (!context.mounted) return;
                   Navigator.of(context).pop();
                 }
                 
