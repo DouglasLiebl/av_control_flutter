@@ -442,7 +442,7 @@ class GeneralDetails extends StatelessWidget {
                         Expanded(
                           child: Column(
                             children: [
-                              Icon(Icons.breakfast_dining_outlined, color: DefaultColors.iconAmber(), size: 22,),
+                              Icon(Icons.breakfast_dining_outlined, color: DefaultColors.iconGreen(), size: 22,),
                               Text(
                                 "Ração Total Recebida",
                                 style: TextStyle(
@@ -529,7 +529,7 @@ class GeneralDetails extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Column(
                               children: [
-                                Icon(Icons.balance_outlined, color: DefaultColors.iconGreen(), size: 22),
+                                Icon(Icons.balance_outlined, color: DefaultColors.iconPurple(), size: 22),
                                 Text(
                                   "Peso Médio atual",
                                   style: TextStyle(

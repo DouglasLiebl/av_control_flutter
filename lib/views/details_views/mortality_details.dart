@@ -100,6 +100,11 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                           color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
+                                          hintText: "EX: 00",
+                                          hintStyle: TextStyle(
+                                            color: DefaultColors.textGray(),
+                                            fontSize: 14,
+                                          ), 
                                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(5),
@@ -142,6 +147,11 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                           color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
+                                          hintText: "EX: 00",
+                                          hintStyle: TextStyle(
+                                            color: DefaultColors.textGray(),
+                                            fontSize: 14,
+                                          ), 
                                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(5),
@@ -225,7 +235,7 @@ class _MortalityDetailsState extends State<MortalityDetails> {
               SizedBox(height: 16),
               // Registers
               if (allotmentProvider.getMortalityHistory().isNotEmpty) 
-                TableRows.getMortalityTopRow(),
+                MortalityTableRows.getMortalityTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -235,9 +245,9 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                   final history = allotmentProvider.getMortalityHistory()[index];
 
                   if (!((allotmentProvider.getMortalityHistory().length - 1) == index)) {
-                    return TableRows.getMortalityMiddleRow(history);
+                    return MortalityTableRows.getMortalityMiddleRow(history);
                   } else {
-                    return TableRows.getMortalityBottomRow(history);
+                    return MortalityTableRows.getMortalityBottomRow(history);
                   }
                 }
               )

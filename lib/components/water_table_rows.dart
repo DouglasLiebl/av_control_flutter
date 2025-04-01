@@ -45,7 +45,7 @@ class WaterTableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -78,7 +78,7 @@ class WaterTableRows {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.water_drop_outlined, size: 14, color: DefaultColors.iconLightBlue(),),
+                            Icon(Icons.water_drop_outlined, size: 16, color: DefaultColors.iconLightBlue(),),
                             SizedBox(width: 5),
                             Text(
                               DateFormater.formatDateString(history.createdAt),
@@ -170,7 +170,7 @@ class WaterTableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -207,7 +207,7 @@ class WaterTableRows {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.water_drop_outlined, size: 14, color: DefaultColors.iconLightBlue(),),
+                              Icon(Icons.water_drop_outlined, size: 16, color: DefaultColors.iconLightBlue(),),
                               SizedBox(width: 5),
                               Text(
                                 DateFormater.formatDateString(history.createdAt),
@@ -298,7 +298,7 @@ class WaterTableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -360,7 +360,7 @@ class WaterTableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(

@@ -46,7 +46,7 @@ class WeightTableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -284,7 +284,7 @@ class WeightTableRows {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.balance_outlined, size: 14, color: DefaultColors.iconGreen(),),
+                            Icon(Icons.balance_outlined, size: 16, color: DefaultColors.iconPurple(),),
                             SizedBox(width: 5),
                             Text(
                               DateFormater.formatDateString(history.createdAt),
@@ -458,7 +458,7 @@ class WeightTableRows {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.balance_outlined, size: 14, color: DefaultColors.iconGreen(),),
+                            Icon(Icons.balance_outlined, size: 16, color: DefaultColors.iconPurple(),),
                             SizedBox(width: 5),
                             Text(
                               DateFormater.formatDateString(history.createdAt),

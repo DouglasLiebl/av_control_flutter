@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:demo_project/dto/feed_dto.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/dto/water_dto.dart';
@@ -667,6 +669,29 @@ class DatabaseHelper {
         whereArgs: [request.allotmentId]
       );
 
+    });
+  }
+
+  Future<void> registerOfflineOperation(String data, String operationType) async {
+    final db = await database;
+
+    await db.transaction((tx) async {
+      tx.insert(
+        "tb_offline_sync", 
+        {
+          "id": Random().nextInt(100),
+          "operation_type": operationType,
+          "data": data
+        }  
+      );
+    }); 
+  }
+
+  Future<void> cleanOfflineOperations() async {
+    final db = await database;
+
+    await db.transaction((tx) async {
+      await tx.rawDelete("DELETE FROM tb_offline_sync");
     });
   }
 

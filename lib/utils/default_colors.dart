@@ -65,4 +65,8 @@ class DefaultColors {
   static Color iconGreen() {
     return Color(0xFF38b000);
   }
+
+  static Color iconPurple() {
+    return Color(0xFF6D28D9);
+  }
 }

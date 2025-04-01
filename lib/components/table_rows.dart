@@ -3,7 +3,7 @@ import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
 
-class TableRows {
+class MortalityTableRows {
 
   static Card getMortalityTopRow() {
     return Card(
@@ -45,7 +45,7 @@ class TableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -78,7 +78,7 @@ class TableRows {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.heart_broken_outlined, size: 14, color: DefaultColors.iconRed()),
+                            Icon(Icons.heart_broken_outlined, size: 16, color: DefaultColors.iconRed()),
                             SizedBox(width: 5),
                             Text(
                               DateFormater.formatDateString(history.createdAt),
@@ -170,7 +170,7 @@ class TableRows {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        side: BorderSide.none, // No border for the whole shape
+        side: BorderSide.none,
         borderRadius: BorderRadius.zero,
       ),
       child: Container(
@@ -207,7 +207,7 @@ class TableRows {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.heart_broken_outlined, size: 14, color: DefaultColors.iconRed()),
+                              Icon(Icons.heart_broken_outlined, size: 16, color: DefaultColors.iconRed()),
                               SizedBox(width: 5),
                               Text(
                                 DateFormater.formatDateString(history.createdAt),

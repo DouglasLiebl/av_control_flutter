@@ -1,0 +1,1 @@
+/home/douglas/.local/share/Trash/files/av_control_flutter/build/app/intermediates/cxx/Debug/1pr2p1c4/obj/arm64-v8a

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:demo_project/data/database_helper.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/dto/feed_dto.dart';
@@ -112,38 +115,128 @@ class AllotmentProvider with ChangeNotifier {
   }
 
   Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {
-    MortalityDto response = await _serverService
-      .registerMortality(auth, _allotment.id, deaths, eliminations);
+    bool status = await InternetConnection().hasInternetAccess;
 
-    Mortality data = Mortality.fromDTO(response);
+    if (status) {
+      MortalityDto response = await _serverService
+        .registerMortality(auth, _allotment.id, deaths, eliminations);
 
-    await dbHelper.registerMortality(response);
-    _allotment.mortalityHistory.add(data);
-    _allotment.currentDeathPercentage = response.newDeathPercentage;
+      Mortality data = Mortality.fromDTO(response);
+
+      await dbHelper.registerMortality(response);
+      _allotment.mortalityHistory.add(data);
+      _allotment.currentDeathPercentage = response.newDeathPercentage;
+    } else {
+      Mortality data = Mortality(
+        id: Random().nextInt(100).toString(), 
+        allotmentId: _allotment.id, 
+        age: _allotment.currentAge, 
+        deaths: deaths, 
+        eliminations: eliminations, 
+        createdAt: DateTime.now().toString());
+
+      await dbHelper.registerOfflineOperation(jsonEncode({
+        data
+      }), "MORTALITY");
+
+      _allotment.mortalityHistory.add(data);
+
+      int totalDeaths = _allotment.mortalityHistory
+        .fold(0, (sum, mortality) => sum + mortality.deaths);
+
+
+      int totalEliminations = _allotment.mortalityHistory
+        .fold(0, (sum, mortality) => sum + mortality.eliminations);
+
+      double newDeathPercentage = ((totalDeaths + totalEliminations) * 100.0) / _allotment.totalAmount;
+      _allotment.currentDeathPercentage = newDeathPercentage;
+    }
+ 
+    
     notifyListeners();
   }
 
   Future<void> updateWaterHistory(Auth auth, String aviaryId, int multiplier, int measure) async {
-    WaterDto response = await _serverService
-      .registerWaterHistory(auth, multiplier, _allotment.id, measure);
+    bool status = await InternetConnection().hasInternetAccess;
 
-    Water data = Water.fromDTO(response);
+    if (status) {
+      WaterDto response = await _serverService
+        .registerWaterHistory(auth, multiplier, _allotment.id, measure);
 
-    await dbHelper.registerWaterHistory(response, aviaryId);
-    _allotment.waterHistory.add(data);
-    _allotment.currentTotalWaterConsume = response.newTotalConsumed;
+      Water data = Water.fromDTO(response);
+
+      await dbHelper.registerWaterHistory(response, aviaryId);
+      _allotment.waterHistory.add(data);
+      _allotment.currentTotalWaterConsume = response.newTotalConsumed;
+    } else {
+      int consumedLiters = (measure - _allotment.waterHistory[-1].currentMeasure) * multiplier;
+
+      Water data = Water(
+        id: Random().nextInt(100).toString(),
+        allotmentId: _allotment.id,
+        currentMeasure: measure,
+        previousMeasure: _allotment.waterHistory[-1].currentMeasure,
+        age: _allotment.currentAge,
+        createdAt: DateTime.now().toString(),
+        consumedLiters: consumedLiters
+      );
+
+      await dbHelper.registerOfflineOperation(jsonEncode({
+        data
+      }), "WATER");
+
+      _allotment.waterHistory.add(data);
+      _allotment.currentTotalWaterConsume = _allotment.currentTotalWaterConsume + consumedLiters;
+    }
+
     notifyListeners(); 
   }
 
   Future<void> updateWeight(Auth auth, int totalUnits, double tare, List<WeightBox> weights) async {
-    Weight response = await _serverService
+    bool status = await InternetConnection().hasInternetAccess;
+
+    if (status) {
+      Weight response = await _serverService
       .registerWeight(auth, _allotment.id, totalUnits, tare, weights);
 
       await dbHelper.registerWeight(response);
       _allotment.weightHistory.add(response);
       _allotment.currentWeight = response.weight;
+    } else {
+      Weight data = Weight(
+        id: Random().nextInt(100).toString(),
+        allotmentId: _allotment.id,
+        age: _allotment.currentAge,
+        weight: 0.0,
+        totalUnits: totalUnits,
+        tare: tare,
+        createdAt: DateTime.now().toString(),
+        boxesWeights: []
+      );
 
-      notifyListeners();
+      List<WeightBox> boxWeights = weights.map((w) => WeightBox(
+        id: Random().nextInt(100).toString(),
+        weight: w.weight,
+        weightId: data.id,
+        number: w.number,
+        units: w.units
+      )).toList();
+
+      double totalWeight = boxWeights.fold(0, (sum, weight) => sum + (weight.weight - tare));
+      double averageWeight = totalWeight / totalUnits;
+
+      data.weight = averageWeight;
+      data.boxesWeights = boxWeights;
+
+      await dbHelper.registerOfflineOperation(jsonEncode({
+        data
+      }), "WEIGHT");
+
+      _allotment.weightHistory.add(data);
+      _allotment.currentWeight = data.weight;
+    }
+
+    notifyListeners();
   }
 
   Future<void> updateFeed(

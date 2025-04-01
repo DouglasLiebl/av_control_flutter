@@ -78,7 +78,7 @@ class FeedTableRows {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.breakfast_dining_outlined, size: 14, color: DefaultColors.iconAmber(),),
+                            Icon(Icons.breakfast_dining_outlined, size: 16, color: DefaultColors.iconGreen(),),
                             SizedBox(width: 5),
                             Text(
                               DateFormater.formatDateString(history.createdAt),
@@ -207,7 +207,7 @@ class FeedTableRows {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.breakfast_dining_outlined, size: 14, color: DefaultColors.iconAmber(),),
+                              Icon(Icons.breakfast_dining_outlined, size: 16, color: DefaultColors.iconGreen(),),
                               SizedBox(width: 5),
                               Text(
                                 DateFormater.formatDateString(history.createdAt),
