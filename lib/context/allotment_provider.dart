@@ -107,6 +107,10 @@ class AllotmentProvider with ChangeNotifier {
     return _allotment.weightHistory;
   }
 
+  List<Feed> getFeedHistory() {
+    return _allotment.feedHistory;
+  }
+
   Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {
     MortalityDto response = await _serverService
       .registerMortality(auth, _allotment.id, deaths, eliminations);

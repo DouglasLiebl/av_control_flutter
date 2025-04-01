@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:demo_project/components/table_rows.dart';
+import 'package:demo_project/components/feed_table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/xml_receiver.dart';
@@ -174,20 +174,20 @@ class _FeedDetailsState extends State<FeedDetails> {
               ),
               SizedBox(height: 16),
               // Registers
-              if (allotmentProvider.getMortalityHistory().isNotEmpty) 
-                TableRows.getMortalityTopRow(),
+              if (allotmentProvider.getFeedHistory().isNotEmpty) 
+                FeedTableRows.getFeedTopRow(),
               ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: allotmentProvider.getMortalityHistory().length,
+                itemCount: allotmentProvider.getFeedHistory().length,
                 itemBuilder: (context, index) {
                   
-                  final history = allotmentProvider.getMortalityHistory()[index];
+                  final history = allotmentProvider.getFeedHistory()[index];
 
-                  if (!((allotmentProvider.getMortalityHistory().length - 1) == index)) {
-                    return TableRows.getMortalityMiddleRow(history);
+                  if (!((allotmentProvider.getFeedHistory().length - 1) == index)) {
+                    return FeedTableRows.getFeedMiddleRow(history);
                   } else {
-                    return TableRows.getMortalityBottomRow(history);
+                    return FeedTableRows.getFeedBottomRow(history);
                   }
                 }
               )

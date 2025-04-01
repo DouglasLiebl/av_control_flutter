@@ -32,6 +32,11 @@ class _XmlReceiverState extends State<XmlReceiver> {
 
   late XmlDocument data;
 
+  void _refreshData() {
+    setState(() {});
+    widget.changeState();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,13 +74,15 @@ class _XmlReceiverState extends State<XmlReceiver> {
     void registerFeed() async {
       await allotmentProvider.updateFeed(
         provider.getAuth(), 
-        _allotmentController.text,
+        widget.allotmentId ?? _allotmentController.text,
         _accessKeyController.text, 
         _nfeNumberController.text, 
         _emmitedAtController.text, 
         double.parse(_weightController.text), 
         _typeController.text
       );
+
+      _refreshData();
     }
 
     return WillPopScope(
@@ -102,11 +109,15 @@ class _XmlReceiverState extends State<XmlReceiver> {
                 child: InkWell(
                   onTap: () async {
                     registerFeed();
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage())
-                    );                      
+                    if (widget.allotmentId == null) {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage())
+                      );   
+                    } else {
+                      Navigator.of(context).pop();
+                    }             
                   },
                   overlayColor: MaterialStateProperty.resolveWith<Color?>(
                     (Set<MaterialState> states) {

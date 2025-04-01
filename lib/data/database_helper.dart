@@ -502,7 +502,7 @@ class DatabaseHelper {
       allotmentId: f['allotment_id'],
       accessKey: f['access_key'],
       nfeNumber: f['nfe_number'],
-      emittedAt: f['emmited_at'],
+      emittedAt: f['emitted_at'],
       weight: f['weight'],
       type: f["type"],
       createdAt: f['created_at']

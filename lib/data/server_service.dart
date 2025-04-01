@@ -112,6 +112,7 @@ class ServerService {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = await jsonDecode(response.body);
+      print(jsonResponse);
       return Allotment.fromJson(jsonResponse);
     } else {
       throw Exception("Failed to fetch allotment details");

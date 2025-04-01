@@ -39,7 +39,7 @@ class _DetailsPage extends State<DetailsPage> {
       MortalityDetails(aviary: widget.aviary, onRefresh: refreshPage),
       WaterDetails(id: widget.aviary.id, onRefresh: refreshPage),
       WeightDetails(id: widget.aviary.id, onRefresh: refreshPage),
-      FeedDetails(id: widget.aviary.activeAllotmentId!, onRefresh: refreshPage)
+      FeedDetails(id: widget.aviary.activeAllotmentId ?? "", onRefresh: refreshPage)
     ];
   }
 
