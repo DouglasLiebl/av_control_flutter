@@ -13,8 +13,8 @@ import 'package:http/http.dart' as http;
 
 class ServerService {
   final String baseUrl = Platform.isAndroid 
-    ? 'http://10.0.2.2:8080'
-    : 'http://localhost:8080';
+    ? 'http://44.201.40.23:8080'
+    : 'http://44.201.40.23:8080';
 
   Future<Account> login(String email, String password) async {
     final response = await http.post(

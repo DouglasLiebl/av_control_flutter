@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:demo_project/data/database_helper.dart';
+import 'package:demo_project/data/secure_storage_service.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/dto/feed_dto.dart';
 import 'package:demo_project/dto/mortality_dto.dart';
@@ -14,11 +15,13 @@ import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
 import 'package:demo_project/models/weight_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class AllotmentProvider with ChangeNotifier {
   final DatabaseHelper dbHelper = DatabaseHelper();
   final ServerService _serverService = ServerService();
+  final SecureStorageService _secureStorageService = SecureStorageService(storage: FlutterSecureStorage());
 
   Allotment _allotment = Allotment(
     id: '', 
@@ -50,14 +53,20 @@ class AllotmentProvider with ChangeNotifier {
       final allotmentData = await _serverService.getAllotmentDetails(auth, allotmentId);
       _allotment = allotmentData;
       await dbHelper.updateAllotmentData(allotmentData);
-      notifyListeners();
     } else {
-      final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
-      _allotment = allotmentData; 
-      notifyListeners();
+      if (await dbHelper.hasDataToSync()) {
+        Allotment? localData = await _secureStorageService.getAllotment(allotmentId);
+        
+        if (localData != null) {
+          _allotment = localData;
+        }
+      } else {
+        final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
+        _allotment = allotmentData;
+      } 
     }
 
-   
+    notifyListeners();
   }
 
   Future<void> registerAllotment(Auth auth, aviaryId, int totalAmount) async {
@@ -117,7 +126,7 @@ class AllotmentProvider with ChangeNotifier {
   Future<void> updateMortality(Auth auth, int deaths, int eliminations) async {
     bool status = await InternetConnection().hasInternetAccess;
 
-    if (status) {
+    if (!status) {
       MortalityDto response = await _serverService
         .registerMortality(auth, _allotment.id, deaths, eliminations);
 
@@ -135,9 +144,7 @@ class AllotmentProvider with ChangeNotifier {
         eliminations: eliminations, 
         createdAt: DateTime.now().toString());
 
-      await dbHelper.registerOfflineOperation(jsonEncode({
-        data
-      }), "MORTALITY");
+      await dbHelper.registerOfflineOperation(data.toJson().toString(), "MORTALITY");
 
       _allotment.mortalityHistory.add(data);
 

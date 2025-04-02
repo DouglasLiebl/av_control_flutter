@@ -39,4 +39,15 @@ class Mortality {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "allotmentId": allotmentId,
+      "age": age,
+      "deaths": deaths,
+      "eliminations": eliminations,
+      "createdAt": createdAt
+    };
+  }
+
 }

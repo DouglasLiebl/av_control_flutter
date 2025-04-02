@@ -9,6 +9,7 @@ import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:demo_project/models/feed.dart';
 import 'package:demo_project/models/mortality.dart';
+import 'package:demo_project/models/sync_data.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
 import 'package:demo_project/models/weight_box.dart';
@@ -687,7 +688,19 @@ class DatabaseHelper {
     }); 
   }
 
-  Future<void> cleanOfflineOperations() async {
+  Future<List<SyncData>> getPendingOperations() async {
+    final db = await database;
+
+    List<Map<String, dynamic>> data = await db.rawQuery(
+      '''
+      SELECT * FROM tb_offline_sync
+      '''
+    );
+
+    return data.map((d) => SyncData.fromJson(d)).toList();
+  }
+
+  Future<void> cleanPendingOperations() async {
     final db = await database;
 
     await db.transaction((tx) async {
@@ -701,13 +714,41 @@ class DatabaseHelper {
       final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM tb_account'));
       return count != null && count > 0;
     } catch (e) {
-      print('Error checking local data: $e');
       return false;
     }
   }
 
   Future<void> registerOfflineData(int id, String type, String data) async {
-    
+    final db = await database;
+
+    await db.transaction((tx) async {
+      await tx.insert(
+        "tb_offline_sync",
+        {
+          "id": Random().nextInt(100).toString(),
+          "type": type,
+          "data": data
+        }
+      );
+    });
+  }
+
+  Future<void> cleanOfflineSync() async {
+    final db = await database;
+
+    await db.transaction((tx) async {
+      await tx.rawQuery("DELETE FROM tb_offline_sync");
+    });
+  }
+
+  Future<bool> hasDataToSync() async {
+    try {
+      final db = await database;
+      final count = Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT(*) FROM tb_offline_sync"));
+      return count != null && count > 0;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> cleanDatabase(String id) async {

@@ -1,13 +1,17 @@
 import 'package:demo_project/data/database_helper.dart';
+import 'package:demo_project/data/secure_storage_service.dart';
 import 'package:demo_project/data/server_service.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DataProvider with ChangeNotifier {
   final DatabaseHelper dbHelper = DatabaseHelper();
   final ServerService _serverService = ServerService();
+  final SecureStorageService _secureStorage = SecureStorageService(storage: FlutterSecureStorage());
+
   Account _account = Account(
     id: '',
     firstName: '',
@@ -33,6 +37,7 @@ class DataProvider with ChangeNotifier {
     if (await dbHelper.hasLocalData()) {
       final accountData = await dbHelper.getContext();
       _account = accountData;
+      _secureStorage.setItem("Auth", accountData.authData.toString());
     }
     
     notifyListeners();

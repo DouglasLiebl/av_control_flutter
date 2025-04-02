@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:demo_project/models/allotment.dart';
+import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/mortality.dart';
 import 'package:demo_project/models/water.dart';
 import 'package:demo_project/models/weight.dart';
@@ -21,6 +22,27 @@ class SecureStorageService {
 
   Future<void> deleteItem(String key) async {
     await storage.delete(key: key);
+  }
+
+  Future<Auth?> getAuth() async {
+    String? storedData = await getItem("Auth");
+
+    if (storedData != null) {
+      Map<String, dynamic> json = jsonDecode(storedData);
+      return Auth.fromJson(json);
+    }
+  
+    return null;
+  }
+
+  Future<Allotment?> getAllotment(String allotmentId) async {
+    String? storedData = await getItem(allotmentId);
+
+    if (storedData != null) {
+      Map<String, dynamic> json = jsonDecode(storedData);
+      return Allotment.fromJson(json);
+    }
+    return null;
   }
 
   Future<void> setMortality(Mortality value, double newDeathPercentage) async {

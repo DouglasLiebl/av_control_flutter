@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
+import 'package:demo_project/service/connectivity_service.dart';
 import 'package:demo_project/views/home.dart';
 import 'package:demo_project/views/login.dart';
 import 'package:demo_project/views/xml_receiver.dart';
@@ -9,12 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DataProvider()),
-        ChangeNotifierProvider(create: (_) => AllotmentProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectivityService()),
+        ChangeNotifierProvider(create: (_) => AllotmentProvider())
       ],
       child: const MyApp(),
     ),
@@ -34,7 +38,7 @@ class _MyAppState extends State<MyApp> {
    @override
   void initState() {
     super.initState();
-
+    
     ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) {
       _handleSharedFile(value);
     }, onError: (err) {
@@ -50,7 +54,6 @@ class _MyAppState extends State<MyApp> {
     void _handleSharedFile(List<SharedMediaFile> files) async {
     if (files.isNotEmpty) {
       String path = files.first.path;
-      print("Received file path: $path");
 
       // Read the file content
       File file = File(path);
