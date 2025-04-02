@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/home/douglas/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/douglas/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/douglas/codes/av_control_flutter/android/app/.cxx/Debug/5e42b732/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/douglas/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/douglas/codes/av_control_flutter/android/app/.cxx/Debug/5e42b732/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

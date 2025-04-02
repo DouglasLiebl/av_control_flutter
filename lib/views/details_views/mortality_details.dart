@@ -1,3 +1,4 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/components/table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
@@ -196,6 +197,10 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                 ),
                               ),
                               onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                      
+                                Loading.getLoading(context);
+
                                 final deaths = _deathsController.text.isEmpty ? 
                                   0 : int.parse(_deathsController.text);
                                 final eliminations = _eliminationsController.text.isEmpty ? 
@@ -206,9 +211,14 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                   deaths,
                                   eliminations
                                 );
+                                
                                 _deathsController.clear();
                                 _eliminationsController.clear();
                                 _refreshData();
+
+
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
                               }, 
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

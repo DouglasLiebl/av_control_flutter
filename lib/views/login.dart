@@ -1,3 +1,4 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:demo_project/views/home.dart';
@@ -156,12 +157,17 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 onPressed: () async {
+                                  FocusScope.of(context).unfocus();
+                      
+                                  Loading.getLoading(context);
+
                                   try {
                                     await provider.login(
                                       _emailController.text, 
                                       _passwordController.text
                                     );
 
+                                    if (!context.mounted) return;
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(builder: (context) => const HomePage())  

@@ -1,3 +1,4 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/components/weight_register_cards.dart';
 import 'package:demo_project/components/weight_table_rows.dart';
 import 'package:demo_project/context/allotment_provider.dart';
@@ -76,13 +77,14 @@ class _WaterDetailsState extends State<WeightRegister> {
       _refreshData();
     }
 
-    void finishRegister() async {
+    Future<void> finishRegister() async {
       final tareString = await storage.getItem("Tare");
       final tare = tareString != null ? double.parse(tareString) : 0.0;
       
       int totalUnits = weights.fold(0, (total, element) => total + element.units);
 
       await allotmentProvider.updateWeight(provider.getAuth(), totalUnits, tare, weights);
+      _refreshData();
     }
 
     Future<bool> closePopUp() async {
@@ -176,8 +178,13 @@ class _WaterDetailsState extends State<WeightRegister> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () async {
-                      finishRegister();  
-                      Navigator.of(context).pop();                      
+                      Loading.getLoading(context);
+
+                      await finishRegister();
+
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();  
+                      Navigator.of(context).pop();               
                     },
                     overlayColor: MaterialStateProperty.resolveWith<Color?>(
                       (Set<MaterialState> states) {

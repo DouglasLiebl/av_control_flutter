@@ -500,37 +500,13 @@ class DatabaseHelper {
       [allotmentData['id']]
     );
 
-    List<Feed> feeds = feedHistory.map((f) => Feed(
-      id: f['id'],
-      allotmentId: f['allotment_id'],
-      accessKey: f['access_key'],
-      nfeNumber: f['nfe_number'],
-      emittedAt: f['emitted_at'],
-      weight: f['weight'],
-      type: f["type"],
-      createdAt: f['created_at']
-    )).toList();
+    List<Feed> feeds = feedHistory.map((f) => Feed.fromJson(f)).toList();
 
-    final allotment = Allotment(
-      id: allotmentData['id'] ?? '',
-      aviaryId: allotmentData['aviary_id'] ?? '',
-      isActive: (allotmentData['is_active'] as int) == 1,
-      number: allotmentData['number'] ?? 0,
-      totalAmount: allotmentData['total_amount'] ?? 0,
-      currentAge: allotmentData['current_age'] ?? 0,
-      startedAt: allotmentData['started_at'] ?? '',
-      endedAt: allotmentData['ended_at'] ?? '',
-      currentDeathPercentage: allotmentData['current_death_percentage'] ?? 0.0,
-      currentWeight: allotmentData['current_weight'] ?? 0.0,
-      currentTotalWaterConsume: (allotmentData['current_total_water_consume'] ?? 0).toInt(),
-      currentTotalFeedReceived: allotmentData['current_total_feed_received'] ?? 0.0,
-      waterHistory: waterHistory
-        .map((w) => Water.fromJson(w))
-        .toList(),
-      mortalityHistory: mortalities,
-      weightHistory: weights,
-      feedHistory: feeds
-    );
+    final allotment = Allotment.fromJson(allotmentData);
+    allotment.mortalityHistory = mortalities;
+    allotment.waterHistory = waterHistory.map((w) => Water.fromJson(w)).toList();
+    allotment.weightHistory = weights;
+    allotment.feedHistory = feeds;
 
     return allotment;
   }
@@ -713,7 +689,7 @@ class DatabaseHelper {
       final db = await database;
       final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM tb_account'));
       return count != null && count > 0;
-    } catch (e) {
+    } catch (e) { 
       return false;
     }
   }
@@ -721,7 +697,8 @@ class DatabaseHelper {
   Future<void> registerOfflineData(int id, String type, String data) async {
     final db = await database;
 
-    await db.transaction((tx) async {
+    try {
+       await db.transaction((tx) async {
       await tx.insert(
         "tb_offline_sync",
         {
@@ -731,6 +708,9 @@ class DatabaseHelper {
         }
       );
     });
+    } catch(e) {
+      print(e);
+    }
   }
 
   Future<void> cleanOfflineSync() async {

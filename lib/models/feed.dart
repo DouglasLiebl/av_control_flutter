@@ -24,13 +24,13 @@ class Feed {
   factory Feed.fromJson(Map<String, dynamic> json) {
     return Feed(
       id: json['id'],
-      allotmentId: json['allotmentId'],
-      accessKey: json['accessKey'],
-      nfeNumber: json['nfeNumber'],
-      emittedAt: json['emittedAt'],
+      allotmentId: json['allotmentId'] ?? "",
+      accessKey: json['accessKey'] ?? "",
+      nfeNumber: json['nfeNumber'] ?? "",
+      emittedAt: json['emittedAt'] ?? "",
       weight: (json['weight'] as num).toDouble(),
       type: json["type"],
-      createdAt: json['createdAt']
+      createdAt: json['createdAt'] ?? ""
     );
   }
 

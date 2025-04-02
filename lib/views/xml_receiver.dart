@@ -1,3 +1,4 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/models/aviary.dart';
@@ -71,7 +72,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
     final matchingAviaryId = findMatchingAviaryId(xmlAviaryName, provider.getAviaries());
     _allotmentController.text = matchingAviaryId ?? "";
 
-    void registerFeed() async {
+    Future<void> registerFeed() async {
       await allotmentProvider.updateFeed(
         provider.getAuth(), 
         widget.allotmentId ?? _allotmentController.text,
@@ -108,14 +109,20 @@ class _XmlReceiverState extends State<XmlReceiver> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () async {
-                    registerFeed();
+                    Loading.getLoading(context);
+
+                    await registerFeed();
+
+                    if (!context.mounted) return;
                     if (widget.allotmentId == null) {
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage())
                       );   
                     } else {
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }             
                   },

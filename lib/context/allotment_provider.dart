@@ -157,6 +157,8 @@ class AllotmentProvider with ChangeNotifier {
 
       double newDeathPercentage = ((totalDeaths + totalEliminations) * 100.0) / _allotment.totalAmount;
       _allotment.currentDeathPercentage = newDeathPercentage;
+
+      _secureStorageService.setMortality(data, newDeathPercentage);
     }
  
     

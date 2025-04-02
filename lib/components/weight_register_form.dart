@@ -371,8 +371,7 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                       isTareEnabled = false;
                     });
                   }
-
-
+                  FocusScope.of(context).unfocus();
                   widget.onPress();
                 }, 
                 child: Row(

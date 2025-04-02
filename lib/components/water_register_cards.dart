@@ -1,9 +1,11 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/utils/default_colors.dart';
 import 'package:flutter/material.dart';
 
 class WaterRegisterCards {
 
   static Card firstRegisterCard(
+    BuildContext context,
     TextEditingController multiplierController, 
     TextEditingController measureController,
     Function onPress
@@ -163,7 +165,14 @@ class WaterRegisterCards {
                       ),
                     ),
                     onPressed: () async {
+                      FocusScope.of(context).unfocus();
+
+                      Loading.getLoading(context);
+
                       await onPress();
+
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
                     }, 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -190,6 +199,7 @@ class WaterRegisterCards {
   }
 
   static Card registerCard(
+    BuildContext context,
     TextEditingController measureController,
     bool isFistAllotmentRegister,
     Function onPress
@@ -307,7 +317,14 @@ class WaterRegisterCards {
                       ),
                     ),
                     onPressed: () async {
+                      FocusScope.of(context).unfocus();
+                      
+                      Loading.getLoading(context);
+
                       await onPress();
+
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
                     }, 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

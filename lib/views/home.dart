@@ -1,3 +1,4 @@
+import 'package:demo_project/components/loading.dart';
 import 'package:demo_project/context/allotment_provider.dart';
 import 'package:demo_project/context/data_provider.dart';
 import 'package:demo_project/utils/default_colors.dart';
@@ -172,38 +173,8 @@ class HomePage extends StatelessWidget {
                         ),
                         trailing: Icon(Icons.arrow_forward_ios, size: 15,),
                         onTap: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              return Center(
-                                child: Container(
-                                  padding: EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircularProgressIndicator(
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        "Carregando detalhes...",
-                                        style: TextStyle(
-                                          color: DefaultColors.textGray(),
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-
+                          Loading.getLoading(context);
+                          
                           if (aviary.activeAllotmentId != null) {
                             await allotmentProvider.loadContext(provider.getAuth(), aviary.activeAllotmentId!);
                           } else {

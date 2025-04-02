@@ -35,7 +35,7 @@ class _WaterDetailsState extends State<WaterDetails> {
 
     final aviary = provider.getAviaryById(widget.id);
 
-    void registerWaterMeasure() async {
+    Future<void> registerWaterMeasure() async {
 
       final measure = _measureController.text.isEmpty ? 
         0 : int.parse(_measureController.text);
@@ -49,11 +49,11 @@ class _WaterDetailsState extends State<WaterDetails> {
         multiplier, 
         measure
       );
-
-      await provider.reloadContext();
-
+      
       _measureController.clear();
       _multiplierController.clear();
+
+      await provider.reloadContext();
 
       _refreshData();
     }
@@ -69,11 +69,13 @@ class _WaterDetailsState extends State<WaterDetails> {
             children: [
               aviary.currentWaterMultiplier != null
               ? WaterRegisterCards.registerCard(
+                context,
                 _measureController,
                 allotmentProvider.getWaterHistory().isEmpty,
                 registerWaterMeasure
               )
               : WaterRegisterCards.firstRegisterCard(
+                context,
                 _multiplierController,
                 _measureController,
                 registerWaterMeasure

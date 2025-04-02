@@ -18,7 +18,7 @@ class WeightBox {
       id: json["id"],
       weightId: json["weightId"],
       number: json["number"],
-      weight: json["weight"],
+      weight: (json["weight"] as num).toDouble(),
       units: json["units"]
     );
   }

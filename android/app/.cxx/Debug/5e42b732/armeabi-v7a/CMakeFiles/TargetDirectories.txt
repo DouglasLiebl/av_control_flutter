@@ -1,0 +1,2 @@
+/home/douglas/codes/av_control_flutter/android/app/.cxx/Debug/5e42b732/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/douglas/codes/av_control_flutter/android/app/.cxx/Debug/5e42b732/armeabi-v7a/CMakeFiles/rebuild_cache.dir
