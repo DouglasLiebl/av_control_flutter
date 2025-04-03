@@ -42,5 +42,17 @@ class Water {
       createdAt: source.createdAt
     );
   }
+
+  static Map<String, dynamic> toJson(Water source) {
+    return {
+      'id': source.id,
+      'allotmentId': source.allotmentId,
+      'age': source.age,
+      'previousMeasure': source.previousMeasure,
+      'currentMeasure': source.currentMeasure,
+      'consumedLiters': source.consumedLiters,
+      'createdAt': source.createdAt
+    };
+  }
   
 }

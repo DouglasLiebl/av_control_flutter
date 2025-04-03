@@ -49,7 +49,8 @@ class AllotmentProvider with ChangeNotifier {
   Future<void> loadContext(Auth auth, String allotmentId) async {
     bool status = await InternetConnection().hasInternetAccess;
     
-    if (status) {
+    if (!status) {
+      print("SERVER");
       final allotmentData = await _serverService.getAllotmentDetails(auth, allotmentId);
       _allotment = allotmentData;
       await dbHelper.updateAllotmentData(allotmentData);
@@ -58,11 +59,14 @@ class AllotmentProvider with ChangeNotifier {
         Allotment? localData = await _secureStorageService.getAllotment(allotmentId);
         
         if (localData != null) {
+          print("LOCAL SECURE STORAGE");
           _allotment = localData;
         }
       } else {
+        print("LOCAL SQLITE");
         final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
         _allotment = allotmentData;
+        _secureStorageService.setItem(allotmentId, jsonEncode(Allotment.toJson(_allotment)));
       } 
     }
 
@@ -144,7 +148,7 @@ class AllotmentProvider with ChangeNotifier {
         eliminations: eliminations, 
         createdAt: DateTime.now().toString());
 
-      await dbHelper.registerOfflineOperation(data.toJson().toString(), "MORTALITY");
+      await dbHelper.registerOfflineOperation(jsonEncode(Mortality.toJson(data)), "MORTALITY");
 
       _allotment.mortalityHistory.add(data);
 
@@ -161,7 +165,6 @@ class AllotmentProvider with ChangeNotifier {
       _secureStorageService.setMortality(data, newDeathPercentage);
     }
  
-    
     notifyListeners();
   }
 

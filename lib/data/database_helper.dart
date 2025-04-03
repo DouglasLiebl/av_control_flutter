@@ -5,7 +5,6 @@ import 'package:demo_project/dto/mortality_dto.dart';
 import 'package:demo_project/dto/water_dto.dart';
 import 'package:demo_project/models/account.dart';
 import 'package:demo_project/models/allotment.dart';
-import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
 import 'package:demo_project/models/feed.dart';
 import 'package:demo_project/models/mortality.dart';
@@ -43,8 +42,8 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_account(
         id VARCHAR(300) PRIMARY KEY,
-        first_name VARCHAR(300),
-        last_name VARCHAR(300),
+        firstName VARCHAR(300),
+        lastName VARCHAR(300),
         email VARCHAR(300)
       );
     ''');
@@ -52,12 +51,12 @@ class DatabaseHelper {
     // Create auth data table
     await db.execute('''
       CREATE TABLE tb_auth_data(
-        account_id VARCHAR(300) PRIMARY KEY,
-        access_token TEXT,
-        token_type VARCHAR(40),
-        refresh_token TEXT,
-        expires_at VARCHAR(255),
-        FOREIGN KEY (account_id) REFERENCES tb_account(id) ON DELETE CASCADE
+        accountId VARCHAR(300) PRIMARY KEY,
+        accessToken TEXT,
+        tokenType VARCHAR(40),
+        refreshToken TEXT,
+        expiresAt VARCHAR(255),
+        FOREIGN KEY (accountId) REFERENCES tb_account(id) ON DELETE CASCADE
       );
     ''');
 
@@ -67,10 +66,10 @@ class DatabaseHelper {
         id VARCHAR(300) PRIMARY KEY,
         name VARCHAR(300),
         alias VARCHAR(255),
-        account_id VARCHAR(300),
-        active_allotment_id VARCHAR(300),
-        current_water_multiplier INTEGER,
-        FOREIGN KEY (account_id) REFERENCES tb_account(id) ON DELETE CASCADE
+        accountId VARCHAR(300),
+        activeAllotmentId VARCHAR(300),
+        currentWaterMultiplier INTEGER,
+        FOREIGN KEY (accountId) REFERENCES tb_account(id) ON DELETE CASCADE
       );
     ''');
 
@@ -78,17 +77,17 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_allotments(
         id VARCHAR(300) PRIMARY KEY,
-        aviary_id VARCHAR(300),
-        is_active BOOLEAN,
+        aviaryId VARCHAR(300),
+        isActive BOOLEAN,
         number INTEGER,
-        total_amount INTEGER,
-        current_age INTEGER,
-        started_at VARCHAR(100),
-        ended_at VARCHAR(100),
-        current_death_percentage DECIMAL(10, 3),
-        current_weight DECIMAL(10, 3),
-        current_total_water_consume INTEGER,
-        current_total_feed_received DECIMAL(12, 4)
+        totalAmount INTEGER,
+        currentAge INTEGER,
+        startedAt VARCHAR(100),
+        endedAt VARCHAR(100),
+        currentDeathPercentage DECIMAL(10, 3),
+        currentWeight DECIMAL(10, 3),
+        currentTotalWaterConsume INTEGER,
+        currentTotalFeedReceived DECIMAL(12, 4)
       );
     ''');
 
@@ -96,13 +95,13 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_water_history (
         id VARCHAR(300) PRIMARY KEY,
-        allotment_id VARCHAR(300),
+        allotmentId VARCHAR(300),
         age INTEGER,
-        previous_measure INTEGER,
-        current_measure INTEGER,
-        consumed_liters INTEGER,
-        created_at VARCHAR(100),
-        FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
+        previousMeasure INTEGER,
+        currentMeasure INTEGER,
+        consumedLiters INTEGER,
+        createdAt VARCHAR(100),
+        FOREIGN KEY (allotmentId) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
 
@@ -110,12 +109,12 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_mortality_history (
         id VARCHAR(300) PRIMARY KEY,
-        allotment_id VARCHAR(300),
+        allotmentId VARCHAR(300),
         age INTEGER,
         deaths INTEGER,
         eliminations INTEGER,
-        created_at VARCHAR(100),
-        FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
+        createdAt VARCHAR(100),
+        FOREIGN KEY (allotmentId) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
 
@@ -123,13 +122,13 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_weight_history (
         id VARCHAR(300) PRIMARY KEY,
-        allotment_id VARCHAR(300),
+        allotmentId VARCHAR(300),
         age INTEGER,
         weight DECIMAL(10, 3),
         tare DECIMAL(10, 3),
-        total_units INTEGER,
-        created_at VARCHAR(100),
-        FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
+        totalUnits INTEGER,
+        createdAt VARCHAR(100),
+        FOREIGN KEY (allotmentId) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
 
@@ -138,40 +137,40 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE tb_box_weight_history (
         id VARCHAR(300) PRIMARY KEY,
-        weight_id VARCHAR(300),
+        weightId VARCHAR(300),
         number INTEGER,
         weight DECIMAL(10, 3),
         units INTEGER,
-        FOREIGN KEY (weight_id) REFERENCES tb_weight_history(id) ON DELETE CASCADE
+        FOREIGN KEY (weightId) REFERENCES tb_weight_history(id) ON DELETE CASCADE
       );
     ''');
 
     await db.execute('''
       CREATE TABLE tb_feed_history (
         id VARCHAR(300) PRIMARY KEY,
-        allotment_id VARCHAR(300),
-        access_key TEXT,
-        nfe_number VARCHAR(300),
-        emitted_at VARCHAR(100),
+        allotmentId VARCHAR(300),
+        accessKey TEXT,
+        nfeNumber VARCHAR(300),
+        emittedAt VARCHAR(100),
         weight DECIMAL(12, 4),
         type VARCHAR(10),
-        created_at VARCHAR(100),
-        FOREIGN KEY (allotment_id) REFERENCES tb_allotments(id) ON DELETE CASCADE
+        createdAt VARCHAR(100),
+        FOREIGN KEY (allotmentId) REFERENCES tb_allotments(id) ON DELETE CASCADE
       );
     ''');
 
     await db.execute('''
       CREATE TABLE tb_offline_sync (
         id INTEGER PRIMARY KEY,
-        operation_type VARCHAR(40),
+        operationType VARCHAR(40),
         data TEXT
       );
     ''');
 
     // Create indexes
     await db.execute('CREATE INDEX idx_account_email ON tb_account(email);');
-    await db.execute('CREATE INDEX idx_auth_token ON tb_auth_data(access_token);');
-    await db.execute('CREATE INDEX idx_account_id ON tb_aviaries(account_id);');
+    await db.execute('CREATE INDEX idx_auth_token ON tb_auth_data(accessToken);');
+    await db.execute('CREATE INDEX idx_account_id ON tb_aviaries(accountId);');
     await db.execute('CREATE INDEX idx_id ON tb_allotments(id);');
   }
 
@@ -181,8 +180,8 @@ class DatabaseHelper {
       "tb_account", 
       {
         'id': request.id,
-        'first_name': request.firstName,
-        'last_name': request.lastName,
+        'firstName': request.firstName,
+        'lastName': request.lastName,
         'email': request.email
       }
     );
@@ -190,11 +189,11 @@ class DatabaseHelper {
     await db.insert(
       "tb_auth_data", 
       {
-        'account_id': request.id,
-        'access_token': request.authData.accessToken,
-        'token_type': request.authData.tokenType,
-        'refresh_token': request.authData.refreshToken,
-        'expires_at': request.authData.accessTokenExpiration
+        'accountId': request.id,
+        'accessToken': request.authData.accessToken,
+        'tokenType': request.authData.tokenType,
+        'refreshToken': request.authData.refreshToken,
+        'expiresAt': request.authData.accessTokenExpiration
       }
     );
 
@@ -205,9 +204,9 @@ class DatabaseHelper {
           'id': a.id,
           'name': a.name,
           'alias': a.alias,
-          'account_id': request.id,
-          'active_allotment_id': a.activeAllotmentId,
-          'current_water_multiplier': a.currentWaterMultiplier
+          'accountId': request.id,
+          'activeAllotmentId': a.activeAllotmentId,
+          'currentWaterMultiplier': a.currentWaterMultiplier
         }
       ); 
     }
@@ -222,9 +221,9 @@ class DatabaseHelper {
           'id': request.id,
           'name': request.name,
           'alias': request.alias,
-          'account_id': request.accountId,
-          'active_allotment_id': null,
-          'current_water_multiplier': null
+          'accountId': request.accountId,
+          'activeAllotmentId': null,
+          'currentWaterMultiplier': null
         },
         conflictAlgorithm: ConflictAlgorithm.replace
       );
@@ -239,23 +238,24 @@ class DatabaseHelper {
         "tb_allotments", 
         {
           'id': request.id,
-          'aviary_id': request.aviaryId,
-          'is_active': request.isActive ? 1 : 0,
+          'aviaryId': request.aviaryId,
+          'isActive': request.isActive ? 1 : 0,
           'number': request.number,
-          'total_amount': request.totalAmount,
-          'current_age': request.currentAge,
-          'started_at': request.startedAt,
-          'ended_at': request.endedAt,
-          'current_death_percentage': request.currentDeathPercentage,
-          'current_weight': request.currentWeight,
-          'current_total_water_consume': request.currentTotalWaterConsume
+          'totalAmount': request.totalAmount,
+          'currentAge': request.currentAge,
+          'startedAt': request.startedAt,
+          'endedAt': request.endedAt,
+          'currentDeathPercentage': request.currentDeathPercentage,
+          'currentWeight': request.currentWeight,
+          'currentTotalWaterConsume': request.currentTotalWaterConsume,
+          'currentTotalFeedReceived': request.currentTotalFeedReceived
         },
       );
 
       await txn.update(
         "tb_aviaries", 
         {
-          'active_allotment_id': request.id
+          'activeAllotmentId': request.id
         },
         where: 'id = ?',
         whereArgs: [request.aviaryId]
@@ -271,16 +271,17 @@ class DatabaseHelper {
         "tb_allotments", 
         {
           'id': request.id,
-          'aviary_id': request.aviaryId,
-          'is_active': request.isActive ? 1 : 0,
+          'aviaryId': request.aviaryId,
+          'isActive': request.isActive ? 1 : 0,
           'number': request.number,
-          'total_amount': request.totalAmount,
-          'current_age': request.currentAge,
-          'started_at': request.startedAt,
-          'ended_at': request.endedAt,
-          'current_death_percentage': request.currentDeathPercentage,
-          'current_weight': request.currentWeight,
-          'current_total_water_consume': request.currentTotalWaterConsume
+          'totalAmount': request.totalAmount,
+          'currentAge': request.currentAge,
+          'startedAt': request.startedAt,
+          'endedAt': request.endedAt,
+          'currentDeathPercentage': request.currentDeathPercentage,
+          'currentWeight': request.currentWeight,
+          'currentTotalWaterConsume': request.currentTotalWaterConsume,
+          'currentTotalFeedReceived': request.currentTotalFeedReceived
         },
         conflictAlgorithm: ConflictAlgorithm.replace
       );
@@ -290,12 +291,12 @@ class DatabaseHelper {
           "tb_water_history",
           {
             'id': h.id,
-            'allotment_id': h.allotmentId,
+            'allotmentId': h.allotmentId,
             'age': h.age,
-            'previous_measure': h.previousMeasure,
-            'current_measure': h.currentMeasure,
-            'consumed_liters': h.consumedLiters,
-            'created_at': h.createdAt
+            'previousMeasure': h.previousMeasure,
+            'currentMeasure': h.currentMeasure,
+            'consumedLiters': h.consumedLiters,
+            'createdAt': h.createdAt
           },
           conflictAlgorithm: ConflictAlgorithm.replace
         );
@@ -306,11 +307,11 @@ class DatabaseHelper {
           "tb_mortality_history",
           {
             'id': h.id,
-            'allotment_id': h.allotmentId,
+            'allotmentId': h.allotmentId,
             'age': h.age,
             'deaths': h.deaths,
             'eliminations': h.eliminations,
-            'created_at': h.createdAt
+            'createdAt': h.createdAt
           },
           conflictAlgorithm: ConflictAlgorithm.replace
         );
@@ -321,12 +322,12 @@ class DatabaseHelper {
           "tb_weight_history",
           {
             'id': h.id,
-            'allotment_id': h.allotmentId,
+            'allotmentId': h.allotmentId,
             'age': h.age,
             'weight': h.weight,
             'tare': h.tare,
-            'total_units': h.totalUnits,
-            'created_at': h.createdAt
+            'totalUnits': h.totalUnits,
+            'createdAt': h.createdAt
           },
           conflictAlgorithm: ConflictAlgorithm.replace
         );
@@ -336,7 +337,7 @@ class DatabaseHelper {
             "tb_box_weight_history",
             {
               'id': hb.id,
-              'weight_id': hb.weightId,
+              'weightId': hb.weightId,
               'number': hb.number,
               'weight': hb.weight,
               'units': hb.units
@@ -352,13 +353,13 @@ class DatabaseHelper {
           "tb_feed_history",
           {
             "id": f.id,
-            "allotment_id": f.allotmentId,
-            "access_key": f.accessKey,
-            "nfe_number": f.nfeNumber,
-            "emitted_at": f.emittedAt,
+            "allotmentId": f.allotmentId,
+            "accessKey": f.accessKey,
+            "nfeNumber": f.nfeNumber,
+            "emittedAt": f.emittedAt,
             "weight": f.weight,
             "type": f.type,
-            "created_at": f.createdAt
+            "createdAt": f.createdAt
           },
           conflictAlgorithm: ConflictAlgorithm.replace
         );
@@ -374,12 +375,15 @@ class DatabaseHelper {
       '''
       SELECT 
         a.*,
-        auth.access_token,
-        auth.token_type,
-        auth.refresh_token,
-        auth.expires_at
+        json_object(
+          'accountId', auth.accountId,
+          'accessToken', auth.accessToken,
+          'tokenType', auth.tokenType, 
+          'refreshToken', auth.refreshToken,
+          'accessTokenExpiration', auth.expiresAt
+        ) as auth
       FROM tb_account a
-      LEFT JOIN tb_auth_data auth ON auth.account_id = a.id
+      LEFT JOIN tb_auth_data auth ON auth.accountId = a.id
       ''');
 
     if (results.isEmpty) {
@@ -390,34 +394,13 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> registeredAviaries = await db.rawQuery(
       '''
       SELECT * FROM tb_aviaries
-      WHERE account_id = ?
+      WHERE accountId = ?
       ''',
       [accountData['id']]
     );
     
-    final account = Account(
-      id: accountData['id'] ?? '',
-      firstName: accountData['first_name'] ?? '', 
-      lastName: accountData['last_name'] ?? '',
-      email: accountData['email'] ?? '',
-      authData: Auth(
-        accountId: accountData['id'] ?? '',
-        accessToken: accountData['access_token'] ?? '',
-        tokenType: accountData['token_type'] ?? '',
-        refreshToken: accountData['refresh_token'] ?? '',
-        accessTokenExpiration: accountData['expires_at'] ?? '',
-      ),
-      aviaries: registeredAviaries
-        .map((a) => Aviary(
-          id: a['id'],
-          name: a['name'],
-          alias: a['alias'],
-          accountId: a['account_id'],
-          activeAllotmentId: a['active_allotment_id'],
-          currentWaterMultiplier: a['current_water_multiplier']
-        ))
-        .toList(),
-    );
+    Account account = Account.fromSQLite(accountData);
+    account.aviaries = registeredAviaries.map((a) => Aviary.fromJson(a)).toList();
 
     return account;
   }
@@ -441,7 +424,7 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> waterHistory = await db.rawQuery(
       '''
       SELECT * FROM tb_water_history
-      WHERE allotment_id = ?
+      WHERE allotmentId = ?
       ''',
       [allotmentData['id']]
     );
@@ -449,24 +432,15 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> mortalityHistory = await db.rawQuery(
       '''
       SELECT * FROM tb_mortality_history
-      WHERE allotment_id = ?
+      WHERE allotmentId = ?
       ''',
       [allotmentData['id']]
     );
-
-    final List<Mortality> mortalities = mortalityHistory.map((m) => Mortality(
-      id: m['id'],
-      allotmentId: m['allotment_id'],
-      age: m['age'],
-      deaths: m['deaths'].toInt(),
-      eliminations: m['eliminations'].toInt(),
-      createdAt: m['created_at']
-    )).toList();
     
     final List<Map<String, dynamic>> weightHistory = await db.rawQuery(
       '''
       SELECT * FROM tb_weight_history
-      WHERE allotment_id = ?
+      WHERE allotmentId = ?
       ''',
       [allotmentData['id']]
     );
@@ -482,7 +456,7 @@ class DatabaseHelper {
 
       return Weight(
         id: weight['id'],
-        allotmentId: weight['allotment_id'],
+        allotmentId: weight['allotmentId'],
         age: weight['age'],
         weight: weight['weight'],
         tare: weight['tare'],
@@ -495,18 +469,16 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> feedHistory = await db.rawQuery(
       '''
       SELECT * FROM tb_feed_history
-      WHERE allotment_id = ?
+      WHERE allotmentId = ?
       ''',
       [allotmentData['id']]
     );
 
-    List<Feed> feeds = feedHistory.map((f) => Feed.fromJson(f)).toList();
-
-    final allotment = Allotment.fromJson(allotmentData);
-    allotment.mortalityHistory = mortalities;
+    final allotment = Allotment.fromSQLite(allotmentData);
+    allotment.mortalityHistory = mortalityHistory.map((m) => Mortality.fromJson(m)).toList();
     allotment.waterHistory = waterHistory.map((w) => Water.fromJson(w)).toList();
     allotment.weightHistory = weights;
-    allotment.feedHistory = feeds;
+    allotment.feedHistory = feedHistory.map((f) => Feed.fromJson(f)).toList();
 
     return allotment;
   }
@@ -519,18 +491,18 @@ class DatabaseHelper {
         "tb_mortality_history",
         {
           'id': request.id,
-          'allotment_id': request.allotmentId,
+          'allotmentId': request.allotmentId,
           'age': request.age,
           'deaths': request.deaths,
           'eliminations': request.eliminations,
-          'created_at': request.createdAt
+          'createdAt': request.createdAt
         }
       );
 
       await txn.update(
         "tb_allotments",
         {
-          "current_death_percentage": request.newDeathPercentage
+          "currentDeathPercentage": request.newDeathPercentage
         },
         where: "id = ?",
         whereArgs: [request.allotmentId]
@@ -547,19 +519,19 @@ class DatabaseHelper {
         "tb_water_history",
         {
           "id": request.id,
-          "allotment_id": request.allotmentId,
+          "allotmentId": request.allotmentId,
           "age": request.age,
-          "previous_measure": request.previousMeasure,
-          "current_measure": request.currentMeasure,
-          "consumed_liters": request.consumedLiters,
-          "created_at": request.createdAt
+          "previousMeasure": request.previousMeasure,
+          "currentMeasure": request.currentMeasure,
+          "consumedLiters": request.consumedLiters,
+          "createdAt": request.createdAt
         }
       );
 
       await txn.update(
         "tb_aviaries", 
         {
-          "current_water_multiplier": request.multiplier
+          "currentWaterMultiplier": request.multiplier
         },
         where: "id = ?",
         whereArgs: [aviaryId]
@@ -568,7 +540,7 @@ class DatabaseHelper {
       await txn.update(
         "tb_allotments",
         {
-          "current_total_water_consume": request.newTotalConsumed
+          "currentTotalWaterConsume": request.newTotalConsumed
         },
         where: "id = ?",
         whereArgs: [request.allotmentId]
@@ -585,12 +557,12 @@ class DatabaseHelper {
         "tb_weight_history", 
         {
           "id": request.id,
-          "allotment_id": request.allotmentId,
+          "allotmentId": request.allotmentId,
           "age": request.age,
           "weight": request.weight,
           "tare": request.tare,
-          "total_units": request.totalUnits,
-          "created_at": request.createdAt
+          "totalUnits": request.totalUnits,
+          "createdAt": request.createdAt
         }
       );
 
@@ -599,7 +571,7 @@ class DatabaseHelper {
           "tb_box_weight_history",
           {
             "id": w.id,
-            "weight_id": w.weightId,
+            "weightId": w.weightId,
             "number": w.number,
             "weight": w.weight,
             "units": w.units
@@ -610,7 +582,7 @@ class DatabaseHelper {
       await tx.update(
         "tb_allotments",
         {
-          "current_weight": request.weight
+          "currentWeight": request.weight
         },
         where: "id = ?",
         whereArgs: [request.allotmentId]
@@ -627,20 +599,20 @@ class DatabaseHelper {
         "tb_feed_history", 
         {
           "id": request.id,
-          "allotment_id": request.allotmentId,
-          "access_key": request.accessKey,
-          "nfe_number": request.nfeNumber,
-          "emitted_at": request.emittedAt,
+          "allotmentId": request.allotmentId,
+          "accessKey": request.accessKey,
+          "nfeNumber": request.nfeNumber,
+          "emittedAt": request.emittedAt,
           "weight": request.weight,
           "type": request.type,
-          "created_at": request.createdAt
+          "createdAt": request.createdAt
         }
       );
 
       tx.update(
         "tb_allotments", 
         {
-          "current_total_feed_received": request.currentTotalFeedReceived
+          "currentTotalFeedReceived": request.currentTotalFeedReceived
         },
         where: "id = ?",
         whereArgs: [request.allotmentId]
@@ -657,7 +629,7 @@ class DatabaseHelper {
         "tb_offline_sync", 
         {
           "id": Random().nextInt(100),
-          "operation_type": operationType,
+          "operationType": operationType,
           "data": data
         }  
       );
@@ -691,25 +663,6 @@ class DatabaseHelper {
       return count != null && count > 0;
     } catch (e) { 
       return false;
-    }
-  }
-
-  Future<void> registerOfflineData(int id, String type, String data) async {
-    final db = await database;
-
-    try {
-       await db.transaction((tx) async {
-      await tx.insert(
-        "tb_offline_sync",
-        {
-          "id": Random().nextInt(100).toString(),
-          "type": type,
-          "data": data
-        }
-      );
-    });
-    } catch(e) {
-      print(e);
     }
   }
 

@@ -25,6 +25,8 @@ class WeightBox {
 
   static Map<String, dynamic> toJson(WeightBox source) {
     return {
+      "id": source.id,
+      "weightId": source.id,
       "number": source.number,
       "weight": source.weight,
       "units": source.units

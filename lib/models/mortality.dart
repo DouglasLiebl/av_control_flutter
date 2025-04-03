@@ -39,15 +39,15 @@ class Mortality {
     );
   }
 
-  Map<String, dynamic> toJson() {
+  static Map<String, dynamic> toJson(Mortality source) {
     return {
-      "id": id,
-      "allotmentId": allotmentId,
-      "age": age,
-      "deaths": deaths,
-      "eliminations": eliminations,
-      "createdAt": createdAt
-    };
+      'id': source.id,
+      'allotmentId': source.allotmentId,
+      'age': source.age,
+      'deaths': source.deaths,
+      'eliminations': source.eliminations,
+      'createdAt': source.createdAt
+    };    
   }
 
 }

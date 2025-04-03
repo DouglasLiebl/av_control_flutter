@@ -56,7 +56,7 @@ class SecureStorageService {
       allotment.currentDeathPercentage = newDeathPercentage;
       allotment.mortalityHistory.add(value);
 
-      await setItem(value.allotmentId, jsonEncode(allotment));
+      await setItem(value.allotmentId, jsonEncode(Allotment.toJson(allotment)));
     }
   }
 
@@ -71,7 +71,7 @@ class SecureStorageService {
       allotment.currentTotalWaterConsume = newTotalConsume;
       allotment.waterHistory.add(value);
 
-      await setItem(value.allotmentId, jsonEncode(allotment));
+      await setItem(value.allotmentId, jsonEncode(Allotment.toJson(allotment)));
     }
   }
 
@@ -86,7 +86,7 @@ class SecureStorageService {
       allotment.currentWeight = latestWeight;
       allotment.weightHistory.add(value);
 
-      await setItem(value.allotmentId, jsonEncode(allotment));
+      await setItem(value.allotmentId, jsonEncode(Allotment.toJson(allotment)));
     }
   }
 }

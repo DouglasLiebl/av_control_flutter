@@ -35,4 +35,30 @@ class Weight {
         .toList()
     );
   }
+
+  factory Weight.fromSQLite(Map<String, dynamic> json) {
+    return Weight(
+      id: json["id"],
+      allotmentId: json["allotmentId"],
+      age: json["age"],
+      weight: json["weight"],
+      tare: json["tare"],
+      totalUnits: json["totalUnits"],
+      createdAt: json["createdAt"],
+      boxesWeights: []
+    );
+  }
+
+  static Map<String, dynamic> toJson(Weight source) {
+    return {
+      'id': source.id,
+      'allotmentId': source.allotmentId,
+      'age': source.age,
+      'weight': source.weight,
+      'tare': source.tare,
+      'totalUnits': source.totalUnits,
+      'createdAt': source.createdAt,
+      'weights': source.boxesWeights.map((box) => WeightBox.toJson(box)).toList()
+    };
+  }
 }

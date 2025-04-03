@@ -46,4 +46,17 @@ class Feed {
       createdAt: source.createdAt
     );
   }
+
+  static Map<String, dynamic> toJson(Feed source) {
+    return {
+      'id': source.id,
+      'allotmentId': source.allotmentId,
+      'accessKey': source.accessKey,
+      'nfeNumber': source.nfeNumber,
+      'emittedAt': source.emittedAt,
+      'weight': source.weight,
+      'type': source.type,
+      'createdAt': source.createdAt
+    };
+  }
 }

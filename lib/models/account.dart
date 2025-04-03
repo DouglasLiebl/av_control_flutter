@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:demo_project/models/auth.dart';
 import 'package:demo_project/models/aviary.dart';
 
@@ -29,6 +31,20 @@ class Account {
           .map((aviary) => Aviary.fromJson(aviary))
           .toList(),
       authData: Auth.fromJson(json['auth']),
+    );
+  }
+
+  factory Account.fromSQLite(Map<String, dynamic> json) {
+    final authData = json['auth'] is String 
+      ? jsonDecode(json['auth']) as Map<String, dynamic>
+      : json['auth'] as Map<String, dynamic>;
+    return Account(
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      email: json['email'],
+      aviaries: [],
+      authData: Auth.fromJson(authData),
     );
   }
 }
