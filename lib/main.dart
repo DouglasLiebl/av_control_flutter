@@ -1,28 +1,47 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:demo_project/context/allotment_provider.dart';
-import 'package:demo_project/context/data_provider.dart';
-import 'package:demo_project/service/connectivity_service.dart';
-import 'package:demo_project/views/home.dart';
-import 'package:demo_project/views/login.dart';
-import 'package:demo_project/views/xml_receiver.dart';
+import 'package:demo_project/infra/factory/repository_factory.dart';
+import 'package:demo_project/infra/factory/service_factory.dart';
+import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
+import 'package:demo_project/presentation/provider/account_provider.dart';
+import 'package:demo_project/presentation/provider/allotment_provider.dart';
+import 'package:demo_project/presentation/views/home.dart';
+import 'package:demo_project/presentation/views/login.dart';
+import 'package:demo_project/presentation/views/xml_receiver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+final getIt = GetIt.instance;
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => DataProvider()),
-        ChangeNotifierProvider(create: (_) => ConnectivityService()),
-        ChangeNotifierProvider(create: (_) => AllotmentProvider())
-      ],
-      child: const MyApp(),
-    ),
-  );
+void main() async {
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await dotenv.load(fileName: ".env");
+
+    getIt.registerSingleton<SecureStorage>(SecureStorage(storage: FlutterSecureStorage()));
+    getIt.registerSingleton<RepositoryFactory>(RepositoryFactory());
+    getIt.registerSingleton<ServiceFactory>(ServiceFactory());
+
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AllotmentProvider()),
+          ChangeNotifierProvider(create: (_) => AccountProvider(
+            authService: getIt<ServiceFactory>().getAuthService(),
+            accountService: getIt<ServiceFactory>().getAccountService()
+          ))
+        ],
+        child: const MyApp(),
+      ),
+    );
+  }, (e, stackTrace) {
+
+  });
 }
 
 class MyApp extends StatefulWidget {
@@ -35,7 +54,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String? fileContent;
 
-   @override
+  @override
   void initState() {
     super.initState();
     
@@ -45,17 +64,15 @@ class _MyAppState extends State<MyApp> {
       print("Error: $err");
     });
 
-    // Handle shared files when the app is launched
     ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) {
       _handleSharedFile(value);
     });
   }
 
-    void _handleSharedFile(List<SharedMediaFile> files) async {
+  void _handleSharedFile(List<SharedMediaFile> files) async {
     if (files.isNotEmpty) {
       String path = files.first.path;
 
-      // Read the file content
       File file = File(path);
       String content = await file.readAsString();
 
@@ -69,10 +86,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Consumer<DataProvider>(
+      home: Consumer<AccountProvider>(
         builder: (context, provider, child) {
           return FutureBuilder<bool>(
-            future: provider.dbHelper.hasLocalData(),
+            future: provider.authService.hasLoggedUser(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Scaffold(

@@ -1,17 +1,17 @@
 import 'dart:math';
 
-import 'package:demo_project/dto/feed_dto.dart';
-import 'package:demo_project/dto/mortality_dto.dart';
-import 'package:demo_project/dto/water_dto.dart';
-import 'package:demo_project/models/account.dart';
-import 'package:demo_project/models/allotment.dart';
-import 'package:demo_project/models/aviary.dart';
-import 'package:demo_project/models/feed.dart';
-import 'package:demo_project/models/mortality.dart';
-import 'package:demo_project/models/sync_data.dart';
-import 'package:demo_project/models/water.dart';
-import 'package:demo_project/models/weight.dart';
-import 'package:demo_project/models/weight_box.dart';
+import 'package:demo_project/infra/dto/feed_dto.dart';
+import 'package:demo_project/infra/dto/mortality_dto.dart';
+import 'package:demo_project/infra/dto/water_dto.dart';
+import 'package:demo_project/domain/entity/account.dart';
+import 'package:demo_project/domain/entity/allotment.dart';
+import 'package:demo_project/domain/entity/aviary.dart';
+import 'package:demo_project/domain/entity/feed.dart';
+import 'package:demo_project/domain/entity/mortality.dart';
+import 'package:demo_project/domain/entity/sync_data.dart';
+import 'package:demo_project/domain/entity/water.dart';
+import 'package:demo_project/domain/entity/weight.dart';
+import 'package:demo_project/domain/entity/weight_box.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -175,41 +175,7 @@ class DatabaseHelper {
   }
 
   Future<void> registerAccountData(Account request) async { 
-    final db = await database;
-    await db.insert(
-      "tb_account", 
-      {
-        'id': request.id,
-        'firstName': request.firstName,
-        'lastName': request.lastName,
-        'email': request.email
-      }
-    );
-
-    await db.insert(
-      "tb_auth_data", 
-      {
-        'accountId': request.id,
-        'accessToken': request.authData.accessToken,
-        'tokenType': request.authData.tokenType,
-        'refreshToken': request.authData.refreshToken,
-        'expiresAt': request.authData.accessTokenExpiration
-      }
-    );
-
-    for (Aviary a in request.aviaries) {
-      await db.insert(
-        "tb_aviaries",
-        {
-          'id': a.id,
-          'name': a.name,
-          'alias': a.alias,
-          'accountId': request.id,
-          'activeAllotmentId': a.activeAllotmentId,
-          'currentWaterMultiplier': a.currentWaterMultiplier
-        }
-      ); 
-    }
+   
   }
 
   Future<void> registerAviaryData(Aviary request) async {
@@ -367,42 +333,6 @@ class DatabaseHelper {
 
     });
 
-  }
-
-  Future<Account> getContext() async {
-    final db = await database;
-    final List<Map<String, dynamic>> results = await db.rawQuery(
-      '''
-      SELECT 
-        a.*,
-        json_object(
-          'accountId', auth.accountId,
-          'accessToken', auth.accessToken,
-          'tokenType', auth.tokenType, 
-          'refreshToken', auth.refreshToken,
-          'accessTokenExpiration', auth.expiresAt
-        ) as auth
-      FROM tb_account a
-      LEFT JOIN tb_auth_data auth ON auth.accountId = a.id
-      ''');
-
-    if (results.isEmpty) {
-      throw Exception("No account found");
-    }
-    final accountData = results.first;
-
-    final List<Map<String, dynamic>> registeredAviaries = await db.rawQuery(
-      '''
-      SELECT * FROM tb_aviaries
-      WHERE accountId = ?
-      ''',
-      [accountData['id']]
-    );
-    
-    Account account = Account.fromSQLite(accountData);
-    account.aviaries = registeredAviaries.map((a) => Aviary.fromJson(a)).toList();
-
-    return account;
   }
 
   Future<Allotment> getAllotmentContext(String allotmentId) async {
@@ -685,12 +615,6 @@ class DatabaseHelper {
   }
 
   Future<void> cleanDatabase(String id) async {
-    final db = await database;
-    await db.transaction((txn) async {
-      await txn.rawDelete('DELETE FROM tb_aviaries');
-      await txn.rawDelete('DELETE FROM tb_auth_data');
-      await txn.rawDelete('DELETE FROM tb_account');
-      await txn.rawDelete('DELETE FROM tb_allotments');
-    });
+    
   }
 }
