@@ -1,12 +1,12 @@
+import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
+import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/components/loading.dart';
-import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/widgets/register_cards/weight_register_cards.dart';
 import 'package:demo_project/presentation/widgets/table_rows/weight_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/weight_box.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class WeightRegister extends StatefulWidget {
@@ -40,8 +40,7 @@ class _WaterDetailsState extends State<WeightRegister> {
   @override
   Widget build(BuildContext context) {
     final allotmentProvider = context.watch<AllotmentProvider>();
-    final provider = context.watch<AccountProvider>();
-    final storage = SecureStorageService(storage: FlutterSecureStorage());
+    final storage = getIt<SecureStorage>();
 
     void registerWeight() async {
       final weight = _weightController.text.isEmpty ? 
@@ -162,11 +161,11 @@ class _WaterDetailsState extends State<WeightRegister> {
                   if (!context.mounted) return;
                   Navigator.of(context).pop();
                 }
-                
               },
             ),
           actions: [
-            Padding(
+            weights.isNotEmpty
+            ? Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Container(
                 decoration: BoxDecoration(
@@ -220,7 +219,7 @@ class _WaterDetailsState extends State<WeightRegister> {
                 ),
               ),
             )
-          
+            : SizedBox.shrink()
           ]
         ),
         body: SafeArea(

@@ -45,7 +45,7 @@ class WeightRegisterCards {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Clique em adicionar registro para iniciar um novo registro de pesos.",
+                      "Clique em iniciar registro para iniciar um novo registro de pesos.",
                       style: TextStyle(
                         color: DefaultColors.subTitleGray(),
                         fontSize: 15

@@ -1,26 +1,19 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:demo_project/data/database_helper.dart';
-import 'package:demo_project/data/secure_storage_service.dart';
-import 'package:demo_project/data/server_service.dart';
+import 'package:demo_project/domain/service/allotment_service.dart';
 import 'package:demo_project/infra/dto/feed_dto.dart';
 import 'package:demo_project/infra/dto/mortality_dto.dart';
 import 'package:demo_project/infra/dto/water_dto.dart';
 import 'package:demo_project/domain/entity/allotment.dart';
-import 'package:demo_project/infra/dto/auth_dto.dart';
 import 'package:demo_project/domain/entity/feed.dart';
 import 'package:demo_project/domain/entity/mortality.dart';
 import 'package:demo_project/domain/entity/water.dart';
 import 'package:demo_project/domain/entity/weight.dart';
 import 'package:demo_project/domain/entity/weight_box.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:demo_project/presentation/provider/base_provider.dart';
 
-class AllotmentProvider with ChangeNotifier {
-  final DatabaseHelper dbHelper = DatabaseHelper();
+class AllotmentProvider extends BaseProvider {
+  final AllotmentService allotmentService;
 
+  AllotmentProvider({required this.allotmentService});
 
   Allotment _allotment = Allotment(
     id: '', 
@@ -41,30 +34,14 @@ class AllotmentProvider with ChangeNotifier {
     feedHistory: []
   );
 
-  AllotmentProvider();
-
   Allotment get getAllotment => _allotment;
 
   Future<void> loadContext(String allotmentId) async {
-    bool status = await InternetConnection().hasInternetAccess;
-    
-    if (!status) {
-      print("SERVER");
-      final allotmentData = await _serverService.getAllotmentDetails(auth, allotmentId);
-      _allotment = allotmentData;
-      await dbHelper.updateAllotmentData(allotmentData);
-    } else {
-      if (await dbHelper.hasDataToSync()) {
-        Allotment? localData = await _secureStorageService.getAllotment(allotmentId);
-        
-        print("LOCAL SECURE STORAGE");
-        _allotment = localData;
-            } else {
-        print("LOCAL SQLITE");
-        final allotmentData = await dbHelper.getAllotmentContext(allotmentId);
-        _allotment = allotmentData;
-        _secureStorageService.setItem(allotmentId, jsonEncode(Allotment.toJson(_allotment)));
-      } 
+    try {
+      Allotment response = await allotmentService.getAllotmentData(allotmentId);
+      _allotment = response;
+    } catch (e, stackTrace) {
+      handleError(e, stackTrace);
     }
 
     notifyListeners();
@@ -72,13 +49,13 @@ class AllotmentProvider with ChangeNotifier {
 
   Future<void> registerAllotment(aviaryId, int totalAmount) async {
     try {
-      Allotment response = await _serverService.startAllotment(auth, totalAmount, aviaryId);
-      await dbHelper.registerNewAllotment(response);
+      Allotment response = await allotmentService.registerNewAllotment(aviaryId, totalAmount);
       _allotment = response;
-      notifyListeners();
-    } catch (e) {
-      throw Exception("Failed to register a new allotment $e");
+    } catch (e, stackTrace) {
+      handleError(e, stackTrace);
     }
+
+    notifyListeners();
   }
 
   Future<void> cleanContext() async {
@@ -125,115 +102,43 @@ class AllotmentProvider with ChangeNotifier {
   }
 
   Future<void> updateMortality(int deaths, int eliminations) async {
-    bool status = await InternetConnection().hasInternetAccess;
-
-    if (!status) {
-      MortalityDto response = await _serverService
-        .registerMortality(_allotment.id, deaths, eliminations);
+    try {
+      MortalityDto response = await allotmentService.registerMortality(_allotment.id, deaths, eliminations);
 
       Mortality data = Mortality.fromDTO(response);
 
-      await dbHelper.registerMortality(response);
       _allotment.mortalityHistory.add(data);
       _allotment.currentDeathPercentage = response.newDeathPercentage;
-    } else {
-      
+    } catch (e, stackTrace) {
+      await handleError(e, stackTrace);
     }
  
     notifyListeners();
   }
 
-  Future<void> updateWaterHistory(String aviaryId, int multiplier, int measure) async {
-    bool status = await InternetConnection().hasInternetAccess;
-
-    if (status) {
-      WaterDto response = await _serverService
-        .registerWaterHistory(multiplier, _allotment.id, measure);
+  Future<void> updateWaterHistory(String aviaryId, int multiplier, int currentMeasure) async {
+    try {
+      WaterDto response = await allotmentService.registerWaterConsume(aviaryId, _allotment.id, multiplier, currentMeasure);
 
       Water data = Water.fromDTO(response);
 
-      await dbHelper.registerWaterHistory(response, aviaryId);
       _allotment.waterHistory.add(data);
       _allotment.currentTotalWaterConsume = response.newTotalConsumed;
-    } else {
-      int consumedLiters = (measure - _allotment.waterHistory[-1].currentMeasure) * multiplier;
-
-      Water data = Water(
-        id: Random().nextInt(100).toString(),
-        allotmentId: _allotment.id,
-        currentMeasure: measure,
-        previousMeasure: _allotment.waterHistory[-1].currentMeasure,
-        age: _allotment.currentAge,
-        createdAt: DateTime.now().toString(),
-        consumedLiters: consumedLiters
-      );
-
-      await dbHelper.registerOfflineOperation(
-        jsonEncode({
-          "allotmentId": _allotment.id,
-          "currentMeasure": measure,
-          "multiplier": multiplier,
-        }), "WATER"
-      );
-
-      _allotment.waterHistory.add(data);
-      _allotment.currentTotalWaterConsume = _allotment.currentTotalWaterConsume + consumedLiters;
+    } catch (e, stackTrace) {
+      await handleError(e, stackTrace);
     }
 
     notifyListeners(); 
   }
 
   Future<void> updateWeight(int totalUnits, double tare, List<WeightBox> weights) async {
-    bool status = await InternetConnection().hasInternetAccess;
+    try {
+      Weight response = await allotmentService.registerWeight(_allotment.id, totalUnits, tare, weights);
 
-    if (status) {
-      Weight response = await _serverService
-      .registerWeight(_allotment.id, totalUnits, tare, weights);
-
-      await dbHelper.registerWeight(response);
       _allotment.weightHistory.add(response);
       _allotment.currentWeight = response.weight;
-    } else {
-      Weight data = Weight(
-        id: Random().nextInt(100).toString(),
-        allotmentId: _allotment.id,
-        age: _allotment.currentAge,
-        weight: 0.0,
-        totalUnits: totalUnits,
-        tare: tare,
-        createdAt: DateTime.now().toString(),
-        boxesWeights: []
-      );
-
-      List<WeightBox> boxWeights = weights.map((w) => WeightBox(
-        id: Random().nextInt(100).toString(),
-        weight: w.weight,
-        weightId: data.id,
-        number: w.number,
-        units: w.units
-      )).toList();
-
-      double totalWeight = boxWeights.fold(0, (sum, weight) => sum + (weight.weight - tare));
-      double averageWeight = totalWeight / totalUnits;
-
-      data.weight = averageWeight;
-      data.boxesWeights = boxWeights;
-
-      await dbHelper.registerOfflineOperation(
-        jsonEncode({
-          "allotmentId": _allotment.id,
-          "tare": tare,
-          "totalUnits": totalUnits,
-          "weights": weights.map((wb) => {
-            "weight": wb.weight,
-            "units": wb.units,
-            "number": wb.number
-          }).toList()
-        }), "WEIGHT"
-      );
-
-      _allotment.weightHistory.add(data);
-      _allotment.currentWeight = data.weight;
+    } catch (e, stackTrace) {
+      handleError(e, stackTrace);
     }
 
     notifyListeners();
@@ -247,14 +152,17 @@ class AllotmentProvider with ChangeNotifier {
     double weight, 
     String type
   ) async {
-    FeedDto response = await _serverService
-      .registerFeed(allotmentId, accessKey, nfeNumber, emmitedAt, weight, type);
+    try {
+      FeedDto response = await allotmentService
+        .registerFeed(allotmentId, accessKey, nfeNumber, emmitedAt, weight, type);
 
-    Feed data = Feed.fromDTO(response);
-
-    await dbHelper.registerFeed(response);
-    _allotment.feedHistory.add(data);
-    _allotment.currentTotalFeedReceived = response.currentTotalFeedReceived;
+      Feed data = Feed.fromDTO(response);
+      
+      _allotment.feedHistory.add(data);
+      _allotment.currentTotalFeedReceived = response.currentTotalFeedReceived;
+    } catch (e, stackTrace) {
+      handleError(e, stackTrace);
+    }
 
     notifyListeners();
   }

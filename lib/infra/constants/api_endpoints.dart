@@ -7,7 +7,7 @@ class ApiEndpoints {
 
   static String get registerNewAviary => "$baseUrl/aviary";
 
-  static String get startAlltoment => "$baseUrl/allotment"; 
+  static String get allotmentBaseUrl => "$baseUrl/allotment"; 
   static String get registerMortality => "$baseUrl/allotment/mortality";
   static String get registerWaterConsume => "$baseUrl/allotment/water-consume";
   static String get registerWeight => "$baseUrl/allotment/weight";

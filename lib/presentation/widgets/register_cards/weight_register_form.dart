@@ -1,7 +1,7 @@
-import 'package:demo_project/data/secure_storage_service.dart';
+import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
+import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class WeightRegisterForm extends StatefulWidget {
   final TextEditingController weightController;
@@ -25,7 +25,7 @@ class WeightRegisterForm extends StatefulWidget {
 }
 
 class _WeightRegisterFormState extends State<WeightRegisterForm> {
-  final storage = SecureStorageService(storage: FlutterSecureStorage());
+  final storage = getIt<SecureStorage>();
 
   bool isTareEnabled = false;
 

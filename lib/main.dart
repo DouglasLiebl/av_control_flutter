@@ -30,7 +30,9 @@ void main() async {
     runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => AllotmentProvider()),
+          ChangeNotifierProvider(create: (_) => AllotmentProvider(
+            allotmentService: getIt<ServiceFactory>().getAllotmentService()
+          )),
           ChangeNotifierProvider(create: (_) => AccountProvider(
             authService: getIt<ServiceFactory>().getAuthService(),
             accountService: getIt<ServiceFactory>().getAccountService()
@@ -40,7 +42,8 @@ void main() async {
       ),
     );
   }, (e, stackTrace) {
-
+    print('Error in runZonedGuarded: $e');
+    print('Stack trace: $stackTrace');
   });
 }
 

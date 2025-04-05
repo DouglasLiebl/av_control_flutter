@@ -1,5 +1,4 @@
 import 'package:demo_project/presentation/components/loading.dart';
-import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/widgets/table_rows/mortality_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
@@ -33,7 +32,6 @@ class _MortalityDetailsState extends State<MortalityDetails> {
   @override
   Widget build(BuildContext context) {
     final allotmentProvider = context.read<AllotmentProvider>();
-    final provider = context.read<AccountProvider>();
 
     return SafeArea(
       child: SingleChildScrollView(

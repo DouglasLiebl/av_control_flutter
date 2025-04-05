@@ -1,6 +1,6 @@
 import 'package:demo_project/presentation/components/loading.dart';
+import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
-import 'package:demo_project/presentation/provider/data_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
 import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
@@ -65,7 +65,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
   @override
   Widget build(BuildContext context) {
     initalizeData();
-    final provider = context.read<DataProvider>();
+    final provider = context.read<AccountProvider>();
     final allotmentProvider = context.read<AllotmentProvider>();
 
     final xmlAviaryName = data.findAllElements("dest").first.findElements("xNome").first.text;
@@ -74,7 +74,6 @@ class _XmlReceiverState extends State<XmlReceiver> {
 
     Future<void> registerFeed() async {
       await allotmentProvider.updateFeed(
-        provider.getAuth(), 
         widget.allotmentId ?? _allotmentController.text,
         _accessKeyController.text, 
         _nfeNumberController.text, 

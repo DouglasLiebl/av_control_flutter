@@ -26,7 +26,7 @@ class AuthService {
     secureStorage.setItem("Auth", jsonEncode(AuthDto.toJson(response.authData)));
    
     await db.transaction((tx) async {
-      await db.insert(
+      await tx.insert(
         "tb_account", 
         {
           'id': response.id,
@@ -37,7 +37,7 @@ class AuthService {
       );
 
       for (AviaryDto a in response.aviaries) {
-        await db.insert(
+        await tx.insert(
           "tb_aviaries",
           {
             'id': a.id,

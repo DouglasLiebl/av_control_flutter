@@ -20,7 +20,7 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
   Future<Allotment> getAllotmentDetails(String allotmentId) async {
     try {
       final response = await apiPrivate.get(
-        ApiEndpoints.startAlltoment + allotmentId
+        "${ApiEndpoints.allotmentBaseUrl}/$allotmentId"
       );
 
       Handler.apiResponse(response);
@@ -119,7 +119,7 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
   Future<Allotment> startAllotment(String aviaryId, int totalAmount) async {
     try {
       final response = await apiPrivate.post(
-        ApiEndpoints.startAlltoment,
+        ApiEndpoints.allotmentBaseUrl,
         data: jsonEncode({
           "aviaryId": aviaryId,
           "totalAmount": totalAmount
