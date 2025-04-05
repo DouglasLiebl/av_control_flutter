@@ -1,3 +1,5 @@
+import 'package:demo_project/infra/factory/service_factory.dart';
+import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
@@ -118,7 +120,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                       Navigator.of(context).pop();
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => HomePage())
+                        MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))
                       );   
                     } else {
                       Navigator.of(context).pop();

@@ -1,6 +1,7 @@
 class WaterDto {
   String id;
   String allotmentId;
+  String aviaryId;
   int age;
   int previousMeasure;
   int currentMeasure;
@@ -12,6 +13,7 @@ class WaterDto {
   WaterDto({
     required this.id,
     required this.allotmentId,
+    required this.aviaryId,
     required this.age,
     required this.previousMeasure,
     required this.currentMeasure,
@@ -25,6 +27,7 @@ class WaterDto {
     return WaterDto(
       id: json["id"],
       allotmentId: json["allotmentId"],
+      aviaryId: json["aviaryId"],
       age: json["age"],
       previousMeasure: json["previousMeasure"],
       currentMeasure: json["currentMeasure"],

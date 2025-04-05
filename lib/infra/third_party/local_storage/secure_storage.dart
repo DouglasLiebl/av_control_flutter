@@ -35,6 +35,14 @@ class SecureStorage {
     return null;
   }
 
+  Future<void> cleanStorage() async {
+    String? auth = await getItem("Auth");
+
+    storage.deleteAll();
+
+    storage.write(key: "Auth", value: auth);
+  }
+
   Future<Allotment?> getAllotment(String allotmentId) async {
     String? storedData = await getItem(allotmentId);
 

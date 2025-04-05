@@ -1,3 +1,5 @@
+import 'package:demo_project/infra/factory/service_factory.dart';
+import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
@@ -171,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.pop(context);
                                 Navigator.pushReplacement(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const HomePage())  
+                                  MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))  
                                 );
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(

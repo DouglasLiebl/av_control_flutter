@@ -41,10 +41,9 @@ class _WaterDetailsState extends State<WaterDetails> {
         0 : int.parse(_measureController.text);
 
       final multiplier = _multiplierController.text.isEmpty ?
-        0 : int.parse(_multiplierController.text);
+        provider.getAviaryById(widget.id).currentWaterMultiplier! : int.parse(_multiplierController.text);
 
       await allotmentProvider.updateWaterHistory(
-        widget.id,
         multiplier, 
         measure
       );

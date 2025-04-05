@@ -75,6 +75,22 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
   }
 
   @override
+  Future<MortalityDto> syncMortality(String data) async {
+    try {
+      final response = await apiPrivate.post(
+        ApiEndpoints.registerMortality,
+        data: data
+      );
+
+      Handler.apiResponse(response);
+      return MortalityDto.fromJson(response.data);
+    } catch (e, stackTrace) {
+      Handler.apiException(e, stackTrace);
+      rethrow;
+    }
+  }
+
+  @override
   Future<WaterDto> registerWaterConsume(String allotmentId, int multiplier, int currentMeasure) async {
     try {
       final response = await apiPrivate.post(
@@ -84,6 +100,22 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
           "currentMeasure": currentMeasure,
           "multiplier": multiplier
         })
+      );
+
+      Handler.apiResponse(response);  
+      return WaterDto.fromJson(response.data);
+    } catch (e, stackTrace) {
+      Handler.apiException(e, stackTrace);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<WaterDto> syncWaterConsume(String data) async {
+    try {
+      final response = await apiPrivate.post(
+        ApiEndpoints.registerWaterConsume,
+        data: data
       );
 
       Handler.apiResponse(response);  
@@ -105,6 +137,22 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
           "tare": tare,
           "weights": weights.map((wb) => WeightBox.toJson(wb)).toList()
         })
+      );
+
+      Handler.apiResponse(response);
+      return Weight.fromJson(response.data);
+    } catch (e, stackTrace) {
+      Handler.apiException(e, stackTrace);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Weight> syncWeight(String data) async {
+    try {
+      final response = await apiPrivate.post(
+        ApiEndpoints.registerWeight,
+        data: data
       );
 
       Handler.apiResponse(response);

@@ -1,3 +1,5 @@
+import 'package:demo_project/infra/factory/service_factory.dart';
+import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/views/home.dart';
@@ -168,7 +170,7 @@ class _RegisterAviary extends State<RegisterAviary> {
                               if (!context.mounted) return;
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (context) => const HomePage()),
+                                MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService())),
                                 (route) => false 
                               );
                             }, 

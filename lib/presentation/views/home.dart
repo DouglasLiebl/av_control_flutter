@@ -14,14 +14,14 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final SyncService syncService;
+  const HomePage({super.key, required this.syncService});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  SyncService syncService = SyncService();
   late StreamSubscription subscription;
   bool isDeviceConnected = false;
   bool isAlertSet = false;
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     subscription = InternetConnection().onStatusChange.listen((status) async {
 
     if ((status == InternetStatus.connected)) {
-      syncService.syncrhronize();
+      await widget.syncService.synchronize();
     }
 
   });

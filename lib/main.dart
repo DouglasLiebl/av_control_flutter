@@ -116,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                     fileContent = null;
                   }));
               } else if (snapshot.hasData && snapshot.data == true) {
-                return HomePage();
+                return HomePage(syncService: getIt<ServiceFactory>().getSyncService());
               } else {
                 return LoginPage();
               }

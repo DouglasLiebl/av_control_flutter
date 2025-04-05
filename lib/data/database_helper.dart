@@ -372,18 +372,6 @@ class DatabaseHelper {
   }
 
 
-  Future<List<SyncData>> getPendingOperations() async {
-    final db = await database;
-
-    List<Map<String, dynamic>> data = await db.rawQuery(
-      '''
-      SELECT * FROM tb_offline_sync
-      '''
-    );
-
-    return data.map((d) => SyncData.fromJson(d)).toList();
-  }
-
   Future<void> cleanPendingOperations() async {
     final db = await database;
 

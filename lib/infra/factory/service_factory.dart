@@ -2,6 +2,7 @@ import 'package:demo_project/domain/service/account_service.dart';
 import 'package:demo_project/domain/service/allotment_service.dart';
 import 'package:demo_project/domain/service/auth_service.dart';
 import 'package:demo_project/domain/service/offline_data_service.dart';
+import 'package:demo_project/domain/service/sync_service.dart';
 import 'package:demo_project/infra/factory/repository_factory.dart';
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/main.dart';
@@ -11,6 +12,7 @@ class ServiceFactory {
   AccountService? accountService;
   AllotmentService? allotmentService;
   OfflineDataService? offlineDataService;
+  SyncService? syncService;
 
   AuthService getAuthService() {
     if (authService != null) return authService!;
@@ -33,7 +35,6 @@ class ServiceFactory {
   OfflineDataService getOfflineDataService() {
     if (offlineDataService != null) return offlineDataService!;
     offlineDataService = OfflineDataService(
-      allotmentRepository: getIt<RepositoryFactory>().getAllotmentRepository(), 
       secureStorage: getIt<SecureStorage>()
     );
     return offlineDataService!;
@@ -47,5 +48,16 @@ class ServiceFactory {
       secureStorage: getIt<SecureStorage>()
     );
     return allotmentService!;
+  }
+
+  SyncService getSyncService() {
+    if (syncService != null) return syncService!;
+    syncService = SyncService(
+      allotmentRepository: getIt<RepositoryFactory>().getAllotmentRepository(),
+      allotmentService: getIt<ServiceFactory>().getAllotmentService(),
+      offlineDataService: getIt<ServiceFactory>().getOfflineDataService(),
+      secureStorage: getIt<SecureStorage>()
+    );
+    return syncService!;
   }
 }

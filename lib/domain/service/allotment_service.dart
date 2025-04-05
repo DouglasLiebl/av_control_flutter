@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:demo_project/domain/entity/allotment.dart';
 import 'package:demo_project/domain/entity/feed.dart';
 import 'package:demo_project/domain/entity/mortality.dart';
@@ -29,17 +27,19 @@ class AllotmentService {
   Future<Allotment> getAllotmentData(String allotmentId) async {
     if (await _networkStatus.hasConnection) {
       Allotment response = await allotmentRepository.getAllotmentDetails(allotmentId);
-
+      print("SERVER");
       await _updateAllotmentLocally(response);
       return response;
     }
 
     if (await offlineDataService.hasDataToSync()) {
+      print("SECURE STORAGE");
       Allotment? response = await secureStorage.getAllotment(allotmentId);
       if (response != null) return response;
     }
 
-    return await _loadLocalData(allotmentId);
+    print("LOCAL SQLITE");
+    return await offlineDataService.loadLocalData(allotmentId);
   }
 
   Future<Allotment> registerNewAllotment(String aviaryId, int totalAmount) async {
@@ -57,18 +57,18 @@ class AllotmentService {
     if (await _networkStatus.hasConnection) {
       MortalityDto response = await allotmentRepository.registerMortality(allotmentId, deaths, eliminations);
 
-      await _registerMortalityLocally(response);
+      await registerMortalityLocally(response);
       return response;  
     }
-
+    print("OFFLINE");
     return await offlineDataService.offMortalityRegister(allotmentId, deaths, eliminations);
   }
 
-  Future<WaterDto> registerWaterConsume(String aviaryId, String allotmentId, int multiplier, int currentMeasure) async {
+  Future<WaterDto> registerWaterConsume(String allotmentId, int multiplier, int currentMeasure) async {
     if (await _networkStatus.hasConnection) {
       WaterDto response = await allotmentRepository.registerWaterConsume(allotmentId, multiplier, currentMeasure);
 
-      await _registerWaterConsumeLocally(response, aviaryId);
+      await registerWaterConsumeLocally(response);
       return response;
     }
 
@@ -79,7 +79,7 @@ class AllotmentService {
     if (await _networkStatus.hasConnection) {
       Weight response = await allotmentRepository.registerWeight(allotmentId, totalUnits, tare, weights);
 
-      await _registerWeightLocally(response);
+      await registerWeightLocally(response);
       return response;
     } 
 
@@ -232,84 +232,9 @@ class AllotmentService {
         );
       }
     });
-  }
+  }  
 
-  Future<Allotment> _loadLocalData(String allotmentId) async {
-    final db = await _sqliteStorage.database;
-
-    final List<Map<String, dynamic>> results = await db.rawQuery(
-      '''
-      SELECT * FROM tb_allotments 
-      WHERE id = ?
-      ''', 
-      [allotmentId]
-    );
-
-    if (results.isEmpty) {
-      throw Exception("No allotment found");
-    }
-
-    final allotmentData = results.first;
-
-    final List<Map<String, dynamic>> mortalityHistory = await db.rawQuery(
-      '''
-      SELECT * FROM tb_mortality_history
-      WHERE allotmentId = ?
-      ''',
-      [allotmentData['id']]
-    );
-
-    final List<Map<String, dynamic>> waterHistory = await db.rawQuery(
-      '''
-      SELECT * FROM tb_water_history
-      WHERE allotmentId = ?
-      ''',
-      [allotmentData['id']]
-    );
-    
-    final List<Map<String, dynamic>> weights = await db.rawQuery(
-      '''
-      SELECT * FROM tb_weight_history
-      WHERE allotmentId = ?
-      ''',
-      [allotmentData['id']]
-    );
-
-    List<Weight> weightHistory = await Future.wait(weights.map((weight) async {
-      List<Map<String, dynamic>> boxes = await db.rawQuery(
-        '''
-        SELECT * FROM tb_box_weight_history
-        WHERE weight_id = ?
-        ''',
-        [weight['id']]
-      );
-
-      Weight response = Weight.fromSQLite(weight);
-      response.boxesWeights = boxes.map((weighBox) => WeightBox.fromJson(weighBox)).toList();
-
-      return response;
-    }).toList());
-
-    final List<Map<String, dynamic>> feedHistory = await db.rawQuery(
-      '''
-      SELECT * FROM tb_feed_history
-      WHERE allotmentId = ?
-      ''',
-      [allotmentData['id']]
-    );
-
-    final allotment = Allotment.fromSQLite(allotmentData);
-    allotment.mortalityHistory = mortalityHistory.map((m) => Mortality.fromJson(m)).toList();
-    allotment.waterHistory = waterHistory.map((w) => Water.fromJson(w)).toList();
-    allotment.weightHistory = weightHistory;
-    allotment.feedHistory = feedHistory.map((f) => Feed.fromJson(f)).toList();
-
-    await secureStorage.setItem(allotment.id, jsonEncode(Allotment.toJson(allotment)));
-
-    return allotment;
-  }
-
-  Future<void> _registerMortalityLocally(MortalityDto source) async {
+  Future<void> registerMortalityLocally(MortalityDto source) async {
     final db = await _sqliteStorage.database;
 
     await db.transaction((tx) async {
@@ -336,7 +261,7 @@ class AllotmentService {
     });
   }
 
-  Future<void> _registerWaterConsumeLocally(WaterDto source, String aviaryId) async {
+  Future<void> registerWaterConsumeLocally(WaterDto source) async {
     final db = await _sqliteStorage.database;
 
     await db.transaction((tx) async {
@@ -359,7 +284,7 @@ class AllotmentService {
           "currentWaterMultiplier": source.multiplier
         },
         where: "id = ?",
-        whereArgs: [aviaryId]
+        whereArgs: [source.aviaryId]
       );
 
       await tx.update(
@@ -374,7 +299,7 @@ class AllotmentService {
     });
   }
 
-  Future<void> _registerWeightLocally(Weight source) async {
+  Future<void> registerWeightLocally(Weight source) async {
     final db = await _sqliteStorage.database;
     
     await db.transaction((tx) async {

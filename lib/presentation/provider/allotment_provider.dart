@@ -116,9 +116,9 @@ class AllotmentProvider extends BaseProvider {
     notifyListeners();
   }
 
-  Future<void> updateWaterHistory(String aviaryId, int multiplier, int currentMeasure) async {
+  Future<void> updateWaterHistory(int multiplier, int currentMeasure) async {
     try {
-      WaterDto response = await allotmentService.registerWaterConsume(aviaryId, _allotment.id, multiplier, currentMeasure);
+      WaterDto response = await allotmentService.registerWaterConsume(_allotment.id, multiplier, currentMeasure);
 
       Water data = Water.fromDTO(response);
 
