@@ -137,35 +137,7 @@ class AllotmentProvider with ChangeNotifier {
       _allotment.mortalityHistory.add(data);
       _allotment.currentDeathPercentage = response.newDeathPercentage;
     } else {
-      Mortality data = Mortality(
-        id: Random().nextInt(100).toString(), 
-        allotmentId: _allotment.id, 
-        age: _allotment.currentAge, 
-        deaths: deaths, 
-        eliminations: eliminations, 
-        createdAt: DateTime.now().toString());
-
-      await dbHelper.registerOfflineOperation(
-        jsonEncode({
-          "allotmentId": _allotment.id,
-          "deaths": deaths,
-          "eliminations": eliminations
-        }), "MORTALITY"
-      );
-
-      _allotment.mortalityHistory.add(data);
-
-      int totalDeaths = _allotment.mortalityHistory
-        .fold(0, (sum, mortality) => sum + mortality.deaths);
-
-
-      int totalEliminations = _allotment.mortalityHistory
-        .fold(0, (sum, mortality) => sum + mortality.eliminations);
-
-      double newDeathPercentage = ((totalDeaths + totalEliminations) * 100.0) / _allotment.totalAmount;
-      _allotment.currentDeathPercentage = newDeathPercentage;
-
-      _secureStorageService.setMortality(data, newDeathPercentage);
+      
     }
  
     notifyListeners();

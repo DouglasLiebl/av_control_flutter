@@ -551,20 +551,6 @@ class DatabaseHelper {
     });
   }
 
-  Future<void> registerOfflineOperation(String data, String operationType) async {
-    final db = await database;
-
-    await db.transaction((tx) async {
-      tx.insert(
-        "tb_offline_sync", 
-        {
-          "id": Random().nextInt(100),
-          "operationType": operationType,
-          "data": data
-        }  
-      );
-    }); 
-  }
 
   Future<List<SyncData>> getPendingOperations() async {
     final db = await database;

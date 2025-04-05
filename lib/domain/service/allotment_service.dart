@@ -1,3 +1,4 @@
+import 'package:demo_project/domain/service/offline_data_service.dart';
 import 'package:demo_project/infra/dto/mortality_dto.dart';
 import 'package:demo_project/infra/repository/allotment_repository.dart';
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
@@ -6,12 +7,13 @@ import 'package:demo_project/utils/network_status.dart';
 
 class AllotmentService {
   final AllotmentRepository allotmentRepository;
+  final OfflineDataService offlineDataService;
   final SecureStorage secureStorage;
   final SqliteStorage _sqliteStorage = SqliteStorage.instance;
   final NetworkStatus _networkStatus = NetworkStatus.instance;
   
 
-  AllotmentService({required this.allotmentRepository, required this.secureStorage});
+  AllotmentService({required this.allotmentRepository, required this.offlineDataService, required this.secureStorage});
 
   Future<MortalityDto> registerMortality(String allotmentId, int deaths, int eliminations) async {
     if (await _networkStatus.hasConnection) {
@@ -21,8 +23,7 @@ class AllotmentService {
       return response;  
     }
 
-
-    
+    return await offlineDataService.offMortalityRegister(allotmentId, deaths, eliminations);
   }
 
   Future<void> _registerMortalityLocally(MortalityDto source) async {
