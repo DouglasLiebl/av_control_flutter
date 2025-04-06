@@ -37,10 +37,12 @@ class SecureStorage {
 
   Future<void> cleanStorage() async {
     String? auth = await getItem("Auth");
+    String? tare = await getItem("Tare");
 
     storage.deleteAll();
 
     storage.write(key: "Auth", value: auth);
+    storage.write(key: "Tare", value: tare);
   }
 
   Future<Allotment?> getAllotment(String allotmentId) async {
@@ -61,6 +63,7 @@ class SecureStorage {
       Map<String, dynamic> json = jsonDecode(storedData);
       Allotment allotment = Allotment.fromJson(json);
 
+      print(newDeathPercentage);
       allotment.currentDeathPercentage = newDeathPercentage;
       allotment.mortalityHistory.add(value);
 
@@ -70,7 +73,7 @@ class SecureStorage {
 
   Future<void> setWater(Water value, int newTotalConsume) async {
     String? storedData = await getItem(value.allotmentId);
-
+  
     if (storedData != null) {
       await deleteItem(value.allotmentId);
       Map<String, dynamic> json = jsonDecode(storedData);

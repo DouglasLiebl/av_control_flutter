@@ -24,6 +24,7 @@ class AllotmentProvider extends BaseProvider {
     currentAge: 0, 
     startedAt: '', 
     endedAt: '', 
+    currentWaterMultiplier: 0,
     currentDeathPercentage: 0, 
     currentWeight: 0, 
     currentTotalWaterConsume: 0, 
@@ -68,6 +69,7 @@ class AllotmentProvider extends BaseProvider {
       currentAge: 0, 
       startedAt: '', 
       endedAt: '', 
+      currentWaterMultiplier: 0,
       currentDeathPercentage: 0, 
       currentWeight: 0, 
       currentTotalWaterConsume: 0,
@@ -83,6 +85,10 @@ class AllotmentProvider extends BaseProvider {
 
   String getId() {
     return _allotment.id;
+  }
+
+  int getWaterMultiplier() {
+    return _allotment.currentWaterMultiplier;
   }
 
   List<Mortality> getMortalityHistory() {
@@ -124,6 +130,7 @@ class AllotmentProvider extends BaseProvider {
 
       _allotment.waterHistory.add(data);
       _allotment.currentTotalWaterConsume = response.newTotalConsumed;
+      _allotment.currentWaterMultiplier = multiplier;
     } catch (e, stackTrace) {
       await handleError(e, stackTrace);
     }

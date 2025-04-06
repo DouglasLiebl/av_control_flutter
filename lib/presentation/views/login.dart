@@ -1,6 +1,5 @@
 import 'package:demo_project/infra/factory/service_factory.dart';
 import 'package:demo_project/main.dart';
-import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/views/home.dart';
@@ -18,6 +17,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+  bool _showPassword = false; 
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           TextFormField(
+                            enabled: _isLoading ? false : true,
+                            keyboardType: TextInputType.emailAddress,
                             controller: _emailController,
                             cursorColor: Colors.black,
                             style: TextStyle(
@@ -81,14 +85,19 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
+                              hintText: "exemplo@email.com",
+                              hintStyle: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                              ), 
                               contentPadding: EdgeInsets.symmetric(horizontal: 10),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126), // Change color when focused
-                                  width: 3.0, // Make border thicker when focused
+                                  color: const Color.fromARGB(255, 128, 126, 126),
+                                  width: 3.0,
                                 )
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -96,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                                   color: const Color.fromARGB(255, 194, 189, 189)
                                 )
                               ),
-                              prefixIcon: Icon(Icons.email_outlined, color: DefaultColors.subTitleGray())
+                              prefixIcon: Icon(Icons.email_outlined, color: DefaultColors.subTitleGray()),
                             ),
                           ),
                           SizedBox(height: 6),
@@ -112,8 +121,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           TextFormField(
+                            enabled: _isLoading ? false : true,
                             controller: _passwordController,
-                            obscureText: true,
+                            obscureText: !_showPassword,
                             cursorColor: Colors.black,
                             style: TextStyle(
                               fontSize: 16,
@@ -126,8 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126), // Change color when focused
-                                  width: 3.0, // Make border thicker when focused
+                                  color: const Color.fromARGB(255, 128, 126, 126),
+                                  width: 3.0, 
                                 )
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -135,7 +145,18 @@ class _LoginPageState extends State<LoginPage> {
                                   color: const Color.fromARGB(255, 194, 189, 189)
                                 )
                               ),
-                              prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray())
+                              prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray()),
+                              suffixIcon: IconButton(  
+                                icon: Icon(
+                                  _showPassword ? Icons.visibility : Icons.visibility_off,
+                                  color: DefaultColors.subTitleGray(),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                              ),
                             ),
                           ),
                           SizedBox(height: 16),
@@ -160,8 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             onPressed: () async {
                               FocusScope.of(context).unfocus();
-                  
-                              Loading.getLoading(context);
+                              _isLoading = true;
 
                               try {
                                 await accountProvider.login(
@@ -170,24 +190,34 @@ class _LoginPageState extends State<LoginPage> {
                                 );
 
                                 if (!context.mounted) return;
-                                Navigator.pop(context);
+                                _isLoading = false;
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))  
                                 );
                               } catch (e) {
+                                _isLoading = false;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(e.toString()))
                                 );
                               }
                             }, 
-                            child: Text(
+                            child: _isLoading
+                            ? SizedBox(
+                              height: 22,
+                              width: 22, 
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
+                              ),
+                            )
+                            : Text(
                               "Entrar",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                               ),
-                            )
+                            ),
                           ),
                           SizedBox(height: 2),
                           TextButton(

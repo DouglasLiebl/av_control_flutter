@@ -1,6 +1,5 @@
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/main.dart';
-import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/widgets/register_cards/weight_register_cards.dart';
 import 'package:demo_project/presentation/widgets/table_rows/weight_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
@@ -28,9 +27,16 @@ class _WaterDetailsState extends State<WeightRegister> {
   final _weightController = TextEditingController();
   final _boxController = TextEditingController();
   final _tareController = TextEditingController();
+  final _weightFocus = FocusNode();
+  final _unitsFocus = FocusNode();
+  final _tareFocus = FocusNode();
+
+  bool _isLoading = false;
 
   void _refreshData() {
-    setState(() {});
+    setState(() {
+      _isLoading = false;
+    });
     widget.onRefresh();
   }
 
@@ -61,7 +67,6 @@ class _WaterDetailsState extends State<WeightRegister> {
         )
       );
   
-
       _weightController.clear();
       _unitsController.clear();
 
@@ -175,13 +180,14 @@ class _WaterDetailsState extends State<WeightRegister> {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () async {
-                      Loading.getLoading(context);
+                    onTap: _isLoading ? null 
+                    : () async {
+                      FocusScope.of(context).unfocus();
+                      setState(() => _isLoading = true);
 
                       await finishRegister();
 
                       if (!context.mounted) return;
-                      Navigator.of(context).pop();  
                       Navigator.of(context).pop();               
                     },
                     overlayColor: MaterialStateProperty.resolveWith<Color?>(
@@ -198,20 +204,34 @@ class _WaterDetailsState extends State<WeightRegister> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.check_outlined, 
-                            size: 20, 
-                            color: DefaultColors.activeGreen()
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Concluir",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: DefaultColors.activeGreen()
+                          _isLoading
+                          ? SizedBox(
+                            height: 22,
+                            width: 22, 
+                            child: CircularProgressIndicator(
+                              color: DefaultColors.activeGreen(),
+                              strokeWidth: 3,
                             ),
-                          ),
+                          )
+                          : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_outlined, 
+                                size: 20, 
+                                color: DefaultColors.activeGreen()
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "Concluir",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: DefaultColors.activeGreen()
+                                ),
+                              ),
+                            ],
+                          ), 
                         ],
                       ),
                     ),
@@ -236,7 +256,11 @@ class _WaterDetailsState extends State<WeightRegister> {
                     _unitsController, 
                     _boxController, 
                     _tareController, 
-                    registerWeight
+                    registerWeight,
+                    _weightFocus,
+                    _unitsFocus,
+                    _tareFocus,
+                    _isLoading
                   ),
                   SizedBox(height: 16),
                   if (weights.isNotEmpty)

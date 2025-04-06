@@ -60,7 +60,6 @@ class AllotmentService {
       await registerMortalityLocally(response);
       return response;  
     }
-    print("OFFLINE");
     return await offlineDataService.offMortalityRegister(allotmentId, deaths, eliminations);
   }
 
@@ -112,6 +111,7 @@ class AllotmentService {
           'currentAge': source.currentAge,
           'startedAt': source.startedAt,
           'endedAt': source.endedAt,
+          'currentWaterMultiplier': source.currentWaterMultiplier,
           'currentDeathPercentage': source.currentDeathPercentage,
           'currentWeight': source.currentWeight,
           'currentTotalWaterConsume': source.currentTotalWaterConsume,
@@ -145,6 +145,7 @@ class AllotmentService {
           'currentAge': source.currentAge,
           'startedAt': source.startedAt,
           'endedAt': source.endedAt,
+          'currentWaterMultiplier': source.currentWaterMultiplier,
           'currentDeathPercentage': source.currentDeathPercentage,
           'currentWeight': source.currentWeight,
           'currentTotalWaterConsume': source.currentTotalWaterConsume,
@@ -279,17 +280,9 @@ class AllotmentService {
       );
 
       await tx.update(
-        "tb_aviaries", 
-        {
-          "currentWaterMultiplier": source.multiplier
-        },
-        where: "id = ?",
-        whereArgs: [source.aviaryId]
-      );
-
-      await tx.update(
         "tb_allotments",
-        {
+        { 
+          "currentWaterMultiplier": source.multiplier,
           "currentTotalWaterConsume": source.newTotalConsumed
         },
         where: "id = ?",

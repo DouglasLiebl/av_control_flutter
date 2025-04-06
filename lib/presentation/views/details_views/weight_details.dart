@@ -23,7 +23,6 @@ class _WeightDetailsState extends State<WeightDetails> {
   
   void _refreshData() {
     setState(() {});
-    widget.onRefresh();
   }
 
   @override

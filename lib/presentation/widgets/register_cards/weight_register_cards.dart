@@ -105,7 +105,11 @@ class WeightRegisterCards {
     TextEditingController unitController,
     TextEditingController boxController,
     TextEditingController tareController,
-    Function onPress
+    Function onPress,
+    FocusNode weightFocus,
+    FocusNode unitsFocus,
+    FocusNode tareFocus,
+    bool isLoading
   ) {
 
     return Card(
@@ -126,7 +130,11 @@ class WeightRegisterCards {
           unitController: unitController, 
           boxController: boxController, 
           tareController: tareController, 
-          onPress: onPress
+          onPress: onPress,
+          weightFocus: weightFocus,
+          unitsFocus: unitsFocus,
+          tareFocus: tareFocus,
+          isLoading: isLoading
         )
       ) 
     );

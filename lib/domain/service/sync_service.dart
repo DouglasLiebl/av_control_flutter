@@ -33,10 +33,13 @@ class SyncService {
       switch (data.type) {
         case "MORTALITY":
           await _syncMortality(data);
+          print("SYNC MORTALITY");
         case "WATER_CONSUME":
           await _syncWaterConsume(data);
+          print("SYNC WATER");
         case "WEIGHT":
           await _syncWeight(data);
+          print("SYNC WEIGHT");
       }
     }
 

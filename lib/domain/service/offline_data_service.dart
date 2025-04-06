@@ -65,14 +65,14 @@ class OfflineDataService {
       List<Map<String, dynamic>> boxes = await db.rawQuery(
         '''
         SELECT * FROM tb_box_weight_history
-        WHERE weight_id = ?
+        WHERE weightId = ?
         ''',
         [weight['id']]
       );
 
       Weight response = Weight.fromSQLite(weight);
       response.boxesWeights = boxes.map((weighBox) => WeightBox.fromJson(weighBox)).toList();
-
+      
       return response;
     }).toList());
 
@@ -102,12 +102,14 @@ class OfflineDataService {
 
     int totalDeaths = allotment.mortalityHistory
       .fold(0, (sum, mortality) => sum + mortality.deaths);
-
+    totalDeaths += deaths;
 
     int totalEliminations = allotment.mortalityHistory
       .fold(0, (sum, mortality) => sum + mortality.eliminations);
+    totalEliminations += eliminations;
 
     double newDeathPercentage = ((totalDeaths + totalEliminations) * 100.0) / allotment.totalAmount;
+    newDeathPercentage = double.parse(newDeathPercentage.toStringAsFixed(2));
 
     MortalityDto data = MortalityDto(
       id: Random().nextInt(100).toString(), 
@@ -146,15 +148,22 @@ class OfflineDataService {
 
     Allotment allotment = await loadLocalData(allotmentId);
 
-    int consumedLiters = (currentMeasure - allotment.waterHistory.last.currentMeasure) * multiplier;
-    int newTotalConsume = allotment.currentTotalWaterConsume + consumedLiters;
+    int consumedLiters = 0;
+    int newTotalConsume = 0;
+    int lastMeasure = 0;
+
+    if (allotment.waterHistory.isNotEmpty) {
+      consumedLiters = (currentMeasure - allotment.waterHistory.last.currentMeasure) * multiplier;
+      newTotalConsume = allotment.currentTotalWaterConsume + consumedLiters;
+      lastMeasure = allotment.waterHistory.last.currentMeasure;
+    }
 
     WaterDto data = WaterDto(
       id: Random().nextInt(100).toString(),
       allotmentId: allotment.id,
       aviaryId: "",
       currentMeasure: currentMeasure,
-      previousMeasure: allotment.waterHistory.last.currentMeasure,
+      previousMeasure: lastMeasure,
       age: allotment.currentAge,
       createdAt: DateTime.now().toString(),
       consumedLiters: consumedLiters,
@@ -208,11 +217,13 @@ class OfflineDataService {
     double totalWeight = boxWeights.fold(0, (sum, weight) => sum + (weight.weight - tare));
     double averageWeight = totalWeight / totalUnits;
 
+    averageWeight = double.parse(averageWeight.toStringAsFixed(3));
+
     data.weight = averageWeight;
     data.boxesWeights = boxWeights;
 
     await secureStorage.setWeight(data, data.weight);
-
+    
     await db.transaction((tx) async {
       await tx.insert(
         "tb_offline_sync",

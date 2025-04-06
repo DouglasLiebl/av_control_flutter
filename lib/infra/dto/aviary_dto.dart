@@ -5,7 +5,6 @@ class AviaryDto {
   String alias;
   String accountId;
   String? activeAllotmentId;
-  int? currentWaterMultiplier;
 
   AviaryDto({
     required this.id,
@@ -13,7 +12,6 @@ class AviaryDto {
     required this.alias,
     required this.accountId,
     required this.activeAllotmentId,
-    this.currentWaterMultiplier
   });
 
   factory AviaryDto.fromJson(Map<String, dynamic> json) {
@@ -23,7 +21,6 @@ class AviaryDto {
       alias: json['alias'],
       accountId: json['accountId'],
       activeAllotmentId: json['activeAllotmentId'],
-      currentWaterMultiplier: json['currentWaterMultiplier']
     );
   }
 }

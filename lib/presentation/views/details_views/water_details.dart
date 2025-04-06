@@ -1,4 +1,3 @@
-import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/widgets/register_cards/water_register_cards.dart';
 import 'package:demo_project/presentation/widgets/table_rows/water_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
@@ -22,26 +21,37 @@ class WaterDetails extends StatefulWidget {
 class _WaterDetailsState extends State<WaterDetails> {
   final _multiplierController = TextEditingController();
   final _measureController = TextEditingController();
+  final _multiplierFocus = FocusNode();
+  final _measureFocus = FocusNode();
+
+  bool _isLoading = false;
 
   void _refreshData() {
-    setState(() {});
-    widget.onRefresh();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _multiplierFocus.dispose();
+    _measureFocus.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final allotmentProvider = context.read<AllotmentProvider>();
-    final provider = context.read<AccountProvider>();
-
-    final aviary = provider.getAviaryById(widget.id);
 
     Future<void> registerWaterMeasure() async {
+      FocusScope.of(context).unfocus();
+      _isLoading = true;
 
       final measure = _measureController.text.isEmpty ? 
         0 : int.parse(_measureController.text);
 
       final multiplier = _multiplierController.text.isEmpty ?
-        provider.getAviaryById(widget.id).currentWaterMultiplier! : int.parse(_multiplierController.text);
+        allotmentProvider.getWaterMultiplier() : int.parse(_multiplierController.text);
 
       await allotmentProvider.updateWaterHistory(
         multiplier, 
@@ -50,8 +60,6 @@ class _WaterDetailsState extends State<WaterDetails> {
       
       _measureController.clear();
       _multiplierController.clear();
-
-      await provider.reloadContext();
 
       _refreshData();
     }
@@ -65,21 +73,25 @@ class _WaterDetailsState extends State<WaterDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              aviary.currentWaterMultiplier != null
+              allotmentProvider.getWaterMultiplier() != 0
               ? WaterRegisterCards.registerCard(
                 context,
                 _measureController,
                 allotmentProvider.getWaterHistory().isEmpty,
-                registerWaterMeasure
+                registerWaterMeasure,
+                _isLoading,
+                _measureFocus
               )
               : WaterRegisterCards.firstRegisterCard(
                 context,
                 _multiplierController,
                 _measureController,
-                registerWaterMeasure
+                registerWaterMeasure,
+                _isLoading,
+                _multiplierFocus,
+                _measureFocus
               ),
               SizedBox(height: 16),
-              // Registers
               if (allotmentProvider.getWaterHistory().isNotEmpty)
                   WaterTableRows.getWaterTopRow(),
               ListView.builder(

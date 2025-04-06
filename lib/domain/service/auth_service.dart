@@ -45,7 +45,6 @@ class AuthService {
             'alias': a.alias,
             'accountId': response.id,
             'activeAllotmentId': a.activeAllotmentId,
-            'currentWaterMultiplier': a.currentWaterMultiplier
           }
         ); 
         }

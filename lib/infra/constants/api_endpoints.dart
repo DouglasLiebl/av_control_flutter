@@ -4,8 +4,9 @@ class ApiEndpoints {
   static String baseUrl = dotenv.env["BASE_URL"] ?? "";
 
   static String get login => "$baseUrl/login";
+  static String get refreshToken => "$baseUrl/refresh-token";
 
-  static String get registerNewAviary => "$baseUrl/aviary";
+  static String get registerNewAviary => "$baseUrl/aviary/";
 
   static String get allotmentBaseUrl => "$baseUrl/allotment"; 
   static String get registerMortality => "$baseUrl/allotment/mortality";

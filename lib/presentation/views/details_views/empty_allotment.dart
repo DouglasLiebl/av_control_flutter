@@ -2,20 +2,35 @@ import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/utils/input_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class EmptyAllotment extends StatelessWidget {
+class EmptyAllotment extends StatefulWidget {
   final Aviary aviary;
   final VoidCallback onRefresh;
 
-  EmptyAllotment({
+  const EmptyAllotment({
     super.key, 
     required this.aviary,
     required this.onRefresh,
   });
 
+  @override
+  State<EmptyAllotment> createState() => _EmptyAllotmentState();
+}
+
+class _EmptyAllotmentState extends State<EmptyAllotment> {
   final _initialBirdsController = TextEditingController();
+
+  bool _isLoading = false;
+
+  void _refreshData() {
+    setState(() {
+      _isLoading = false;
+    });
+    widget.onRefresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +98,7 @@ class EmptyAllotment extends StatelessWidget {
                                 ),
                               ),
                               TextFormField(
+                                enabled: _isLoading ? false : true,
                                 keyboardType: TextInputType.number,
                                 controller: _initialBirdsController,
                                 cursorColor: Colors.black,
@@ -90,7 +106,13 @@ class EmptyAllotment extends StatelessWidget {
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
+                                inputFormatters: [InputFormater.startAllotment()],
                                 decoration: InputDecoration(
+                                  hintText: "Ex: 43.000",
+                                  hintStyle: TextStyle(
+                                    color: DefaultColors.textGray(),
+                                    fontSize: 14,
+                                  ), 
                                   contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
@@ -129,30 +151,48 @@ class EmptyAllotment extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                onPressed: () async {
+                                onPressed: _isLoading ? null
+                                : () async {
+                                  FocusScope.of(context).unfocus();
+                                  _isLoading = true;
+
                                   await allotmentProvider.registerAllotment(
-                                    aviary.id,
-                                    int.parse(_initialBirdsController.text)
+                                    widget.aviary.id,
+                                    int.parse(_initialBirdsController.text.replaceAll(".", ""))
                                   );
 
                                   provider.updateActiveAllotmentId(
-                                    aviary.id, allotmentProvider.getId()
+                                    widget.aviary.id, allotmentProvider.getId()
                                   );
 
-                                  onRefresh();
+                                  _refreshData();
                                 }, 
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.add, color: Colors.white,),
-                                    SizedBox(width: 16),
-                                    Text(
-                                      "Registar Novo Lote",
-                                      style: TextStyle(
+                                    _isLoading
+                                    ? SizedBox(
+                                      height: 22,
+                                      width: 22, 
+                                      child: CircularProgressIndicator(
                                         color: Colors.white,
-                                        fontSize: 18,
+                                        strokeWidth: 3,
                                       ),
                                     )
+                                    : Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.add, color: Colors.white),
+                                        SizedBox(width: 16),
+                                        Text(
+                                          "Registrar Novo Lote",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 )
                               ),

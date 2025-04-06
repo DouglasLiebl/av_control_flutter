@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo_project/infra/constants/api_endpoints.dart';
 import 'package:demo_project/infra/dto/auth_dto.dart';
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/main.dart';
@@ -20,7 +21,7 @@ class ApiPrivate {
 
         authData = await getIt<SecureStorage>().getAuth();
 
-         options.baseUrl = dotenv.env["BASE_URL"] ?? "";
+        options.baseUrl = dotenv.env["BASE_URL"] ?? "";
         options.headers["Authorization"] = "${authData?.tokenType} ${authData?.accessToken}";
 
         Logger.log('-------------------------');
@@ -39,7 +40,23 @@ class ApiPrivate {
         Logger.log(exception.response?.statusCode ?? '');
         Logger.log(exception.response?.data);
         Logger.log('-------------------------');
+        
+        if (exception.response?.statusCode == 401) {
+          final authData = await getIt<SecureStorage>().getAuth();
+          if (authData == null) throw Exception('No auth data found');
 
+          await _getRefreshToken(authData);
+
+          final opts = exception.requestOptions;
+          final newAuthData = await getIt<SecureStorage>().getAuth();
+          print("TRYING TO DO THE ORIGINAL REQUEST");
+            
+          opts.headers["Authorization"] = "${newAuthData?.tokenType} ${newAuthData?.accessToken}";
+          
+          final response = await dio.fetch(opts);
+          print("SUCCESSFULLY DID THE ORIGINAL REQUEST");
+          return handler.resolve(response);
+        }
         
         return handler.next(exception);
       },
@@ -54,5 +71,25 @@ class ApiPrivate {
     ));
 
     return dio;
+  }
+
+  Future<void> _getRefreshToken(AuthDto auth) async {
+    print("STARTED TO GET REFRESH TOKEN");
+    final refreshDio = Dio(BaseOptions(
+      baseUrl: dotenv.env["BASE_URL"] ?? "",
+    ));
+
+    final response = await refreshDio.post(
+      ApiEndpoints.refreshToken,
+      data: {
+        'refreshToken': auth.refreshToken
+      }
+    );
+
+    if (response.statusCode == 200) {
+      print("SUCCESSFULLY GET A NEW REFRESH TOKEN");
+      final newAuthData = AuthDto.fromJson(response.data);
+      await getIt<SecureStorage>().setItem("Auth", jsonEncode(AuthDto.toJson(newAuthData)));
+    }
   }
 }

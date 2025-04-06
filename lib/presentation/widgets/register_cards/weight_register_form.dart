@@ -9,6 +9,10 @@ class WeightRegisterForm extends StatefulWidget {
   final TextEditingController boxController;
   final TextEditingController tareController;
   final Function onPress;
+  final FocusNode weightFocus;
+  final FocusNode unitsFocus;
+  final FocusNode tareFocus;
+  final bool isLoading;
 
   const WeightRegisterForm({
     super.key,
@@ -17,6 +21,10 @@ class WeightRegisterForm extends StatefulWidget {
     required this.boxController,
     required this.tareController,
     required this.onPress,
+    required this.weightFocus,
+    required this.unitsFocus,
+    required this.tareFocus,
+    required this.isLoading
   });
 
   @override
@@ -85,14 +93,25 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                         ),
                         SizedBox(height: 8),
                         TextFormField(
+                          enabled: widget.isLoading ? false : true,
                           keyboardType: TextInputType.number,
                           controller: widget.weightController, 
                           cursorColor: DefaultColors.valueGray(),
+                          focusNode: widget.weightFocus,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) {
+                            Focus.of(context).requestFocus(widget.unitsFocus);
+                          },
                           style: TextStyle(
                             fontSize: 16,
                             color: DefaultColors.valueGray(),
                           ),
                           decoration: InputDecoration(
+                            hintText: "Ex: 12.020",
+                            hintStyle: TextStyle(
+                              color: DefaultColors.textGray(),
+                              fontSize: 14,
+                            ), 
                             contentPadding: EdgeInsets.symmetric(horizontal: 10),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -127,14 +146,25 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                         ),
                         SizedBox(height: 8),
                         TextFormField(
+                          enabled: widget.isLoading ? false : true,
                           keyboardType: TextInputType.number,
                           controller: widget.unitController, 
                           cursorColor: DefaultColors.valueGray(),
+                          focusNode: widget.unitsFocus,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {
+                            Focus.of(context).unfocus();
+                          },
                           style: TextStyle(
                             fontSize: 16,
                             color: DefaultColors.valueGray(),
                           ),
                           decoration: InputDecoration(
+                            hintText: "Ex: 10",
+                            hintStyle: TextStyle(
+                              color: DefaultColors.textGray(),
+                              fontSize: 14,
+                            ), 
                             contentPadding: EdgeInsets.symmetric(horizontal: 10),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -295,14 +325,25 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                           ),
                           SizedBox(height: 8),
                           TextFormField(
+                            enabled: widget.isLoading ? false : true,
                             keyboardType: TextInputType.number,
                             controller: widget.tareController, 
                             cursorColor: DefaultColors.valueGray(),
+                            focusNode: widget.tareFocus,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) {
+                              Focus.of(context).unfocus();
+                            },
                             style: TextStyle(
                               fontSize: 16,
                               color: DefaultColors.valueGray(),
                             ),
                             decoration: InputDecoration(
+                              hintText: "Ex: 1.350",
+                              hintStyle: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                              ), 
                               contentPadding: EdgeInsets.symmetric(horizontal: 10),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -364,7 +405,8 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                     },
                   ),
                 ),
-                onPressed: () async {
+                onPressed: widget.isLoading ? null
+                : () async {
                   if (isTareEnabled) {
                     storage.setItem("Tare", widget.tareController.text);
                     setState(() {

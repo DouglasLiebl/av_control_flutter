@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/widgets/table_rows/feed_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
@@ -25,6 +26,7 @@ class FeedDetails extends StatefulWidget {
 class _FeedDetailsState extends State<FeedDetails> {
   Future<void> _pickAndOpenXmlFile() async {
     try {
+      Loading.getLoading(context);
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xml'],
@@ -35,6 +37,7 @@ class _FeedDetailsState extends State<FeedDetails> {
         
         if (!mounted) return;
         
+        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(

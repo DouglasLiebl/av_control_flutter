@@ -41,8 +41,8 @@ class Weight {
       id: json["id"],
       allotmentId: json["allotmentId"],
       age: json["age"],
-      weight: json["weight"],
-      tare: json["tare"],
+      weight: json["weight"].toDouble(),
+      tare: json["tare"].toDouble(),
       totalUnits: json["totalUnits"],
       createdAt: json["createdAt"],
       boxesWeights: []

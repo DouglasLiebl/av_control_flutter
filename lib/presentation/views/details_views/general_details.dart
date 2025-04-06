@@ -4,6 +4,7 @@ import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/widgets/tags/status_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GeneralDetails extends StatelessWidget {
@@ -190,7 +191,8 @@ class GeneralDetails extends StatelessWidget {
                           ),      
                         ),
                         Text(
-                          allotment.getAllotment.totalAmount.toString(),
+                          NumberFormat.decimalPattern('pt_BR')
+                            .format(allotment.getAllotment.totalAmount),
                           style: TextStyle(
                             color: DefaultColors.valueGray(),
                             fontSize: 14

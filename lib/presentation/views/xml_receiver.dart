@@ -1,6 +1,5 @@
 import 'package:demo_project/infra/factory/service_factory.dart';
 import 'package:demo_project/main.dart';
-import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
@@ -21,7 +20,6 @@ class XmlReceiver extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _XmlReceiverState();
-  
 }
 
 class _XmlReceiverState extends State<XmlReceiver> {
@@ -34,9 +32,12 @@ class _XmlReceiverState extends State<XmlReceiver> {
   final _weightController = TextEditingController();
 
   late XmlDocument data;
+  bool _isLoading = false;
 
   void _refreshData() {
-    setState(() {});
+    setState(() {
+      _isLoading = false;
+    });
     widget.changeState();
   }
 
@@ -50,10 +51,10 @@ class _XmlReceiverState extends State<XmlReceiver> {
     final receivedName = xmlAviaryName.toLowerCase().trim();
     final matching = aviaries.firstWhere(
       (aviary) => aviary.name.toLowerCase().trim() == receivedName,
-      orElse: () => Aviary(id: '', name: '', alias: '', accountId: '', activeAllotmentId: ''),
+      orElse: () => Aviary(id: '', name: '', alias: '', accountId: '', activeAllotmentId: null),
     );
 
-    return matching.activeAllotmentId!.isNotEmpty ? matching.activeAllotmentId : null;
+    return matching.activeAllotmentId?.isNotEmpty == true ? matching.activeAllotmentId : null;
   }
 
   void initalizeData() {
@@ -72,6 +73,8 @@ class _XmlReceiverState extends State<XmlReceiver> {
 
     final xmlAviaryName = data.findAllElements("dest").first.findElements("xNome").first.text;
     final matchingAviaryId = findMatchingAviaryId(xmlAviaryName, provider.getAviaries());
+    final hasActiveAllotments = provider.getAviaries()
+      .any((aviary) => aviary.activeAllotmentId != null);
     _allotmentController.text = matchingAviaryId ?? "";
 
     Future<void> registerFeed() async {
@@ -110,20 +113,18 @@ class _XmlReceiverState extends State<XmlReceiver> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () async {
-                    Loading.getLoading(context);
+                    FocusScope.of(context).unfocus();
+                    setState(() => _isLoading = true);
 
                     await registerFeed();
 
                     if (!context.mounted) return;
                     if (widget.allotmentId == null) {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))
                       );   
                     } else {
-                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }             
                   },
@@ -137,27 +138,41 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   ),
                   borderRadius: BorderRadius.circular(9999),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.check_outlined, 
-                          size: 20, 
-                          color: DefaultColors.activeGreen()
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "Salvar",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: DefaultColors.activeGreen()
-                          ),
-                        ),
-                      ],
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _isLoading
+                          ? SizedBox(
+                            height: 22,
+                            width: 22, 
+                            child: CircularProgressIndicator(
+                              color: DefaultColors.activeGreen(),
+                              strokeWidth: 3,
+                            ),
+                          )
+                          : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_outlined, 
+                                size: 20, 
+                                color: DefaultColors.activeGreen()
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "Salvar",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: DefaultColors.activeGreen()
+                                ),
+                              ),
+                            ],
+                          ), 
+                        ],
+                      ),
                     ),
-                  ),
                 ),
               ),
             ),
@@ -582,7 +597,9 @@ class _XmlReceiverState extends State<XmlReceiver> {
                   ) 
                 ),
                 SizedBox(height: 16),
-                provider.getAccount.id.isNotEmpty && widget.allotmentId == null
+                provider.getAccount.id.isNotEmpty && 
+                widget.allotmentId == null &&
+                hasActiveAllotments
                 ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -597,6 +614,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
                       child: ButtonTheme(
                         alignedDropdown: true,
                         child: DropdownButtonFormField<String>( 
+                          menuMaxHeight: 300,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 10),
                             border: OutlineInputBorder(
@@ -638,15 +656,19 @@ class _XmlReceiverState extends State<XmlReceiver> {
                           ),
                           dropdownColor: Colors.white,
                           isExpanded: true,
-                          value: matchingAviaryId,
-                          items:  provider.getAviaries().map((aviary) {
-                            return DropdownMenuItem(
-                              value: aviary.activeAllotmentId,
-                              child: Text(
-                                aviary.name, 
-                                style: TextStyle(fontSize: 16)
-                              ),
-                            );
+                          value: matchingAviaryId != null && provider.getAviaries().any(
+                            (aviary) => aviary.activeAllotmentId == matchingAviaryId
+                          ) ? matchingAviaryId : null,
+                          items:  provider.getAviaries()
+                            .where((aviary) => aviary.activeAllotmentId != null)
+                            .map((aviary) {
+                              return DropdownMenuItem(
+                                value: aviary.activeAllotmentId,
+                                child: Text(
+                                  aviary.name, 
+                                  style: TextStyle(fontSize: 16)
+                                ),
+                              );
                           }).toList()
                         )
                       ) 

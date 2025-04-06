@@ -14,10 +14,19 @@ class RegisterAviary extends StatefulWidget {
 }
 
 class _RegisterAviary extends State<RegisterAviary> {
-
   final _nameController = TextEditingController();
   final _aliasController = TextEditingController();
+  final _nameFocus = FocusNode();
+  final _aliasFocus = FocusNode();
 
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _nameFocus.dispose();
+    _aliasFocus.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +87,24 @@ class _RegisterAviary extends State<RegisterAviary> {
                             ),
                           ),
                           TextFormField(
+                            enabled: _isLoading ? false : true,
                             controller: _nameController,
                             cursorColor: Colors.black,
+                            focusNode: _nameFocus,
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) {
+                              Focus.of(context).requestFocus(_aliasFocus);
+                            },
                             style: TextStyle(
                               fontSize: 16, // Change font size
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
+                              hintText: "Ex: INTEGRADO CLIMATIZADO",
+                              hintStyle: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                              ), 
                               contentPadding: EdgeInsets.symmetric(horizontal: 10),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -116,13 +136,24 @@ class _RegisterAviary extends State<RegisterAviary> {
                             ),
                           ),
                           TextFormField(
+                            enabled: _isLoading ? false : true,
                             controller: _aliasController,
                             cursorColor: Colors.black,
+                            focusNode: _aliasFocus,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) {
+                              Focus.of(context).unfocus();
+                            },
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
                             ),
                             decoration: InputDecoration(
+                              hintText: "Ex: AV 01",
+                              hintStyle: TextStyle(
+                                color: DefaultColors.textGray(),
+                                fontSize: 14,
+                              ), 
                               contentPadding: EdgeInsets.symmetric(horizontal: 10),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
@@ -161,20 +192,34 @@ class _RegisterAviary extends State<RegisterAviary> {
                                 },
                               ),
                             ),
-                            onPressed: () async {
+                            onPressed: _isLoading ? null
+                            : () async {
+                              FocusScope.of(context).unfocus();
+                              _isLoading = true;
+
                               await accountProvider.registerAviary(
-                                _nameController.text, 
+                                _nameController.text.toUpperCase(), 
                                 _aliasController.text
                               );
 
                               if (!context.mounted) return;
+                              _isLoading = false;
                               Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService())),
                                 (route) => false 
                               );
                             }, 
-                            child: Text(
+                            child: _isLoading
+                            ? SizedBox(
+                              height: 22,
+                              width: 22, 
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
+                              ),
+                            )
+                            : Text(
                               "Salvar",
                               style: TextStyle(
                                 color: Colors.white,

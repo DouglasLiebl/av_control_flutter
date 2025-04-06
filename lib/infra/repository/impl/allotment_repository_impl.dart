@@ -167,7 +167,7 @@ class AllotmentRepositoryImpl implements AllotmentRepository {
   Future<Allotment> startAllotment(String aviaryId, int totalAmount) async {
     try {
       final response = await apiPrivate.post(
-        ApiEndpoints.allotmentBaseUrl,
+        "${ApiEndpoints.allotmentBaseUrl}/",
         data: jsonEncode({
           "aviaryId": aviaryId,
           "totalAmount": totalAmount

@@ -26,7 +26,6 @@ class AccountService {
           'alias': response.alias,
           'accountId': response.accountId,
           'activeAllotmentId': null,
-          'currentWaterMultiplier': null
         },
         conflictAlgorithm: ConflictAlgorithm.replace
       );

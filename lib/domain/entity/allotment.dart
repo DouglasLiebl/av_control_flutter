@@ -13,6 +13,7 @@ class Allotment {
   int currentAge;
   String startedAt;
   String endedAt;
+  int currentWaterMultiplier;
   double currentDeathPercentage;
   double currentWeight;
   int currentTotalWaterConsume;
@@ -32,6 +33,7 @@ class Allotment {
     required this.currentAge,
     required this.startedAt,
     required this.endedAt,
+    required this.currentWaterMultiplier,
     required this.currentDeathPercentage,
     required this.currentWeight,
     required this.currentTotalWaterConsume,
@@ -52,6 +54,7 @@ class Allotment {
       currentAge: json["currentAge"].toInt(),
       startedAt: json["startedAt"],
       endedAt: json["endedAt"] ?? '',
+      currentWaterMultiplier: json["currentWaterMultiplier"],
       currentDeathPercentage: (json["currentDeathPercentage"] as num).toDouble(),
       currentWeight: (json["currentWeight"] as num).toDouble(),
       currentTotalWaterConsume: json["currentTotalWaterConsume"].toInt(),
@@ -81,6 +84,7 @@ class Allotment {
       currentAge: json["currentAge"].toInt(),
       startedAt: json["startedAt"],
       endedAt: json["endedAt"] ?? '',
+      currentWaterMultiplier: json["currentWaterMultiplier"],
       currentDeathPercentage: (json["currentDeathPercentage"] as num).toDouble(),
       currentWeight: (json["currentWeight"] as num).toDouble(),
       currentTotalWaterConsume: json["currentTotalWaterConsume"].toInt(),
@@ -102,6 +106,7 @@ class Allotment {
       'currentAge': source.currentAge,
       'startedAt': source.startedAt,
       'endedAt': source.endedAt,
+      'currentWaterMultiplier': source.currentWaterMultiplier,
       'currentDeathPercentage': source.currentDeathPercentage,
       'currentWeight': source.currentWeight,
       'currentTotalWaterConsume': source.currentTotalWaterConsume,

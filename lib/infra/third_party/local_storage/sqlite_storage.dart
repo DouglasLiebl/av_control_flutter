@@ -41,7 +41,6 @@ class SqliteStorage {
         alias VARCHAR(255),
         accountId VARCHAR(300),
         activeAllotmentId VARCHAR(300),
-        currentWaterMultiplier INTEGER,
         FOREIGN KEY (accountId) REFERENCES tb_account(id) ON DELETE CASCADE
       );
     ''');
@@ -56,6 +55,7 @@ class SqliteStorage {
         currentAge INTEGER,
         startedAt VARCHAR(100),
         endedAt VARCHAR(100),
+        currentWaterMultiplier INTEGER,
         currentDeathPercentage DECIMAL(10, 3),
         currentWeight DECIMAL(10, 3),
         currentTotalWaterConsume INTEGER,

@@ -1,4 +1,3 @@
-import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,10 @@ class WaterRegisterCards {
     BuildContext context,
     TextEditingController multiplierController, 
     TextEditingController measureController,
-    Function onPress
+    Function onPress,
+    bool isLoading,
+    FocusNode multiplierFocus,
+    FocusNode measureFocus
   ) {
     return Card(
       color: Colors.white,
@@ -71,14 +73,25 @@ class WaterRegisterCards {
                             ),
                             SizedBox(height: 8),
                             TextFormField(
+                              enabled: isLoading ? false : true,
                               keyboardType: TextInputType.number,
                               controller: multiplierController, 
                               cursorColor: DefaultColors.valueGray(),
+                              focusNode: multiplierFocus,
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) {
+                                Focus.of(context).requestFocus(measureFocus);
+                              },
                               style: TextStyle(
                                 fontSize: 16,
                                 color: DefaultColors.valueGray(),
                               ),
                               decoration: InputDecoration(
+                                hintText: "Ex: 1000",
+                                hintStyle: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                ), 
                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -113,14 +126,25 @@ class WaterRegisterCards {
                             ),
                             SizedBox(height: 8),
                             TextFormField(
+                              enabled: isLoading ? false : true,
                               keyboardType: TextInputType.number,
                               controller: measureController,
                               cursorColor: DefaultColors.valueGray(),
+                              focusNode: measureFocus,
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) {
+                                Focus.of(context).unfocus();
+                              },
                               style: TextStyle(
                                 fontSize: 16,
                                 color: DefaultColors.valueGray(),
                               ),
                               decoration: InputDecoration(
+                                hintText: "Ex: 43210",
+                                hintStyle: TextStyle(
+                                  color: DefaultColors.textGray(),
+                                  fontSize: 14,
+                                ), 
                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -164,28 +188,36 @@ class WaterRegisterCards {
                         },
                       ),
                     ),
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-
-                      Loading.getLoading(context);
-
+                    onPressed: isLoading ? null
+                    : () async {
                       await onPress();
-
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
                     }, 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add, color: Colors.white,),
-                        SizedBox(width: 16),
-                        Text(
-                          "Adicionar Registro",
-                          style: TextStyle(
+                        isLoading
+                        ? SizedBox(
+                          height: 22,
+                          width: 22, 
+                          child: CircularProgressIndicator(
                             color: Colors.white,
-                            fontSize: 18,
+                            strokeWidth: 3,
                           ),
                         )
+                        : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: Colors.white),
+                            SizedBox(width: 16),
+                            Text(
+                              "Adicionar Registro",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     )
                   ),
@@ -202,7 +234,9 @@ class WaterRegisterCards {
     BuildContext context,
     TextEditingController measureController,
     bool isFistAllotmentRegister,
-    Function onPress
+    Function onPress,
+    bool isLoading,
+    FocusNode measureFocus
   ) {
     return Card(
       color: Colors.white,
@@ -229,7 +263,7 @@ class WaterRegisterCards {
                   Container(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Novo Registro de Água",
+                      "Novo Registro de Consumo",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -240,23 +274,39 @@ class WaterRegisterCards {
                   ),
                   isFistAllotmentRegister
                   ? Column(
-                      children: [
-                        SizedBox(height: 12),
-                        Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Insira o ponto de partida do seu hidrômetro",
-                          style: TextStyle(
-                            color: DefaultColors.subTitleGray(),
-                            fontSize: 15
-                          ),
-                          textAlign: TextAlign.left,
-                          ),
+                    children: [
+                      SizedBox(height: 12),
+                      Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Insira o ponto de partida do seu hidrômetro",
+                        style: TextStyle(
+                          color: DefaultColors.subTitleGray(),
+                          fontSize: 15
                         ),
-                        SizedBox(height: 12),
-                      ],
-                    )
-                  : SizedBox(height: 12),
+                        textAlign: TextAlign.left,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                    ],
+                  )
+                  : Column(
+                    children: [
+                      SizedBox(height: 12),
+                      Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Insira o valor do seu hidrômetro abaixo e pressione Adicionar Registro para salvar",
+                        style: TextStyle(
+                          color: DefaultColors.subTitleGray(),
+                          fontSize: 15
+                        ),
+                        textAlign: TextAlign.left,
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                    ],
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -268,14 +318,25 @@ class WaterRegisterCards {
                       ),
                       SizedBox(height: 8),
                       TextFormField(
+                        enabled: isLoading ? false : true,
                         keyboardType: TextInputType.number,
                         controller: measureController,
                         cursorColor: DefaultColors.valueGray(),
+                        focusNode: measureFocus,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) {
+                          Focus.of(context).unfocus();
+                        },
                         style: TextStyle(
                           fontSize: 16,
                           color: DefaultColors.valueGray(),
                         ),
                         decoration: InputDecoration(
+                          hintText: "Ex: 43210",
+                          hintStyle: TextStyle(
+                            color: DefaultColors.textGray(),
+                            fontSize: 14,
+                          ), 
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -316,28 +377,36 @@ class WaterRegisterCards {
                         },
                       ),
                     ),
-                    onPressed: () async {
-                      FocusScope.of(context).unfocus();
-                      
-                      Loading.getLoading(context);
-
+                    onPressed: isLoading ? null
+                    : () async {
                       await onPress();
-
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
-                    }, 
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add, color: Colors.white,),
-                        SizedBox(width: 16),
-                        Text(
-                          "Adicionar Registro",
-                          style: TextStyle(
+                        isLoading
+                        ? SizedBox(
+                          height: 22,
+                          width: 22, 
+                          child: CircularProgressIndicator(
                             color: Colors.white,
-                            fontSize: 18,
+                            strokeWidth: 3,
                           ),
                         )
+                        : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: Colors.white),
+                            SizedBox(width: 16),
+                            Text(
+                              "Adicionar Registro",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     )
                   ),

@@ -1,4 +1,3 @@
-import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/widgets/table_rows/mortality_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
@@ -23,10 +22,22 @@ class MortalityDetails extends StatefulWidget {
 class _MortalityDetailsState extends State<MortalityDetails> {
   final _deathsController = TextEditingController();
   final _eliminationsController = TextEditingController();
+  final _deathsFocus = FocusNode();
+  final _eliminationsFocus = FocusNode();
+
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _deathsFocus.dispose();
+    _eliminationsFocus.dispose(); 
+    super.dispose();
+  }
 
   void _refreshData() {
-    setState(() {});
-    widget.onRefresh();
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -76,7 +87,23 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                 textAlign: TextAlign.left,
                               ),
                             ),
-                            SizedBox(height: 12),
+                            Column(
+                              children: [
+                                SizedBox(height: 12),
+                                Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Insira os valores abaixo e pressione Adicionar Registro para salvar. Caso um campo não seja inserido o valor padrão zero será utilizado",
+                                  style: TextStyle(
+                                    color: DefaultColors.subTitleGray(),
+                                    fontSize: 15
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(height: 12),
+                              ],
+                            ),
                             Row(
                               children: [
                                 Expanded(
@@ -91,15 +118,21 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                       ),
                                       SizedBox(height: 8),
                                       TextFormField(
+                                        enabled: _isLoading ? false : true,
                                         keyboardType: TextInputType.number,
                                         controller: _deathsController,
                                         cursorColor: DefaultColors.valueGray(),
+                                        focusNode: _deathsFocus,
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (_) {
+                                          FocusScope.of(context).requestFocus(_eliminationsFocus);
+                                        },
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
-                                          hintText: "EX: 00",
+                                          hintText: "Ex: 00",
                                           hintStyle: TextStyle(
                                             color: DefaultColors.textGray(),
                                             fontSize: 14,
@@ -138,15 +171,21 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                       ),
                                       SizedBox(height: 8),
                                       TextFormField(
+                                        enabled: _isLoading ? false : true,
                                         keyboardType: TextInputType.number,
                                         controller: _eliminationsController,
                                         cursorColor: DefaultColors.valueGray(),
+                                        focusNode: _eliminationsFocus,
+                                        textInputAction: TextInputAction.done,
+                                        onFieldSubmitted: (_) {
+                                          FocusScope.of(context).unfocus();
+                                        },
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: DefaultColors.valueGray(),
                                         ),
                                         decoration: InputDecoration(
-                                          hintText: "EX: 00",
+                                          hintText: "Ex: 00",
                                           hintStyle: TextStyle(
                                             color: DefaultColors.textGray(),
                                             fontSize: 14,
@@ -194,10 +233,10 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                   },
                                 ),
                               ),
-                              onPressed: () async {
+                              onPressed: _isLoading ? null
+                              : () async {
                                 FocusScope.of(context).unfocus();
-                      
-                                Loading.getLoading(context);
+                                _isLoading = true;
 
                                 final deaths = _deathsController.text.isEmpty ? 
                                   0 : int.parse(_deathsController.text);
@@ -212,23 +251,33 @@ class _MortalityDetailsState extends State<MortalityDetails> {
                                 _deathsController.clear();
                                 _eliminationsController.clear();
                                 _refreshData();
-
-
-                                if (!context.mounted) return;
-                                Navigator.pop(context);
                               }, 
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.add, color: Colors.white,),
-                                  SizedBox(width: 16),
-                                  Text(
-                                    "Adicionar Registro",
-                                    style: TextStyle(
+                                  _isLoading
+                                  ? SizedBox(
+                                    height: 22,
+                                    width: 22, 
+                                    child: CircularProgressIndicator(
                                       color: Colors.white,
-                                      fontSize: 18,
+                                      strokeWidth: 3,
                                     ),
                                   )
+                                  : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add, color: Colors.white),
+                                      SizedBox(width: 16),
+                                      Text(
+                                        "Adicionar Registro",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               )
                             ),
