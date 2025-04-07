@@ -101,7 +101,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
         backgroundColor: DefaultColors.bgGray(),
         title: Text("Registro de Nota"),
         actions: [
-          provider.getAccount.id != ""
+          provider.getAccount.id != "" && hasActiveAllotments
           ? Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
