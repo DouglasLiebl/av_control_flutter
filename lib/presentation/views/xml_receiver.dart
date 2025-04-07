@@ -7,6 +7,7 @@ import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:xml/xml.dart';
 
@@ -30,6 +31,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
   final _emmitedAtController = TextEditingController();
   final _typeController = TextEditingController();
   final _weightController = TextEditingController();
+  final _transporterController = TextEditingController();
 
   late XmlDocument data;
   bool _isLoading = false;
@@ -63,6 +65,7 @@ class _XmlReceiverState extends State<XmlReceiver> {
     _typeController.text = data.findAllElements("xProd").first.text;
     _weightController.text = data.findAllElements("qTrib").first.text;
     _emmitedAtController.text = DateFormater.formatISODate(data.findAllElements("dhEmi").first.text).toString();
+    _transporterController.text = data.findAllElements("transporta").first.findAllElements("xNome").first.text;
   }
 
   @override
@@ -410,7 +413,58 @@ class _XmlReceiverState extends State<XmlReceiver> {
                             ),      
                           ),
                           Text(
-                            _weightController.text,
+                            "${NumberFormat.decimalPattern("pt_BR")
+                              .format(double.parse(_weightController.text))} Kg",
+                            style: TextStyle(
+                              color: DefaultColors.valueGray(),
+                              fontSize: 14
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  color: Colors.white,
+                  elevation: 0,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide.none,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                        right: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                        top: BorderSide(
+                          color: DefaultColors.borderGray(),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Transp.",
+                            style: TextStyle(
+                              color: DefaultColors.textGray(),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14
+                            ),      
+                          ),
+                          Text(
+                            _transporterController.text,
                             style: TextStyle(
                               color: DefaultColors.valueGray(),
                               fontSize: 14

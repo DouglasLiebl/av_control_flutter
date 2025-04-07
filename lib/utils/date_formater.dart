@@ -18,7 +18,7 @@ class DateFormater {
 
     static String formatISODate(String isoDateStr) {
     try {
-      final date = DateTime.parse(isoDateStr);
+      final date = DateTime.parse(isoDateStr).toLocal();
       return DateFormat('dd/MM/yyyy HH:mm').format(date);
     } catch (e) {
       return 'Data inválida';
