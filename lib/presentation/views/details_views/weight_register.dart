@@ -1,5 +1,6 @@
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/main.dart';
+import 'package:demo_project/presentation/widgets/buttons/finish_button.dart';
 import 'package:demo_project/presentation/widgets/register_cards/weight_register_cards.dart';
 import 'package:demo_project/presentation/widgets/table_rows/weight_table_rows.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
@@ -81,6 +82,9 @@ class _WaterDetailsState extends State<WeightRegister> {
     }
 
     Future<void> finishRegister() async {
+      setState(() {
+        _isLoading = true;
+      });
       final tareString = await storage.getItem("Tare");
       final tare = tareString != null ? double.parse(tareString) : 0.0;
       
@@ -157,6 +161,12 @@ class _WaterDetailsState extends State<WeightRegister> {
       child: Scaffold(
         backgroundColor: DefaultColors.bgGray(),
         appBar: AppBar(
+          title: Text(
+            "Pesagem",
+            style: TextStyle(
+              fontFamily: "JetBrains Mono"
+            )
+          ),
           backgroundColor: DefaultColors.bgGray(),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -170,75 +180,7 @@ class _WaterDetailsState extends State<WeightRegister> {
             ),
           actions: [
             weights.isNotEmpty
-            ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: DefaultColors.activeBgGreen(),
-                  borderRadius: BorderRadius.circular(9999),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: _isLoading ? null 
-                    : () async {
-                      FocusScope.of(context).unfocus();
-                      setState(() => _isLoading = true);
-
-                      await finishRegister();
-
-                      if (!context.mounted) return;
-                      Navigator.of(context).pop();               
-                    },
-                    overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                      (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.pressed)) {
-                          return DefaultColors.activeGreen().withOpacity(0.1);
-                        }
-                        return null;
-                      },
-                    ),
-                    borderRadius: BorderRadius.circular(9999),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _isLoading
-                          ? SizedBox(
-                            height: 22,
-                            width: 22, 
-                            child: CircularProgressIndicator(
-                              color: DefaultColors.activeGreen(),
-                              strokeWidth: 3,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.check_outlined, 
-                                size: 20, 
-                                color: DefaultColors.activeGreen()
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                "Concluir",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: DefaultColors.activeGreen()
-                                ),
-                              ),
-                            ],
-                          ), 
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
+            ? FinishButton(value: "Concluir", isLoading: _isLoading, onPress: finishRegister)
             : SizedBox.shrink()
           ]
         ),
@@ -246,7 +188,7 @@ class _WaterDetailsState extends State<WeightRegister> {
           child: SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -50,6 +50,7 @@ class _FeedDetailsState extends State<FeedDetails> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -81,7 +82,7 @@ class _FeedDetailsState extends State<FeedDetails> {
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -6,6 +6,7 @@ import 'package:demo_project/infra/factory/service_factory.dart';
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
+import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/views/home.dart';
 import 'package:demo_project/presentation/views/login.dart';
 import 'package:demo_project/presentation/views/xml_receiver.dart';
@@ -42,8 +43,8 @@ void main() async {
       ),
     );
   }, (e, stackTrace) {
-    print('Error in runZonedGuarded: $e');
-    print('Stack trace: $stackTrace');
+    debugPrint('Error in runZonedGuarded: $e');
+    debugPrint('Stack trace: $stackTrace');
   });
 }
 
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     ReceiveSharingIntent.instance.getMediaStream().listen((List<SharedMediaFile> value) {
       _handleSharedFile(value);
     }, onError: (err) {
-      print("Error: $err");
+      debugPrint("Error: $err");
     });
 
     ReceiveSharingIntent.instance.getInitialMedia().then((List<SharedMediaFile> value) {
@@ -96,12 +97,13 @@ class _MyAppState extends State<MyApp> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Scaffold(
+                  backgroundColor: DefaultColors.bgGray(),
                   body: Center(
                     child: SizedBox(
                       width: 50,
                       height: 50,
                       child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
+                        backgroundColor: DefaultColors.valueGray(),
                         strokeWidth: 4,
                       ),
                     )

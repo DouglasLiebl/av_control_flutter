@@ -30,7 +30,8 @@ class WaterTableRows {
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w500,
-              fontSize: 16
+              fontSize: 16,
+              fontFamily: "JetBrains Mono"
             ),
           ),
         ],
@@ -86,6 +87,7 @@ class WaterTableRows {
                                 color: DefaultColors.valueGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                           ],
@@ -98,6 +100,7 @@ class WaterTableRows {
                                 color: DefaultColors.textGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                             Text(
@@ -106,6 +109,7 @@ class WaterTableRows {
                                 color: DefaultColors.valueGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                           ],
@@ -118,6 +122,7 @@ class WaterTableRows {
                                 color: DefaultColors.textGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                             Text(
@@ -126,6 +131,7 @@ class WaterTableRows {
                                 color: DefaultColors.valueGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                           ],
@@ -138,6 +144,7 @@ class WaterTableRows {
                                 color: DefaultColors.textGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                             Text(
@@ -146,6 +153,7 @@ class WaterTableRows {
                                 color: DefaultColors.valueGray(),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
+                                fontFamily: "JetBrains Mono"
                               ),
                             ),
                           ],
@@ -215,6 +223,7 @@ class WaterTableRows {
                                   color: DefaultColors.valueGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                             ],
@@ -227,6 +236,7 @@ class WaterTableRows {
                                   color: DefaultColors.textGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                               Text(
@@ -235,6 +245,7 @@ class WaterTableRows {
                                   color: DefaultColors.valueGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                             ],
@@ -247,6 +258,7 @@ class WaterTableRows {
                                   color: DefaultColors.textGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                               Text(
@@ -255,6 +267,7 @@ class WaterTableRows {
                                   color: DefaultColors.valueGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                             ],
@@ -267,6 +280,7 @@ class WaterTableRows {
                                   color: DefaultColors.textGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                               Text(
@@ -275,6 +289,7 @@ class WaterTableRows {
                                   color: DefaultColors.valueGray(),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: "JetBrains Mono"
                                 ),
                               ),
                             ],
@@ -333,7 +348,8 @@ class WaterTableRows {
                       style: TextStyle(
                         color: DefaultColors.textGray(),
                         fontWeight: FontWeight.w500,
-                        fontSize: 14
+                        fontSize: 14,
+                        fontFamily: "JetBrains Mono"
                       ),      
                     ),
                     Text(
@@ -342,6 +358,7 @@ class WaterTableRows {
                         color: DefaultColors.valueGray(),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
+                        fontFamily: "JetBrains Mono"
                       ),
                     ),
                   ],
@@ -399,7 +416,8 @@ class WaterTableRows {
                       style: TextStyle(
                         color: DefaultColors.textGray(),
                         fontWeight: FontWeight.w500,
-                        fontSize: 14
+                        fontSize: 14,
+                        fontFamily: "JetBrains Mono"
                       ),      
                     ),
                     Text(
@@ -408,6 +426,7 @@ class WaterTableRows {
                         color: DefaultColors.valueGray(),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
+                        fontFamily: "JetBrains Mono"
                       ),
                     ),
                   ],

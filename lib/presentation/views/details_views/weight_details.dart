@@ -33,19 +33,19 @@ class _WeightDetailsState extends State<WeightDetails> {
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              WeightRegisterCards.startRegister(() {
+              WeightRegisterCards.startRegister(() async {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => WeightRegister(id: widget.id, onRefresh: _refreshData))
                 );
               }),
               SizedBox(height: 16),
-              // Registers
+
               if (allotmentProvider.getWeightHistory().isNotEmpty)
                 WeightTableRows.getWeightTopRow("Registros de Pesos"),
               ListView.builder(

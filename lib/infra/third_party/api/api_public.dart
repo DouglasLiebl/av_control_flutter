@@ -13,6 +13,8 @@ class ApiPublic {
       onRequest: (options, handler) async {
         options.baseUrl = dotenv.env["BASE_URL"] ?? "";
         options.headers["Content-Type"] = "application/json";
+        options.headers["x-api-key"] = dotenv.env["API_KEY"] ?? "";
+        
         return handler.next(options);
       },
       onError: (DioException e, handler) async {

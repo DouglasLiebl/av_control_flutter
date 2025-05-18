@@ -23,6 +23,7 @@ class ApiPrivate {
 
         options.baseUrl = dotenv.env["BASE_URL"] ?? "";
         options.headers["Authorization"] = "${authData?.tokenType} ${authData?.accessToken}";
+        options.headers["x-api-key"] = dotenv.env["API_KEY"] ?? "";
 
         Logger.log('-------------------------');
         Logger.log(options.method);
@@ -49,12 +50,10 @@ class ApiPrivate {
 
           final opts = exception.requestOptions;
           final newAuthData = await getIt<SecureStorage>().getAuth();
-          print("TRYING TO DO THE ORIGINAL REQUEST");
-            
+
           opts.headers["Authorization"] = "${newAuthData?.tokenType} ${newAuthData?.accessToken}";
           
           final response = await dio.fetch(opts);
-          print("SUCCESSFULLY DID THE ORIGINAL REQUEST");
           return handler.resolve(response);
         }
         
@@ -74,7 +73,6 @@ class ApiPrivate {
   }
 
   Future<void> _getRefreshToken(AuthDto auth) async {
-    print("STARTED TO GET REFRESH TOKEN");
     final refreshDio = Dio(BaseOptions(
       baseUrl: dotenv.env["BASE_URL"] ?? "",
     ));
@@ -87,7 +85,6 @@ class ApiPrivate {
     );
 
     if (response.statusCode == 200) {
-      print("SUCCESSFULLY GET A NEW REFRESH TOKEN");
       final newAuthData = AuthDto.fromJson(response.data);
       await getIt<SecureStorage>().setItem("Auth", jsonEncode(AuthDto.toJson(newAuthData)));
     }

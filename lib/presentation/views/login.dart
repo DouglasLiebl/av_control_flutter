@@ -3,7 +3,9 @@ import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/views/home.dart';
+import 'package:demo_project/presentation/widgets/inputs/custom_input_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,8 +20,10 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+
   bool _isLoading = false;
-  bool _showPassword = false; 
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +51,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: Column(
                         children: [
+                          SvgPicture.asset(
+                            "assets/svg/icon.svg",
+                            height: 160,
+                            width: 160,
+                          ),
                           Text(
                             "Bem-vindo de volta",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 24,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "JetBrains Mono"
                             ),
                           ),
                           Text(
@@ -64,100 +74,26 @@ class _LoginPageState extends State<LoginPage> {
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 20),
-                          Container(
-                            width: double.infinity,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Email",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            enabled: _isLoading ? false : true,
-                            keyboardType: TextInputType.emailAddress,
-                            controller: _emailController,
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              fontSize: 16, // Change font size
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "exemplo@email.com",
-                              hintStyle: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontSize: 14,
-                              ), 
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126),
-                                  width: 3.0,
-                                )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 194, 189, 189)
-                                )
-                              ),
-                              prefixIcon: Icon(Icons.email_outlined, color: DefaultColors.subTitleGray()),
-                            ),
+                          CustomInputField(
+                            label: "Email",
+                            hintText: "email@email.com",
+                            keyboardType: TextInputType.emailAddress, 
+                            controller: _emailController, 
+                            isLoading: _isLoading, 
+                            focusNode: _emailFocus,
+                            onSubmit: () => Focus.of(context).requestFocus(_passwordFocus),
+                            prefixIcon: Icon(Icons.email_outlined, color: DefaultColors.subTitleGray()),
                           ),
                           SizedBox(height: 6),
-                          Container(
-                            width: double.infinity,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Senha",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            enabled: _isLoading ? false : true,
-                            controller: _passwordController,
-                            obscureText: !_showPassword,
-                            cursorColor: Colors.black,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126),
-                                  width: 3.0, 
-                                )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 194, 189, 189)
-                                )
-                              ),
-                              prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray()),
-                              suffixIcon: IconButton(  
-                                icon: Icon(
-                                  _showPassword ? Icons.visibility : Icons.visibility_off,
-                                  color: DefaultColors.subTitleGray(),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _showPassword = !_showPassword;
-                                  });
-                                },
-                              ),
-                            ),
+                          CustomInputField(
+                            label: "Senha",
+                            keyboardType: TextInputType.text, 
+                            controller: _passwordController, 
+                            isLoading: _isLoading, 
+                            isPassword: true,
+                            focusNode: _passwordFocus,
+                            onSubmit: () => Focus.of(context).unfocus(),
+                            prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray()),
                           ),
                           SizedBox(height: 16),
                           ElevatedButton(

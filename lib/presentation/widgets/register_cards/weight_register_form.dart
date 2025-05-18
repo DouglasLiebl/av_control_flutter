@@ -1,6 +1,11 @@
 import 'package:demo_project/infra/third_party/local_storage/secure_storage.dart';
 import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/presentation/widgets/buttons/custom_button.dart';
+import 'package:demo_project/presentation/widgets/dropdown/dropdown.dart';
+import 'package:demo_project/presentation/widgets/dropdown/dropdown_item.dart';
+import 'package:demo_project/presentation/widgets/inputs/custom_input_field.dart';
+import 'package:demo_project/presentation/widgets/text/card_title.dart';
 import 'package:flutter/material.dart';
 
 class WeightRegisterForm extends StatefulWidget {
@@ -37,7 +42,6 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
 
   bool isTareEnabled = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -55,6 +59,19 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
     });
   }
 
+  Future<void> _finish() async {
+    if (isTareEnabled) {
+      storage.setItem("Tare", widget.tareController.text);
+      setState(() {
+        isTareEnabled = false;
+      });
+    }
+    FocusScope.of(context).unfocus();
+    await widget.onPress();
+    if (!mounted) return;
+    Navigator.of(context).pop();     
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -66,125 +83,36 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
           ),
           child: Column(
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Novo Registro de Peso",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
+              CardTitle(
+                text: "Novo Registro de Peso"
               ),
               SizedBox(height: 12),
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Peso (kg)",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        TextFormField(
-                          enabled: widget.isLoading ? false : true,
-                          keyboardType: TextInputType.number,
-                          controller: widget.weightController, 
-                          cursorColor: DefaultColors.valueGray(),
-                          focusNode: widget.weightFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (_) {
-                            Focus.of(context).requestFocus(widget.unitsFocus);
-                          },
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: DefaultColors.valueGray(),
-                          ),
-                          decoration: InputDecoration(
-                            hintText: "Ex: 12.020",
-                            hintStyle: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                            ), 
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 128, 126, 126),
-                                width: 3.0,
-                              )
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 194, 189, 189)
-                              )
-                            ),
-                            prefixIcon: Icon(Icons.balance_outlined, size: 28, color: DefaultColors.subTitleGray())
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: CustomInputField(
+                      label: "Peso (kg)",
+                      hintText: "Ex: 12.020",
+                      keyboardType: TextInputType.number, 
+                      controller: widget.weightController, 
+                      isLoading: widget.isLoading,
+                      prefixIcon: Icon(Icons.balance_outlined, size: 28, color: DefaultColors.subTitleGray()),
+                      focusNode: widget.weightFocus,
+                      onSubmit: () => Focus.of(context).requestFocus(widget.unitsFocus),
+                    )
                   ),
                   SizedBox(width: 16),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Quantidade",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        TextFormField(
-                          enabled: widget.isLoading ? false : true,
-                          keyboardType: TextInputType.number,
-                          controller: widget.unitController, 
-                          cursorColor: DefaultColors.valueGray(),
-                          focusNode: widget.unitsFocus,
-                          textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (_) {
-                            Focus.of(context).unfocus();
-                          },
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: DefaultColors.valueGray(),
-                          ),
-                          decoration: InputDecoration(
-                            hintText: "Ex: 10",
-                            hintStyle: TextStyle(
-                              color: DefaultColors.textGray(),
-                              fontSize: 14,
-                            ), 
-                            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 128, 126, 126),
-                                width: 3.0,
-                              )
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color.fromARGB(255, 194, 189, 189)
-                              )
-                            ),
-                            prefixIcon: Icon(Icons.format_list_numbered_outlined, size: 28, color: DefaultColors.subTitleGray())
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: CustomInputField(
+                      label: "Quantidade",
+                      hintText: "Ex: 10",
+                      keyboardType: TextInputType.number,
+                      controller: widget.unitController,
+                      isLoading: widget.isLoading,
+                      focusNode: widget.unitsFocus,
+                      onSubmit: () => Focus.of(context).unfocus(),
+                      prefixIcon: Icon(Icons.format_list_numbered_outlined, size: 28, color: DefaultColors.subTitleGray()),
+                    )
                   ),
                 ],
               ),
@@ -195,75 +123,20 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                   Text(
                     "Selecione o Box",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "JetBrains Mono"
                     ),
                   ),
                   SizedBox(height: 8),
-                  DropdownButtonHideUnderline(
-                    child: ButtonTheme(
-                      alignedDropdown: true,
-                      child: DropdownButtonFormField<String>( 
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 128, 126, 126),
-                              width: 3.0,
-                            )
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 194, 189, 189)
-                            )
-                          ),
-                          prefixIcon: Icon(
-                            Icons.inventory_2_outlined,  // Icon for box selection
-                            size: 28,
-                            color: DefaultColors.subTitleGray()
-                          ),
-                        ),
-                        onChanged: (String? value) {
-                          if (value != null) {
-                            widget.boxController.text = value;
-                          }
-                        },
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: DefaultColors.valueGray(),
-                        ),
-                        hint: Text(
-                          "Selecione um box", 
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          )
-                        ),
-                        dropdownColor: Colors.white,
-                        isExpanded: true,
-                        value: null,
-                        items: [
-                          DropdownMenuItem(
-                            value: "1",
-                            child: Text("Box 1", style: TextStyle(fontSize: 16)),
-                          ),
-                          DropdownMenuItem(
-                            value: "2",
-                            child: Text("Box 2", style: TextStyle(fontSize: 16)),
-                          ),
-                          DropdownMenuItem(
-                            value: "3",
-                            child: Text("Box 3", style: TextStyle(fontSize: 16)),
-                          ),
-                          DropdownMenuItem(
-                            value: "4",
-                            child: Text("Box 4", style: TextStyle(fontSize: 16)),
-                          ),
-                        ],
-                      )
-                    ) 
-                  ),
+                  Dropdown(
+                    controller: widget.boxController, 
+                    values: [
+                      DropdownItem(value: "1", description: "Box 1"),
+                      DropdownItem(value: "2", description: "Box 2"),
+                      DropdownItem(value: "3", description: "Box 3"),
+                      DropdownItem(value: "4", description: "Box 4")
+                    ] 
+                  )
                 ],
               ),
               SizedBox(height: 16),
@@ -290,7 +163,8 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "JetBrains Mono"
                             ),
                           ),
                           Transform.scale(
@@ -317,55 +191,21 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                       ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                          "Peso da Tara (kg)",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                          ),
-                          SizedBox(height: 8),
-                          TextFormField(
-                            enabled: widget.isLoading ? false : true,
-                            keyboardType: TextInputType.number,
+                          CustomInputField(
+                            label: "Valor da Tara (kg)", 
+                            keyboardType: TextInputType.number, 
                             controller: widget.tareController, 
-                            cursorColor: DefaultColors.valueGray(),
+                            isLoading: widget.isLoading,
+                            hintText: "Ex: 1.350",
                             focusNode: widget.tareFocus,
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) {
-                              Focus.of(context).unfocus();
-                            },
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: DefaultColors.valueGray(),
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Ex: 1.350",
-                              hintStyle: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontSize: 14,
-                              ), 
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126),
-                                  width: 3.0,
-                                )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 194, 189, 189)
-                                )
-                              ),
-                            ),
+                            onSubmit: () => Focus.of(context).unfocus(),
                           ),
                           Text(
                             "Peso da caixa vazia que será descontado do peso total.",
                             style: TextStyle(
                               color: DefaultColors.subTitleGray(),
                               fontSize: 12,
+                              fontFamily: "JetBrains Mono"
                             ),
                           )
                         ],
@@ -377,7 +217,8 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                             "Usando a tara padrão: ${widget.tareController.text} kg",
                             style: TextStyle(
                               color: DefaultColors.textGray(),
-                              fontSize: 15
+                              fontSize: 15,
+                              fontFamily: "JetBrains Mono"
                             ),
                           )
                         ],
@@ -386,51 +227,11 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
                   ),
                 )
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(DefaultColors.valueGray()),
-                  minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)
-                    ),
-                  ),
-                  elevation: MaterialStateProperty.all(5),
-                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.grey.withOpacity(0.2);
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                onPressed: widget.isLoading ? null
-                : () async {
-                  if (isTareEnabled) {
-                    storage.setItem("Tare", widget.tareController.text);
-                    setState(() {
-                      isTareEnabled = false;
-                    });
-                  }
-                  FocusScope.of(context).unfocus();
-                  widget.onPress();
-                }, 
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, color: Colors.white,),
-                    SizedBox(width: 16),
-                    Text(
-                      "Adicionar",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    )
-                  ],
-                )
-              ),
+              CustomButton(
+                description: "Adicionar", 
+                isLoading: widget.isLoading, 
+                onPress: _finish
+              )
             ],
           ),
         ),

@@ -56,7 +56,12 @@ class _DetailsPage extends State<DetailsPage> {
       backgroundColor: DefaultColors.bgGray(),
       appBar: AppBar(
         backgroundColor: DefaultColors.bgGray(),
-        title: Text("Detalhes do Lote"),
+        title: Text(
+          "Detalhes do Lote",
+          style: TextStyle(
+            fontFamily: "JetBrains Mono"
+          )
+        ),
       ),
       body: allotmentProvider.getAllotment.id == "" 
       ? EmptyAllotment(
