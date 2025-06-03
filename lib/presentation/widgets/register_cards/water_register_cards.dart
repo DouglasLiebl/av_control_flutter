@@ -80,6 +80,7 @@ class WaterRegisterCards {
                     description: "Adicionar Registro",
                     isLoading: isLoading,
                     onPress: onPress,
+                    icon:Icon(Icons.add, color: Colors.white)
                   )
                 ],
               ),
@@ -144,7 +145,8 @@ class WaterRegisterCards {
                   CustomButton(
                     description: "Adicionar Registro",
                     isLoading: isLoading,
-                    onPress: onPress,                  
+                    onPress: onPress,
+                    icon:Icon(Icons.add, color: Colors.white)            
                   ),
                 ],
               ),

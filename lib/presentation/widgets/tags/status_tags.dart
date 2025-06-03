@@ -1,4 +1,5 @@
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/presentation/style/default_typography.dart';
 import 'package:flutter/material.dart';
 
 class StatusTags {
@@ -24,11 +25,7 @@ class StatusTags {
             child: Center(
             child: Text(
                 "Ativo",  
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: DefaultColors.activeGreen()
-                ),
+                style: DefaultTypography.activeTag()
               ),
             ),  
           )
@@ -44,10 +41,7 @@ class StatusTags {
       children: [
         Text(
           alias,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+          style: DefaultTypography.aliasText()
         ),
         Container(
           decoration: BoxDecoration(
@@ -59,11 +53,7 @@ class StatusTags {
             child: Center(
             child: Text(
                 "Inativo",  
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: DefaultColors.inactiveRed()
-                ),
+                style: DefaultTypography.inactiveTag()
               ),
             ),  
           )

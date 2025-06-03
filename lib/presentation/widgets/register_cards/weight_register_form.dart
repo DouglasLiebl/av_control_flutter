@@ -230,7 +230,8 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
               CustomButton(
                 description: "Adicionar", 
                 isLoading: widget.isLoading, 
-                onPress: _finish
+                onPress: _finish,
+                icon:Icon(Icons.add, color: Colors.white)
               )
             ],
           ),

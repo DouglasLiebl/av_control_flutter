@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:demo_project/domain/entity/aviary.dart';
 import 'package:demo_project/presentation/components/loading.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/service/sync_service.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/style/default_typography.dart';
-import 'package:demo_project/presentation/widgets/tags/status_tags.dart';
+import 'package:demo_project/presentation/widgets/menu/home_item.dart';
 import 'package:demo_project/presentation/views/details.dart';
 import 'package:demo_project/presentation/views/options.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  Future<void> goToDetails(Aviary aviary) async {
+    final allotmentProvider = context.read<AllotmentProvider>();
+    Loading.getLoading(context);
+                          
+    if (aviary.activeAllotmentId != null) {
+      await allotmentProvider.loadContext( aviary.activeAllotmentId!);
+    } else {
+      await allotmentProvider.cleanContext();
+    }
+
+    if (!mounted) return;
+    Navigator.pop(context);
+  
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailsPage(aviary: aviary))
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final allotmentProvider = context.watch<AllotmentProvider>();
+    
     final provider = context.watch<AccountProvider>();
 
     return Scaffold(
@@ -175,49 +195,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   itemCount: provider.getAccount.aviaries.length,
                   itemBuilder: (context, index) {
                     final aviary = provider.getAccount.aviaries[index];
-                    return Card(
-                      color: Colors.white,
-                      elevation: 0,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: DefaultColors.borderGray(),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(8)
-                      ),
-                      child: ListTile(
-                        leading: Icon(Icons.home_work),
-                        title: aviary.activeAllotmentId != null 
-                          ? StatusTags.getActiveTag(aviary.alias) 
-                          : StatusTags.getInactiveTag(aviary.alias),
-                        subtitle: Text(
-                          aviary.name,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: DefaultColors.textGray(),
-                          ),
-                        ),
-                        trailing: Icon(Icons.arrow_forward_ios, size: 15,),
-                        onTap: () async {
-                          Loading.getLoading(context);
-                          
-                          if (aviary.activeAllotmentId != null) {
-                            await allotmentProvider.loadContext( aviary.activeAllotmentId!);
-                          } else {
-                            await allotmentProvider.cleanContext();
-                          }
-
-                          if (!context.mounted) return;
-                          Navigator.pop(context);
-                        
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => DetailsPage(aviary: aviary))
-                          );
-                        }
-                      )
-                    ); 
+                    return HomeItem(
+                      aviary: aviary, 
+                      onPress: () async => await goToDetails(aviary)
+                    );
                   },
                 ) 
               )
