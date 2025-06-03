@@ -82,7 +82,7 @@ class FeedTableRows {
                             Icon(Icons.breakfast_dining_outlined, size: 16, color: DefaultColors.iconGreen(),),
                             SizedBox(width: 5),
                             Text(
-                              DateFormater.formatDateString(history.createdAt),
+                              DateFormater.formatDateString(history.emittedAt),
                               style: TextStyle(
                                 color: DefaultColors.valueGray(),
                                 fontSize: 14,
@@ -218,7 +218,7 @@ class FeedTableRows {
                               Icon(Icons.breakfast_dining_outlined, size: 16, color: DefaultColors.iconGreen(),),
                               SizedBox(width: 5),
                               Text(
-                                DateFormater.formatDateString(history.createdAt),
+                                DateFormater.formatDateString(history.emittedAt),
                                 style: TextStyle(
                                   color: DefaultColors.valueGray(),
                                   fontSize: 14,
