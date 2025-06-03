@@ -2,7 +2,9 @@ import 'package:demo_project/infra/factory/service_factory.dart';
 import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/presentation/style/default_typography.dart';
 import 'package:demo_project/presentation/views/home.dart';
+import 'package:demo_project/presentation/widgets/buttons/custom_button.dart';
 import 'package:demo_project/presentation/widgets/inputs/custom_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,7 +25,29 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
+
+  Future<void> login() async {
+    final accountProvider = context.read<AccountProvider>();
+    FocusScope.of(context).unfocus();
+
+    try {
+      await accountProvider.login(
+        _emailController.text, 
+        _passwordController.text
+      );
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))  
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString()))
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +82,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           Text(
                             "Bem-vindo de volta",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: "JetBrains Mono"
-                            ),
+                            style: DefaultTypography.loginTitle()
                           ),
                           Text(
                             "Insira seu email abaixo para acessar sua conta",
-                            style: TextStyle(
-                              color: DefaultColors.subTitleGray(),
-                              fontSize: 15
-                            ),
+                            style: DefaultTypography.loginDescription(),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 20),
@@ -96,64 +112,10 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.key_outlined, color: DefaultColors.subTitleGray()),
                           ),
                           SizedBox(height: 16),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.black),
-                              minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)
-                                ),
-                              ),
-                              elevation: MaterialStateProperty.all(5),
-                              overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.grey.withOpacity(0.2);
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            onPressed: () async {
-                              FocusScope.of(context).unfocus();
-                              _isLoading = true;
-
-                              try {
-                                await accountProvider.login(
-                                  _emailController.text, 
-                                  _passwordController.text
-                                );
-
-                                if (!context.mounted) return;
-                                _isLoading = false;
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService()))  
-                                );
-                              } catch (e) {
-                                _isLoading = false;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(e.toString()))
-                                );
-                              }
-                            }, 
-                            child: _isLoading
-                            ? SizedBox(
-                              height: 22,
-                              width: 22, 
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
-                            : Text(
-                              "Entrar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
+                          CustomButton(
+                            description: "Entrar",
+                            isLoading: accountProvider.isLoading,
+                            onPress:  () async => await login(),
                           ),
                           SizedBox(height: 2),
                           TextButton(

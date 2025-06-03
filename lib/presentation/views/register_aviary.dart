@@ -2,7 +2,10 @@ import 'package:demo_project/infra/factory/service_factory.dart';
 import 'package:demo_project/main.dart';
 import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/presentation/style/default_typography.dart';
 import 'package:demo_project/presentation/views/home.dart';
+import 'package:demo_project/presentation/widgets/buttons/custom_button.dart';
+import 'package:demo_project/presentation/widgets/inputs/custom_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +22,28 @@ class _RegisterAviary extends State<RegisterAviary> {
   final _nameFocus = FocusNode();
   final _aliasFocus = FocusNode();
 
-  bool _isLoading = false;
-
   @override
   void dispose() {
     _nameFocus.dispose();
     _aliasFocus.dispose();
     super.dispose();
+  }
+
+  Future<void> register() async {
+    final accountProvider = context.read<AccountProvider>();
+    FocusScope.of(context).unfocus();
+
+    await accountProvider.registerAviary(
+      _nameController.text.toUpperCase(), 
+      _aliasController.text
+    );
+
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService())),
+      (route) => false 
+    );
   }
 
   @override
@@ -34,7 +52,10 @@ class _RegisterAviary extends State<RegisterAviary> {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registro de aviário"),
+        title: Text(
+          "Registro de aviário",
+          style: DefaultTypography.appBar()  
+        ),
         backgroundColor: DefaultColors.bgGray(),
       ),
       body: Container(
@@ -60,173 +81,47 @@ class _RegisterAviary extends State<RegisterAviary> {
                         children: [
                           Text(
                             "Atenção",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold
-                            ),
+                            style: DefaultTypography.loginTitle()
                           ),
                           Text(
                             " Insira o nome do aviário presente nas notas no campo Nome e como deseja que seja aparente na página principal no campo Apelido.",
-                            style: TextStyle(
-                              color: DefaultColors.subTitleGray(),
-                              fontSize: 15
-                            ),
+                            style: DefaultTypography.loginDescription(),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 20),
-                          Container(
-                            width: double.infinity,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Nome",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            enabled: _isLoading ? false : true,
+                          CustomInputField(
                             controller: _nameController,
-                            cursorColor: Colors.black,
+                            label: "Nome",
+                            keyboardType: TextInputType.text,
+                            isLoading: accountProvider.isLoading,
+                            prefixIcon: Icon(Icons.person_outlined, color: DefaultColors.subTitleGray()),
+                            hintText: "Ex: INTEGRADO CLIMATIZADO",
                             focusNode: _nameFocus,
-                            textInputAction: TextInputAction.next,
-                            onFieldSubmitted: (_) {
+                            onSubmit: () {
                               Focus.of(context).requestFocus(_aliasFocus);
                             },
-                            style: TextStyle(
-                              fontSize: 16, // Change font size
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Ex: INTEGRADO CLIMATIZADO",
-                              hintStyle: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontSize: 14,
-                              ), 
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126), // Change color when focused
-                                  width: 3.0, // Make border thicker when focused
-                                )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 194, 189, 189)
-                                )
-                              ),
-                              prefixIcon: Icon(Icons.person_outline, color: DefaultColors.subTitleGray())
-                            ),
+                            textInputAction: TextInputAction.next,
                           ),
                           SizedBox(height: 6),
-                          Container(
-                            width: double.infinity,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Apelido",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            enabled: _isLoading ? false : true,
+                          CustomInputField(
                             controller: _aliasController,
-                            cursorColor: Colors.black,
+                            label: "Apelido",
+                            keyboardType: TextInputType.text,
+                            isLoading: accountProvider.isLoading,
+                            prefixIcon: Icon(Icons.label_outline, color: DefaultColors.subTitleGray()),
+                            hintText: "Ex: AV 01",
                             focusNode: _aliasFocus,
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (_) {
+                            onSubmit: () {
                               Focus.of(context).unfocus();
                             },
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Ex: AV 01",
-                              hintStyle: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontSize: 14,
-                              ), 
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 128, 126, 126), // Change color when focused
-                                  width: 3.0, // Make border thicker when focused
-                                )
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: const Color.fromARGB(255, 194, 189, 189)
-                                )
-                              ),
-                              prefixIcon: Icon(Icons.label_outline, color: DefaultColors.subTitleGray())
-                            ),
+                            textInputAction: TextInputAction.done,
                           ),
                           SizedBox(height: 16),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Colors.black),
-                              minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5)
-                                ),
-                              ),
-                              elevation: MaterialStateProperty.all(5),
-                              overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.grey.withOpacity(0.2);
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            onPressed: _isLoading ? null
-                            : () async {
-                              FocusScope.of(context).unfocus();
-                              _isLoading = true;
-
-                              await accountProvider.registerAviary(
-                                _nameController.text.toUpperCase(), 
-                                _aliasController.text
-                              );
-
-                              if (!context.mounted) return;
-                              _isLoading = false;
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => HomePage(syncService: getIt<ServiceFactory>().getSyncService())),
-                                (route) => false 
-                              );
-                            }, 
-                            child: _isLoading
-                            ? SizedBox(
-                              height: 22,
-                              width: 22, 
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
-                            : Text(
-                              "Salvar",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            )
-                          ),
+                          CustomButton(
+                            description: "Salvar",
+                            isLoading: accountProvider.isLoading,
+                            onPress: () async => await register(),
+                          )
                         ],
                       ),
                     ),

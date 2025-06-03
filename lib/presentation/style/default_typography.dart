@@ -31,4 +31,58 @@ class DefaultTypography {
     );
   }
 
+  static TextStyle loginTitle() {
+    return TextStyle(
+      color: Colors.black,
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle loginDescription() {
+    return TextStyle(
+      color: DefaultColors.subTitleGray(),
+      fontSize: 15,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle appBar() {
+    return TextStyle(
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle optionItem() {
+    return TextStyle(
+      fontFamily: "JetBrains Mono"
+    );
+  }
+  
+  static TextStyle countBox() {
+    return TextStyle(
+      color: DefaultColors.subTitleGray(),
+      fontSize: 12,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle countBoxActiveValue() {
+    return TextStyle(
+      color: Color(0xFF38a169),
+      fontWeight: FontWeight.bold,
+      fontSize: 20,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle countBoxValue() {
+    return TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 20,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
 }

@@ -20,6 +20,8 @@ class AccountProvider extends BaseProvider {
     aviaries: [],
   );
 
+  bool isLoading = false;
+
   Account get getAccount => _account;  
 
   Future<void> _loadContext() async {
@@ -30,12 +32,15 @@ class AccountProvider extends BaseProvider {
   }
 
   Future<void> login(String email, String password) async {
+    isLoading = true;
+    notifyListeners();
     try {
       Account response = await authService.login(email, password);
       _account = response;
     } catch (e, stackTrace) {
       await handleError(e, stackTrace);
     }
+    isLoading = false;
     notifyListeners();
   }
 
@@ -51,9 +56,13 @@ class AccountProvider extends BaseProvider {
   }
 
   Future<void> registerAviary(String name, String alias) async {
+    isLoading = true;
+    notifyListeners();
+
     Aviary response = await accountService.registerNewAviary(_account.id, name, alias);
     _account.aviaries.add(response);
 
+    isLoading = false;
     notifyListeners();
   }
 

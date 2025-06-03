@@ -5,10 +5,10 @@ import 'package:demo_project/presentation/provider/account_provider.dart';
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/service/sync_service.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
+import 'package:demo_project/presentation/style/default_typography.dart';
 import 'package:demo_project/presentation/widgets/tags/status_tags.dart';
 import 'package:demo_project/presentation/views/details.dart';
 import 'package:demo_project/presentation/views/options.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       backgroundColor: DefaultColors.bgGray(),
       appBar: AppBar(
         backgroundColor: DefaultColors.bgGray(),
-        title: Text("Aviários"),
+        title: Text(
+          "Aviários",
+          style: DefaultTypography.appBar()
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -115,21 +118,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             children: [
                               Text(
                                 "Ativos",
-                                style: TextStyle(
-                                  color: DefaultColors.subTitleGray(),
-                                  fontSize: 12
-                                )
+                                style: DefaultTypography.countBox()
                               ),
                               Text(
                                   "${provider.getAccount.aviaries
                                     .where((a) => a.activeAllotmentId != null)
                                     .length
                                   }",
-                                style: TextStyle(
-                                  color: Color(0xFF38a169),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20
-                                ),
+                                style: DefaultTypography.countBoxActiveValue()
                               )
                             ],
                           ),
@@ -158,17 +154,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             children: [
                               Text(
                                 "Total",
-                                style: TextStyle(
-                                  color: DefaultColors.subTitleGray(),
-                                  fontSize: 12
-                                )
+                                style: DefaultTypography.countBox()
                               ),
                               Text(
                                 "${provider.getAccount.aviaries.length}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20
-                                ),
+                                style: DefaultTypography.countBoxValue()
                               )
                             ],
                           ),

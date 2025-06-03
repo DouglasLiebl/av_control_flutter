@@ -6,12 +6,14 @@ class CustomButton extends StatefulWidget {
   final String description;
   final bool isLoading;
   final AsyncCallback onPress;
+  final Icon? icon;
 
   const CustomButton({
     super.key,
     required this.description,
     required this.isLoading,
-    required this.onPress
+    required this.onPress,
+    this.icon
   });
 
   @override
@@ -60,16 +62,29 @@ class _CustomButton extends State<CustomButton> {
           : Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.add, color: Colors.white),
-              SizedBox(width: 16),
-              Text(
-                widget.description,
-                style: TextStyle(
-                  fontFamily: "JetBrains Mono",
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              )
+              widget.icon != null
+              ? Row(
+                  children: [
+                    widget.icon!,
+                    SizedBox(width: 16),
+                    Text(
+                      widget.description,
+                      style: TextStyle(
+                        fontFamily: "JetBrains Mono",
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                )
+              : Text(
+                  widget.description,
+                  style: TextStyle(
+                    fontFamily: "JetBrains Mono",
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                )
             ],
           ),
         ],

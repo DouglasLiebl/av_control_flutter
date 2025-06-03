@@ -35,6 +35,8 @@ class AllotmentProvider extends BaseProvider {
     feedHistory: []
   );
 
+  bool isLoading = false;
+
   Allotment get getAllotment => _allotment;
 
   Future<void> loadContext(String allotmentId) async {
