@@ -85,4 +85,38 @@ class DefaultTypography {
     );
   }
 
+  static TextStyle activeTag() {
+    return TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: DefaultColors.activeGreen(),
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle inactiveTag() {
+    return TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: DefaultColors.inactiveRed(),
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle aliasText() {
+    return TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
+  static TextStyle aviaryName() {
+    return TextStyle(
+      fontSize: 14,
+      color: DefaultColors.textGray(),
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
 }
