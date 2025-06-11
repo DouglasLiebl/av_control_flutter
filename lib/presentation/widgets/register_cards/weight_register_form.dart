@@ -67,9 +67,7 @@ class _WeightRegisterFormState extends State<WeightRegisterForm> {
       });
     }
     FocusScope.of(context).unfocus();
-    await widget.onPress();
-    if (!mounted) return;
-    Navigator.of(context).pop();     
+    await widget.onPress();     
   }
 
   @override

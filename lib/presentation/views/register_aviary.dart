@@ -125,6 +125,7 @@ class _RegisterAviary extends State<RegisterAviary> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 80)
                   ]
                 ),
               ),

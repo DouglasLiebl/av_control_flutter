@@ -36,6 +36,7 @@ class AllotmentProvider extends BaseProvider {
   );
 
   bool isLoading = false;
+  bool finishLoading = false;
 
   Allotment get getAllotment => _allotment;
 

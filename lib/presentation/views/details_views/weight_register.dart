@@ -92,6 +92,9 @@ class _WaterDetailsState extends State<WeightRegister> {
 
       await allotmentProvider.updateWeight(totalUnits, tare, weights);
       _refreshData();
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();   
     }
 
     Future<bool> closePopUp() async {

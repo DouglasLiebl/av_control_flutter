@@ -94,6 +94,15 @@ class DefaultTypography {
     );
   }
 
+  static TextStyle activeTagTitle() {
+    return TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: DefaultColors.valueGray(),
+      fontFamily: "JetBrains Mono"
+    );
+  }
+
   static TextStyle inactiveTag() {
     return TextStyle(
       fontSize: 12,

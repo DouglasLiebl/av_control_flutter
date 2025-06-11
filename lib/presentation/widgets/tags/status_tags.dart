@@ -10,10 +10,7 @@ class StatusTags {
       children: [
         Text(
           alias,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
+          style: DefaultTypography.activeTagTitle()
         ),
         Container(
           decoration: BoxDecoration(

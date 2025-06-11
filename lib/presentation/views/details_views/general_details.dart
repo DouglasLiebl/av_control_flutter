@@ -1,5 +1,6 @@
 import 'package:demo_project/presentation/provider/allotment_provider.dart';
 import 'package:demo_project/domain/entity/aviary.dart';
+import 'package:demo_project/presentation/style/default_typography.dart';
 import 'package:demo_project/utils/date_formater.dart';
 import 'package:demo_project/presentation/style/default_colors.dart';
 import 'package:demo_project/presentation/widgets/tags/status_tags.dart';
@@ -49,7 +50,7 @@ class GeneralDetails extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Center(
-                          child: Icon(Icons.home_outlined),
+                            child: Icon(Icons.home_outlined),
                           ),  
                         )
                       ),
@@ -62,10 +63,7 @@ class GeneralDetails extends StatelessWidget {
                             SizedBox(height: 4),
                             Text(
                               "ID: ${aviary.id}",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: DefaultColors.textGray(),
-                              ),
+                              style: DefaultTypography.tableRowValue()
                             ),
                           ],
                         ),
@@ -96,11 +94,7 @@ class GeneralDetails extends StatelessWidget {
                     children: [
                       Text(
                         "Detalhes Gerais",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14
-                        ),
+                        style: DefaultTypography.tableRowLabel()
                       ),
                     ],
                   ),
@@ -111,7 +105,7 @@ class GeneralDetails extends StatelessWidget {
                 elevation: 0,
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide.none, // No border for the whole shape
+                  side: BorderSide.none,
                   borderRadius: BorderRadius.zero,
                 ),
                 child: Container(
@@ -134,18 +128,11 @@ class GeneralDetails extends StatelessWidget {
                       children: [
                         Text(
                           "Número",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14
-                          ),      
+                          style: DefaultTypography.tableRowValue()      
                         ),
                         Text(
                           allotment.getAllotment.number.toString(),
-                          style: TextStyle(
-                            color: DefaultColors.valueGray(),
-                            fontSize: 14
-                          ),
+                          style: DefaultTypography.tableRowLabel()
                         ),
                       ],
                     ),
@@ -157,7 +144,7 @@ class GeneralDetails extends StatelessWidget {
                 elevation: 0,
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide.none, // No border for the whole shape
+                  side: BorderSide.none,
                   borderRadius: BorderRadius.zero,
                 ),
                 child: Container(
@@ -184,19 +171,12 @@ class GeneralDetails extends StatelessWidget {
                       children: [
                         Text(
                           "Quantidade Total",
-                          style: TextStyle(
-                            color: DefaultColors.textGray(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14
-                          ),      
+                          style: DefaultTypography.tableRowValue() 
                         ),
                         Text(
                           NumberFormat.decimalPattern('pt_BR')
                             .format(allotment.getAllotment.totalAmount),
-                          style: TextStyle(
-                            color: DefaultColors.valueGray(),
-                            fontSize: 14
-                          ),
+                          style: DefaultTypography.tableRowLabel()
                         ),
                       ],
                     ),
@@ -224,18 +204,11 @@ class GeneralDetails extends StatelessWidget {
                     children: [
                       Text(
                         "Idade Atual",
-                        style: TextStyle(
-                          color: DefaultColors.textGray(),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14
-                        ),      
+                        style: DefaultTypography.tableRowValue() 
                       ),
                       Text(
                         "${allotment.getAllotment.currentAge.toString()} dias",
-                        style: TextStyle(
-                          color: DefaultColors.valueGray(),
-                          fontSize: 14
-                        ),
+                        style: DefaultTypography.tableRowLabel()
                       ),
                     ],
                   ),
@@ -265,11 +238,7 @@ class GeneralDetails extends StatelessWidget {
                     children: [
                       Text(
                         "Linha do Tempo",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14
-                        ),
+                        style: DefaultTypography.tableRowLabel()
                       ),
                     ],
                   ),
@@ -280,7 +249,7 @@ class GeneralDetails extends StatelessWidget {
                 elevation: 0,
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
-                  side: BorderSide.none, // No border for the whole shape
+                  side: BorderSide.none,
                   borderRadius: BorderRadius.zero,
                 ),
                 child: Container(
@@ -308,19 +277,11 @@ class GeneralDetails extends StatelessWidget {
                             children: [
                               Text(
                                 "Início",
-                                style: TextStyle(
-                                  color: DefaultColors.textGray(),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14
-                                ),      
+                                style: DefaultTypography.tableRowValue()  
                               ),
                               Text(
                                 DateFormater.formatDateString(allotment.getAllotment.startedAt),
-                                style: TextStyle(
-                                  color: DefaultColors.valueGray(),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: DefaultTypography.tableRowLabel()
                               ),
                             ],
                           ),
@@ -357,19 +318,11 @@ class GeneralDetails extends StatelessWidget {
                           children: [
                             Text(
                               "Fim Previsto",
-                              style: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14
-                              ),      
+                              style: DefaultTypography.tableRowValue() 
                             ),
                             Text(
                               DateFormater.addDaysToDate(allotment.getAllotment.startedAt, 40),
-                              style: TextStyle(
-                                color: DefaultColors.valueGray(),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: DefaultTypography.tableRowLabel()
                             ),
                           ],
                         ),
@@ -402,11 +355,7 @@ class GeneralDetails extends StatelessWidget {
                     children: [
                       Text(
                         "Estatísticas Atuais",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14
-                        ),
+                        style: DefaultTypography.tableRowLabel()
                       ),
                       ],
                     ),
@@ -447,20 +396,12 @@ class GeneralDetails extends StatelessWidget {
                               Icon(Icons.breakfast_dining_outlined, color: DefaultColors.iconGreen(), size: 22,),
                               Text(
                                 "Ração Total Recebida",
-                                style: TextStyle(
-                                  color: DefaultColors.textGray(),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14
-                                ),
+                                style: DefaultTypography.tableRowValue(),
                                 textAlign: TextAlign.center,
                               ),
                               Text(
                                 "${allotment.getAllotment.currentTotalFeedReceived.toString()} Kg",
-                                style: TextStyle(
-                                  color: DefaultColors.valueGray(),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                style: DefaultTypography.activeTagTitle()
                               ),
                             ],
                           ),
@@ -502,20 +443,12 @@ class GeneralDetails extends StatelessWidget {
                                 Icon(Icons.percent_outlined, color: DefaultColors.iconRed(), size: 22),
                                 Text(
                                   "Mortalidade",
-                                  style: TextStyle(
-                                    color: DefaultColors.textGray(),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14
-                                  ),
+                                  style: DefaultTypography.tableRowValue(),
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
                                   "${allotment.getAllotment.currentDeathPercentage.toString()}%",
-                                  style: TextStyle(
-                                    color: DefaultColors.valueGray(),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: DefaultTypography.activeTagTitle()
                                 ),
                               ],
                             ),
@@ -534,20 +467,12 @@ class GeneralDetails extends StatelessWidget {
                                 Icon(Icons.balance_outlined, color: DefaultColors.iconPurple(), size: 22),
                                 Text(
                                   "Peso Médio atual",
-                                  style: TextStyle(
-                                    color: DefaultColors.textGray(),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14
-                                  ),
+                                  style: DefaultTypography.tableRowValue(),
                                   textAlign: TextAlign.center,
                                 ),
                                 Text(
                                   "${allotment.getAllotment.currentWeight.toString()} Kg",
-                                  style: TextStyle(
-                                    color: DefaultColors.valueGray(),
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: DefaultTypography.activeTagTitle()
                                 ),
                               ],
                             ),
@@ -582,20 +507,12 @@ class GeneralDetails extends StatelessWidget {
                             Icon(Icons.water_drop_outlined, color: DefaultColors.iconLightBlue(), size: 22,),
                             Text(
                               "Consumo Total de Água",
-                              style: TextStyle(
-                                color: DefaultColors.textGray(),
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14
-                              ),
+                              style: DefaultTypography.tableRowValue(),
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               "${allotment.getAllotment.currentTotalWaterConsume.toString()} L",
-                              style: TextStyle(
-                                color: DefaultColors.valueGray(),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: DefaultTypography.activeTagTitle()
                             ),
                           ],
                         ),
